@@ -7,17 +7,23 @@ import {
 } from './requestFunctions';
 import qs from 'qs';
 
-const world = 'world';
+import CookieObject from './interfaces/CookieObject';
 
-export function hello(world: string = 'world'): string {
-  return `Hello ${world}! `;
-};
+// takes the string to parse, and strings to delimit the value we want to find
+const getValueByDelimiters = (data: string, start : string, end : string) : string => {
+    const delimiterStartLength = start.length;
+    const delimiterStartIndex = data.indexOf(start);
+    const dataStartSubstring = data.substring(delimiterStartIndex + delimiterStartLength);
+    const delimiterDifference = dataStartSubstring.indexOf(end);
 
-// console.log(hello());
+    return dataStartSubstring.substring(0, delimiterDifference);
+
+}
 
 (async () => {
     
     let allCookies : string[] = [];
+    let allCookiesObject : CookieObject = {}; 
 
     const GETAmazonRes : any = await axios({
         method: 'get',
@@ -40,14 +46,45 @@ export function hello(world: string = 'world'): string {
         returnParsedCookies( GETAmazonRes.headers['set-cookie'] ) 
     );
 
-    console.log(allCookies);
+    const product = 'B07W4FMQ5Y';
 
+    const GETAmazonProductRes : any = await axios({
+        method: 'get',
+        url: `https://amazon.com/dp/${product}`,
+        withCredentials: true,
+        headers: {
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+            "accept-language": "en-US,en;q=0.9",
+            "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-fetch-dest": "document",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-site": "none",
+            "sec-fetch-user": "?1",
+            "upgrade-insecure-requests": "1",
+            cookie: joinCookies(allCookies)
+        }
+    });
+
+    const FindCSRFData : string= GETAmazonProductRes.data;
+    const CSRFDelimiter : string = '<input type="hidden" name="CSRF" value="';
+    const CSRFToken : string =  getValueByDelimiters(FindCSRFData, CSRFDelimiter, '">');
+    console.log(`CSRF: ${CSRFToken}`)
+
+    const offerListingIDDelimiter = '<input type="hidden" id="offerListingID" name="offerListingID" value="';
+    const offerListingID = getValueByDelimiters(FindCSRFData, offerListingIDDelimiter, '">');
+    console.log(`offerListingID: ${offerListingID}`)
+
+
+    allCookiesObject = convertCookieArrayToObject(allCookies);
+
+    console.log(allCookiesObject)
 
     var data = qs.stringify({
-        'CSRF': 'g0z/RTe3sRIm3ojX1Tdvl/MoHa13GmQYKH9VKSFkS5jFAAAADAAAAABgzQzgcmF3AAAAABVX8CwXqz4nuL9RKX///w==',
-        'offerListingID': '3SpeuU2iTwj3ehtt7yK5zgVh1XL8mL6U8EaPJ%2BwNO1v2Zo3GM7mVv46GVbl%2BFCFK0d7qm398PlfbsJIHuKVfWlfuzETqqgoKMIKBLdBaIc3yr6YoJkDjFS7uJynjH4Micj9NAZPpiwJPciLNYCUDEVN86naDEf6%2B%2F%2B3y2Nmv%2B8cTM1ETWHVEe9Zh1fKRZOvC',
-        'session-id': '141-4964882-9605900',
-        'ASIN': 'B07W4FMQ5Y',
+        'CSRF': CSRFToken,
+        'offerListingID': offerListingID,
+        'session-id': allCookiesObject['session-id'],
+        'ASIN': product,
         'isMerchantExclusive': '0',
         'merchantID': 'A17RGBHHDMOPR5',
         'isAddon': '0',
@@ -62,7 +99,7 @@ export function hello(world: string = 'world'): string {
         'ctaDeviceType': 'desktop',
         'ctaPageType': 'detail',
         'usePrimeHandler': '0',
-        'rsid': '141-4964882-9605900',
+        'rsid': allCookiesObject['session-id'],
         'sourceCustomerOrgListID': '',
         'sourceCustomerOrgListItemID': '',
         'wlPopCommand': '',
@@ -119,7 +156,12 @@ export function hello(world: string = 'world'): string {
             "sec-fetch-site": "same-origin",
             "x-requested-with": "XMLHttpRequest",
             cookie: joinCookies(allCookies)
-        }
-    })
+        },
+        data : data
+    });
+
+    delete POSTAmazonATC['data'];
+
+    console.log(POSTAmazonATC)
 
 })();

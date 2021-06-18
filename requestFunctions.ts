@@ -1,3 +1,5 @@
+import CookieObject from './interfaces/CookieObject';
+
 export const getNumberOfRedirects = (res : any) => {
     return res.request._redirectable._redirectCount
 }
@@ -130,9 +132,7 @@ export const accumulateCookies = (originalCookieArray : string | string[], setCo
     return newCookieArray;
 }
 
-interface CookieObject {
-    [key: string]: string
-}
+
 
 export const convertCookieArrayToObject = (cookieArray : string[]) : CookieObject => {
     let toReturnObject : CookieObject = {};
