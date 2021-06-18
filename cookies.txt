@@ -1,0 +1,22 @@
+// Visiting Amazon Website
+//      Initial GET request yields:
+//          session-id                  123-1234567-1234567
+//          session-id-time             123456789l
+//          i18n-prefs                  =USD
+//          skin                        =noskin
+//     
+//      However, there are more cookies that are recieved when visiting through other requests
+//          csm-hit
+//          ubid-main
+//          session-token
+//              Found in response from 
+//                  https://www.amazon.com/gp/navigation/ajax/dynamic-menu.html?wishlistItems=wishlist&alexaItems=alexa&metricKey=alexaMetric&rid=XZT8JK1T67DDNQGFWGEQ&isFullWidthPrime=0&isPrime=0&dynamicRequest=1&weblabs=&isFreshRegionAndCustomer=&primeMenuWidth=310&_=1624046719743
+//                  https://www.amazon.com/gp/customer-preferences/ajax/icp.html?icpContent=icp&_=1624046719744
+//                  
+//          abid           
+//              Not sure if neccessary. comes from https://assoc-na.associates-amazon.com/abid/um?s=135-8692000-3775442&m=ATVPDKIKX0DER
+//          
+
+
+
+// https://www.amazon.com/Mkeke-Compatible-iPhone-11-Clear/dp/B07W4FMQ5Y/

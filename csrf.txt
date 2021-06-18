@@ -1,0 +1,8 @@
+g9plb6A++2FQ7bfVuPW0qBUcrbJuuJyXabCtqCkZPaLdAAAADAAAAABgzQFccmF3AAAAABVX8CwXqz4nuL9RKX///w==
+gxypw3iOAtlgyXXDFJbQQ4EaefbP6Xd2HsoLwvI8KJwtAAAADAAAAABgzQs8cmF3AAAAABVX8CwXqz4nuL9RKX///w==
+gx8KVCopPJD++/VMYKMxjRmk0NFFRA6eeosX96zDUKEOAAAADAAAAABgzQtvcmF3AAAAABVX8CwXqz4nuL9RKX///w==
+
+92 characters in a CSRF
+40 characters in <input type="hidden" name="CSRF" value="
+
+res.data.indexOf('<input type="hidden" name="CSRF" value="')
