@@ -9,9 +9,9 @@ import {
 import qs from 'qs';
 import CookieObject from './interfaces/CookieObject';
 import justinIsCracked from './genMetadata';
-import { AmazonPass } from './sensitive/logins';
+import { AmazonUser, AmazonPass } from './sensitive/logins';
 
-(async () => {
+const signIn = async () : Promise<string[]> => {
 
     let allCookies : string[] = []
 
@@ -189,7 +189,7 @@ import { AmazonPass } from './sensitive/logins';
         // "openid.return_to": openidDOTreturn_to,
         prevRID: prevRID,
         workflowState: workflowState, // neccessary
-        email: 'brash@usc.edu', // neccessary
+        email: AmazonUser, // neccessary
         // encryptedPwd: encryptedPwd, // neccessary
         // encryptedPwdExpected: ''
         password: AmazonPass
@@ -240,14 +240,12 @@ import { AmazonPass } from './sensitive/logins';
         data : data
     })
 
-    console.log(POSTAmazonSignIn)
+    allCookies = accumulateCookies(
+        allCookies,
+        returnParsedCookies(POSTAmazonSignIn.headers['set-cookie'])
+    );
 
-})();
-
-// https://www.amazon.com/ap/signin
-
-
-
-function delay(timeout : number) {
-    return new Promise((resolve) => setTimeout(resolve, timeout));
+    return allCookies;
 }
+
+export default signIn;
