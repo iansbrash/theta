@@ -9,6 +9,8 @@ import {
 import qs from 'qs';
 import encryptedPwd from './encryptedPwd';
 import CookieObject from './interfaces/CookieObject';
+import justinIsCracked from './datathatismeta';
+import { AmazonPass } from './sensitive/logins';
 
 (async () => {
 
@@ -174,16 +176,24 @@ import CookieObject from './interfaces/CookieObject';
     // console.log(GETAmazonSignInUser);
     // return;
 
+    let metaCracked = justinIsCracked()
+
+    console.log(metaCracked)
+
+    // await delay(20000);
+
+
     const whackObj2 = {
         appActionToken: appActionToken, // neccessary
         appAction: appAction,           
-        // metadata1
+        metadata1: metaCracked,
         // "openid.return_to": openidDOTreturn_to,
         prevRID: prevRID,
         workflowState: workflowState, // neccessary
         email: 'brash@usc.edu', // neccessary
-        encryptedPwd: encryptedPwd, // neccessary
-        encryptedPwdExpected: ''
+        // encryptedPwd: encryptedPwd, // neccessary
+        // encryptedPwdExpected: ''
+        password: AmazonPass
     };
 
     var data = qs.stringify(whackObj2);
@@ -236,3 +246,9 @@ import CookieObject from './interfaces/CookieObject';
 })();
 
 // https://www.amazon.com/ap/signin
+
+
+
+function delay(timeout : number) {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+}
