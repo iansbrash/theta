@@ -1,6 +1,4 @@
-function lsubid() {
-    // const jsdom = require("jsdom");
-    // const { JSDOM } = jsdom;
+const lsubid = () : string => {
     var t = 402871197;
     function e(e : any) {
         e = typeof e === undefined || null === e ? '' : e['toString']();
@@ -18,7 +16,6 @@ function lsubid() {
         , o = 1
         , a = [String('<div id="a-popover-root" style="z-index:-1;position:absolute;"></div>'), "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
         (new Date()).getTime()];
-        // new Date()['getTime']() 当前时间戳  1588070148637
     for (var u in a)
         a['hasOwnProperty'](u) && ((r -= e(a[u])) < 0 && (r += 1),
         (n -= e(a[u])) < 0 && (n += 1),
@@ -36,24 +33,20 @@ function lsubid() {
 function getRandomInt(min : number, max : number) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+    return Math.floor(Math.random() * (max - min) + min);
 }
 
-const crack = () => {
-    let starttime = (new Date).getTime(); //int(time.time() * 1000)
-    // console.log(`starttime: ${starttime}`)
-	let he = starttime + 4442 //time.strftime("%Y-%m-%d-%H-%M-%S",time.localtime(starttime//1000))
-	//let timeArray = starttime.toUTCString() //time.strptime(he,"%Y-%m-%d-%H-%M-%S")
-	// ist = int(time.mktime(timeArray))
+const crack = () : string => {
+    let starttime = (new Date).getTime();
+	let he = starttime + 4442;
 	let lsu = lsubid()
-    // console.log(`lsu: ${lsu}`)
 
 
     let mets = {
-        'tz': /**random.randint(0,9999)*/getRandomInt(0, 9999), 
-        'fp2':  /**random.randint(10000,555555)*/getRandomInt(10000, 555555), 
-        'lsubid':  /**random.randint(0,9999)*/getRandomInt(0, 9999), 
-        'browser':  /**random.randint(0,9999)*/getRandomInt(0, 9999)
+        'tz': getRandomInt(0, 9999), 
+        'fp2':  getRandomInt(10000, 555555), 
+        'lsubid':  getRandomInt(0, 9999), 
+        'browser':  getRandomInt(0, 9999)
     };
 
 	let hahah = {
@@ -85,20 +78,7 @@ const crack = () => {
         errors: hahah['errors'],
         version: hahah['version']
     }
- 
-	// lha = ["{",
-	// 	str('"metrics":' + str(hahah['metrics'])) + ',',
-	// 	str('"start":' + str(hahah['start'])) + ',',
-	// 	str('"timeZone":' + str(hahah['timeZone'])) + ',',
-	// 	str('"lsUbid":"' + str(hahah['lsUbid'])) + '",',
-	// 	str('"referrer":"' + str(hahah['referrer'])) + '",',
-	// 	str('"userAgent":"' + str(hahah['userAgent'])) + '",',
-	// 	str('"location":"' + str(hahah['location'])) + '",',
-	// 	str('"webDriver":' + str(hahah['webDriver'])) + ',',
-	// 	str('"errors":' + str(hahah['errors'])) + ',',
-	// 	str('"version":"' + str(hahah['version'])) + '",',
-	// 	"}"]
- 
+
 	let strhahah = ''
 
     for (let i = 0; i < Object.keys(lha).length; i++){
@@ -150,15 +130,11 @@ const crc32_js = (r : any) => {
 }
 
 function hex_js(t : any){
-    // console.log(`t: ${t}`)
     let temp = ['0123456789ABCDEF'.charAt(t >>> 28 & 15),'0123456789ABCDEF'.charAt(t >>> 24 & 15),'0123456789ABCDEF'.charAt(t >>> 20 & 15),'0123456789ABCDEF'.charAt(t >>> 16 & 15),'0123456789ABCDEF'.charAt(t >>> 12 & 15),'0123456789ABCDEF'.charAt(t >>> 8 & 15),'0123456789ABCDEF'.charAt(t >>> 4 & 15),'0123456789ABCDEF'.charAt(15 & t)]['join']('')
-    // console.log(`temp: ${temp}`)
     return temp;
 };
 
 function doEncrypt(r : any){
-    // console.log(`r: ${r}`)
-
     let t = [1888420705, 2576816180, 2347232058, 874813317];
 		for (var e = Math['ceil'](r['length'] / 4), o = [], i = 0; i < e; i++)
 			o[i] = (255 & r['charCodeAt'](4 * i)) + ((255 & r['charCodeAt'](4 * i + 1)) << 8) + ((255 & r['charCodeAt'](4 * i + 2)) << 16) + ((255 & r['charCodeAt'](4 * i + 3)) << 24);
@@ -168,8 +144,6 @@ function doEncrypt(r : any){
 				c = o[u] += (c >>> 5 ^ a << 2) + (a >>> 3 ^ c << 4) ^ (d ^ a) + (t[3 & u ^ h] ^ c);
 		for (var f = [], s = 0; s < e; s++)
 			f[s] = String['fromCharCode'](255 & o[s], o[s] >>> 8 & 255, o[s] >>> 16 & 255, o[s] >>> 24 & 255);
-
-        // console.log(`f: ${f}`)
 
 		return f['join']('');
 }
@@ -189,32 +163,14 @@ function base64(e : any){
         h
 }
 
-const justinIsCracked = () => {
-
+const genMetadata = () : string => {
     let sthahah = crack()
     let crc32 = crc32_js(sthahah)
     let hek = hex_js(crc32)
     let nstrkey = hek + '#' + sthahah
-    
-    
-    // let exa = 'asdasdasdasd1234235ipusfdhpi7qwy4igasdfasdfa;fhak;sdfhkahsfjashbfouihasefhyq386478012639-2e0ua;fh;sahf'
-    
-    // let exa = 'F4DBDF21#undefined16243933744848X49-4132292-5015391:1624393374Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36https//www.amazon.com/ap/signin?openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fsellercentral.amazon.com%2Fhome&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=sc_na_amazon_v2&openid.mode=checkid_setup&language=zh_CN&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&pageId=sc_na_amazon_v2&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&ssoResponse=eyJ6aXAiOiJERUYiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiQTI1NktXIn0.iYtE7Fv6aJ6v8chj2opIp_kOGZ33bdo5resZCKHOyv0Ovq0Egq5yMA.WdeSSQ_tHORwt2UX.rCFA9SmFW6sMqkq8A9L0t4rOE0SvBe993mELFt-VHyS636tvTYTD7NhHOrHZzB80D_qAjzY3KhcnpZEKTV7t_yZ-v0WIkpXgzr_GTOnAGCoq7uKI079hTMOVL-zZxFJswOXZSCQ7aC_uumC8RKta23jimSBYW9dJDKvfwnVJ7AKiKEjq2V6ZnOEUmPfPSTTYy_jbcPxHt4dmIEoc4g05St4Fat0ccd6kNcf6tb0YzM6zF8bwllfXv2Haslg7g9KT_oY2.3Vmm67W6l0WPcwF1ejudGwnull4.0.0'
-    // let exa = 'asdl;fh;laslfk;oiqhetuiy3059827349-857-2394#[]\\'
-    
     let uf = doEncrypt(nstrkey)
-    // console.log(uf)
     let bas = base64(uf)
-    // console.log('wtf')
-    // console.log('wtf')
-    
-    console.log('ECdITeCs:' + bas);
-
     return ('ECdITeCs:' + bas);
-
-
 }
 
-// justinIsCracked();
-
-export default justinIsCracked;
+export default genMetadata;

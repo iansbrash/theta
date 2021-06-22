@@ -4,6 +4,16 @@ export const getNumberOfRedirects = (res : any) => {
     return res.request._redirectable._redirectCount
 }
 
+// takes the string to parse, and strings to delimit the value we want to find
+export const getValueByDelimiters = (data: string, start : string, end : string) : string => {
+    const delimiterStartLength = start.length;
+    const delimiterStartIndex = data.indexOf(start);
+    const dataStartSubstring = data.substring(delimiterStartIndex + delimiterStartLength);
+    const delimiterDifference = dataStartSubstring.indexOf(end);
+
+    return dataStartSubstring.substring(0, delimiterDifference);
+
+}
 
 // takes a cookie or cookie[] that is unparsed
 // i.e. test=123 path="/" expires="123123"
@@ -23,7 +33,12 @@ export const returnParsedCookies = (cookieArray : string | string[] ) : string[]
             let cookie = cookieArray[i];
     
             let toAppend = cookie.substring(0, cookie.indexOf(';'));
-            arr.push(toAppend);
+            if (toAppend.substring(toAppend.length - 2) === '""'){
+                console.log('Shitty cookie. Discarding.')
+            }
+            else {
+                arr.push(toAppend);
+            }
         }
     
         return arr;

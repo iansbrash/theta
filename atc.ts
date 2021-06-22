@@ -3,22 +3,18 @@ import {
     returnParsedCookies,
     joinCookies,
     accumulateCookies,
-    convertCookieArrayToObject
+    convertCookieArrayToObject,
+    getValueByDelimiters
 } from './requestFunctions';
+import getSessionCookies, {
+    parsePuppeteerCookies
+} from './getSessionCookies';
+import {
+    AmazonUser,
+    AmazonPass
+} from './sensitive/logins';
 import qs from 'qs';
-
 import CookieObject from './interfaces/CookieObject';
-
-// takes the string to parse, and strings to delimit the value we want to find
-const getValueByDelimiters = (data: string, start : string, end : string) : string => {
-    const delimiterStartLength = start.length;
-    const delimiterStartIndex = data.indexOf(start);
-    const dataStartSubstring = data.substring(delimiterStartIndex + delimiterStartLength);
-    const delimiterDifference = dataStartSubstring.indexOf(end);
-
-    return dataStartSubstring.substring(0, delimiterDifference);
-
-}
 
 (async () => {
     
@@ -38,13 +34,23 @@ const getValueByDelimiters = (data: string, start : string, end : string) : stri
             "sec-fetch-mode": "navigate",
             "sec-fetch-site": "none",
             "sec-fetch-user": "?1",
-            "upgrade-insecure-requests": "1"
+            "upgrade-insecure-requests": "1",
+            cookie: joinCookies(allCookies)
         }
     });
 
     allCookies = accumulateCookies(allCookies, 
         returnParsedCookies( GETAmazonRes.headers['set-cookie'] ) 
     );
+
+    const LoginCookies : string[] = parsePuppeteerCookies(
+        await getSessionCookies(AmazonUser, AmazonPass)
+    )
+
+    allCookies = accumulateCookies(allCookies, 
+        LoginCookies 
+    );
+    
 
     const product = 'B07W4FMQ5Y';
 
@@ -160,8 +166,58 @@ const getValueByDelimiters = (data: string, start : string, end : string) : stri
         data : data
     });
 
-    delete POSTAmazonATC['data'];
+    allCookies = accumulateCookies(
+        allCookies,
+        returnParsedCookies( POSTAmazonATC.headers['set-cookie'] )
+    );
 
-    console.log(POSTAmazonATC)
+    // delete POSTAmazonATC['data'];
+    // console.log(POSTAmazonATC)
+    (() => {
+        const d : string = POSTAmazonATC.data;
+        if (d.indexOf('Not added') !== -1) {
+            console.log(`'Not added' error`)
+        }
+        else if (d.indexOf('Added to Cart') !== -1) {
+            console.log(`Successfully 'Added to Cart'`)
+        }
+        else {
+            console.log('Unknown error detected')
+        }
+
+        console.log(`<b>Cart subtotal</b>: ${d.substr(d.indexOf('<b>Cart subtotal</b>') + '<b>Cart subtotal</b>'.length, 10)}`)
+    })();
+
+    // console.log(POSTAmazonATC.data.indexOf('Added to Cart'));
+
+    const GETAmazonAddressSelect : any = await axios({
+        method: 'get',
+        url: 'https://www.amazon.com/gp/buy/addressselect/handlers/display.html?hasWorkingJavascript=1',
+        headers: {
+            "accept": "*/*",
+            "accept-language": "en-US,en;q=0.9",
+            "content-type": "application/x-www-form-urlencoded",
+            "downlink": "5.45",
+            "ect": "4g",
+            "rtt": "100",
+            "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "x-requested-with": "XMLHttpRequest",
+            cookie: joinCookies(allCookies)
+        },
+    });
+
+    // when getting redirect to password when checking out, these cookies change:
+    //      sess-at-main, session-token, NOT sessionid, x-main, NOT ubid-main, NOT at-main, csm-hit, NOT sst-main, NOT session-id-time
+
+    // error is 'Not added'
+
+    console.log(GETAmazonAddressSelect.headers)
+    //<span class="a-color-link clickable-heading">
+    // const temp = GETAmazonAddressSelect.data.indexOf('<span class="a-color-link clickable-heading">');
+    // console.log(`GETAmazonAddressSelect.data.indexOf('<span class="a-color-link clickable-heading">'): ${temp}, ${GETAmazonAddressSelect.data.substr(temp, 7)}`)
 
 })();

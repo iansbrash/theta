@@ -8,7 +8,6 @@ import {
 const PuppeteerLoginAmazonReturnCookies = async (user: string, pass: string) : Promise<puppeteer.Protocol.Network.Cookie[]> => {
     let options : PuppeteerNodeLaunchOptions = {
         headless: false,
-        // args: ['--headless'],
     }
 
     let browser = await puppeteer.launch(options);
@@ -55,20 +54,29 @@ const PuppeteerLoginAmazonReturnCookies = async (user: string, pass: string) : P
     // Get cookies
     let LoginCookies : puppeteer.Protocol.Network.Cookie[] = await page.cookies();
     console.log(`Login cookies below:`)
-    console.log(LoginCookies);
+    console.log(parsePuppeteerCookies(LoginCookies));
+
+    // Tidy up
+    await page.close();
+    await browser.close();
 
     // Return our cookie array
     return LoginCookies;
 }
 
-(async () => {
-    await PuppeteerLoginAmazonReturnCookies(AmazonUser, AmazonPass)
-})();
+
+export const parsePuppeteerCookies = (cookies : puppeteer.Protocol.Network.Cookie[]) : string[] => {
+    return cookies.map((cookie : puppeteer.Protocol.Network.Cookie, index : number) => {
+        return cookie.name + '=' + cookie.value
+    });
+}
 
 // https://github.com/jamesgrams/instagram-poster/blob/master/index.js
 function delay(timeout : number) {
     return new Promise((resolve) => setTimeout(resolve, timeout));
 }
+
+export default PuppeteerLoginAmazonReturnCookies;
 
 
 // COOKIES THAT STAY THE SAME WHEN VISITING A PRODUCT PAGE

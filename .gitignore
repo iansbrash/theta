@@ -116,3 +116,10 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# sensitive
+sensitive
+
+# test files
+Amazon Sign-In_files
+testing

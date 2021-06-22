@@ -7,9 +7,8 @@ import {
     getValueByDelimiters
 } from './requestFunctions';
 import qs from 'qs';
-import encryptedPwd from './encryptedPwd';
 import CookieObject from './interfaces/CookieObject';
-import justinIsCracked from './datathatismeta';
+import justinIsCracked from './genMetadata';
 import { AmazonPass } from './sensitive/logins';
 
 (async () => {
