@@ -21,16 +21,15 @@ import justinIsCracked from './genMetadata';
 // contains the cartInitiateId
 // https://www.amazon.com/gp/cart/view.html?ref_=nav_cart
 
-const GETCheckoutScreen = async (allCookies : string[], email : string, password : string) : Promise<AxiosResponse> => {
-    const cartInitiateId = (new Date).getTime();
-    const CartUrlBeforeRedirect = `https://www.amazon.com/gp/cart/desktop/go-to-checkout.html/ref=ox_sc_proceed?partialCheckoutCart=1&isToBeGiftWrappedBefore=0&proceedToRetailCheckout=Proceed+to+checkout&proceedToCheckout=1&cartInitiateId=${cartInitiateId}`
-    const GETCheckoutScreenResponse : AxiosResponse = await axios({
+const GETCart = async (allCookies : string[]) : Promise<AxiosResponse>=> {
+    const GETCartUrl = "https://www.amazon.com/gp/cart/view.html?ref_=nav_cart";
+    const GETCartResponse : AxiosResponse = await axios({
         method: 'get',
-        url: CartUrlBeforeRedirect,
+        url: GETCartUrl,
         headers: {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
             "accept-language": "en-US,en;q=0.9",
-            "downlink": "7.5",
+            // "downlink": "7.5",
             "ect": "4g",
             "rtt": "50",
             "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"",
@@ -40,6 +39,41 @@ const GETCheckoutScreen = async (allCookies : string[], email : string, password
             "sec-fetch-site": "same-origin",
             "sec-fetch-user": "?1",
             "upgrade-insecure-requests": "1",
+            "referrer": "https://www.amazon.com/gp/cart/view.html?ref_=nav_cart",
+            cookie: joinCookies(allCookies)
+        }
+    });
+
+    return GETCartResponse;
+}
+
+const GETCartRetry : (allCookies : string[]) => Promise<AxiosResponse> = requestRetryWrapper(GETCart, {
+    baseDelay: 3000,
+    numberOfTries: 3,
+    consoleRun: 'Getting checkout screen',
+    consoleError: 'Error getting checkout screen'
+})
+
+const GETCheckoutScreen = async (allCookies : string[], email : string, password : string) : Promise<AxiosResponse> => {
+    const cartInitiateId = (new Date).getTime();
+    const CartUrlBeforeRedirect = `https://www.amazon.com/gp/cart/desktop/go-to-checkout.html/ref=ox_sc_proceed?partialCheckoutCart=1&isToBeGiftWrappedBefore=0&proceedToRetailCheckout=Proceed+to+checkout&proceedToCheckout=1&cartInitiateId=${cartInitiateId}`
+    const GETCheckoutScreenResponse : AxiosResponse = await axios({
+        method: 'get',
+        url: CartUrlBeforeRedirect,
+        headers: {
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+            "accept-language": "en-US,en;q=0.9",
+            // "downlink": "7.5",
+            "ect": "4g",
+            "rtt": "50",
+            "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-fetch-dest": "document",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-user": "?1",
+            "upgrade-insecure-requests": "1",
+            "referrer": "https://www.amazon.com/gp/cart/view.html?ref_=nav_cart",
             cookie: joinCookies(allCookies)
         }
     });
@@ -111,6 +145,34 @@ const GETCheckoutScreen = async (allCookies : string[], email : string, password
 
         if (POSTLoginRedirectResponse.headers['set-cookie'].length === 3){
             tsLogger("Successfully logged in after redirect")
+            console.log(POSTLoginRedirectResponse.headers)
+
+            // const cartInitiateId = (new Date).getTime();
+            // const CartUrlBeforeRedirect = `https://www.amazon.com/gp/cart/desktop/go-to-checkout.html/ref=ox_sc_proceed?partialCheckoutCart=1&isToBeGiftWrappedBefore=0&proceedToRetailCheckout=Proceed+to+checkout&proceedToCheckout=1&cartInitiateId=${cartInitiateId}`
+            // const GETCheckoutScreenResponse2 : AxiosResponse = await axios({
+            //     method: 'get',
+            //     url: CartUrlBeforeRedirect,
+            //     headers: {
+            //         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+            //         "accept-language": "en-US,en;q=0.9",
+            //         "downlink": "7.5",
+            //         "ect": "4g",
+            //         "rtt": "50",
+            //         "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"",
+            //         "sec-ch-ua-mobile": "?0",
+            //         "sec-fetch-dest": "document",
+            //         "sec-fetch-mode": "navigate",
+            //         "sec-fetch-site": "same-origin",
+            //         "sec-fetch-user": "?1",
+            //         "upgrade-insecure-requests": "1",
+            //         cookie: joinCookies(allCookies)
+            //     }
+            // });
+
+            // const needsToResignIn = GETCheckoutScreenResponse2.request.res.responseUrl.includes('/ap/signin')
+
+            // console.log(GETCheckoutScreenResponse2)
+            // console.log(`needsToResignIn: ${needsToResignIn}`)
         }
         else {
             tsLogger("Failed to login after redirect")
@@ -138,50 +200,50 @@ const checkout = async (allCookies : string[]) => {
     // console.log('Beginning checkout process with these cookies:')
     // console.log(allCookies)
 
+    // const GETCartResponse = await GETCartRetry(allCookies);
+
+    // allCookies = accumulateCookies(
+    //     allCookies,
+    //     returnParsedCookies(GETCartResponse.headers['set-cookie'])
+    // );
+
+    // console.log('these cookies')
+    // console.log(convertCookieArrayToObject(allCookies));
+    // return;
+    // need at-main. sess-at-main... don't need sst-main
+
+// x-amz-id-1: YZB2GTVGYTXEKX7MDMEC
+// x-amz-rid: YZB2GTVGYTXEKX7MDMEC
+// x-amz-cf-id: E6Nt_4c1UKLSPvJYlahZIWwbUtWOzpbGc-EcFWHHtPf_sZdbMyObcQ==
+// x-amz-cf-pop: ATL56-C4
     const GETCheckoutScreenResponse = await GETCheckoutScreenRetry(allCookies, AmazonUser, AmazonPass);
 
     allCookies = accumulateCookies(
         allCookies,
         returnParsedCookies(GETCheckoutScreenResponse.headers['set-cookie'])
     )
-
-    return;
-
+    
     const needsToResignIn = GETCheckoutScreenResponse.request.res.responseUrl.includes('/ap/signin')
 
     if (needsToResignIn) {
-        console.log('needs to resign in!')
-
-        // const POSTRedirectSignIn = await axios({
-        //     method: 'post',
-        //     url: 'https://www.amazon.com/ap/signin',
-        //     headers: {
-        //         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-        //         "accept-language": "en-US,en;q=0.9",
-        //         "cache-control": "max-age=0",
-        //         "content-type": "application/x-www-form-urlencoded",
-        //         "downlink": "7.65",
-        //         "ect": "4g",
-        //         "rtt": "50",
-        //         "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"",
-        //         "sec-ch-ua-mobile": "?0",
-        //         "sec-fetch-dest": "document",
-        //         "sec-fetch-mode": "navigate",
-        //         "sec-fetch-site": "same-origin",
-        //         "sec-fetch-user": "?1",
-        //         "upgrade-insecure-requests": "1",
-        //         cookie: joinCookies(allCookies)
-        //     }
-        // })
-
-
-        
+        throw "Needs to sign in again. F";
     }
 
-    console.log(GETCheckoutScreenResponse)
+    const GETCheckoutScreenResponseData = GETCheckoutScreenResponse.data;
+
+    let purchaseId, addressUIWidgetsObfuscatedCustomerId, addressUIWidgetsAddressWizardInteractionId, addressUIWidgetsPreviousAddressFormStateToken;
+    purchaseId = getValueByDelimiters(GETCheckoutScreenResponseData, '<input type="hidden" name="purchaseId" value="', '">');
+    addressUIWidgetsObfuscatedCustomerId = getValueByDelimiters(GETCheckoutScreenResponseData, '<input type="hidden" name="address-ui-widgets-previous-address-form-state-token" value="', '">');
+    addressUIWidgetsAddressWizardInteractionId = getValueByDelimiters(GETCheckoutScreenResponseData, '<input type="hidden" name="address-ui-widgets-address-wizard-interaction-id" value="', '">');
+    addressUIWidgetsPreviousAddressFormStateToken = getValueByDelimiters(GETCheckoutScreenResponseData, '<input type="hidden" name="address-ui-widgets-obfuscated-customerId" value="', '">');
+
+
+
+    // console.log(GETCheckoutScreenResponse)
 }
 
 (async () => {
     let allCookies = await signIn(AmazonUser, AmazonPass);
+    
     await checkout(allCookies);
 })();

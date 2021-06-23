@@ -169,6 +169,8 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
             'accept-language': 'en-US,en;q=0.9', 
             "cookie": joinCookies(allCookies)
         },
+        maxRedirects: 0,
+        validateStatus: function (a) {return true;},
         data : POSTSubData
     })
 
