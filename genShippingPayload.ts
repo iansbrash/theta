@@ -14,7 +14,7 @@ interface addressUIWidgetsDeliveryInstructionsData {
     "initialCountryCode" : string // "US",
 }
 
-interface genShippingPayloadParams {
+export interface genShippingPayloadParams {
     "address-ui-widgets-countryCode": string, // "US",
     "address-ui-widgets-enterAddressFullName": string, // "Ian Brash",
     "address-ui-widgets-enterAddressPhoneNumber": string, // "+16158922385",
@@ -80,6 +80,7 @@ const genShippingPayload = (information : ProfileInformation, shipping : Profile
         "address-ui-widgets-enterAddressCity": city, // "Brentwood",
         "address-ui-widgets-enterAddressStateOrRegion": "TN", // "TN",
         "address-ui-widgets-enterAddressPostalCode": zip, // "37027",
+        "address-ui-widgets-previous-address-form-state-token": dynamicParams['address-ui-widgets-previous-address-form-state-token'], // "eyJ6aXAiOiJERUYiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiQTI1NktXIn0.MMfU6kMpwX7aGLh6Q4HRoZrCRWz_dZu5o9ieFTXzzlyOn0cHi9wl1A.qLLI8hsrqNfx8lDS.cYzQpVDbc-Bk1N4Ov0qgrNsjYkXakv_fOVVxJolJF1Mc8GahXfZaKlDZ5X6piZY6NOHYxoKT5DGNOOhjt8apeboyFlakA90ZqfOBj7OjRtymC8czD3GTCiW-Pw8QmmtKkpVjD7BOWDB7OL2-95evfrRtzdfkHYimV73dLCAXW9bql3g5M8PgtmPb5Adjc-FQh-NAvkO9HXfnJmG8oKj6lWEIWMt_oSVsIo4xgF3dRw9w2Qw43PXu5MO4_WMelJo3wd-cTkn62-LmceT8ZLHe37jnOkJ6OUFCYzTw4YtpdpnPQaad3GE23dcLzvsP_ECMIWmdJ4GgjFavL4nlpLW-ME4MSODfxO3lQff4-e1QgzPf-xH6aYvoj16YRvVgKt3UwXi6j4afuY9OYKcCZ_Bv-12n7SZY6hMpuZSmBkbQqD0TqA-Rpg36neKRcPa2Sg.w52mQVh7kp87LI-GoEU0Eg",
         "address-ui-widgets-delivery-instructions-desktop-expander-context": {
             "deliveryInstructionsDisplayMode": "CDP_ONLY", //"CDP_ONLY", 
             "deliveryInstructionsClientName": "RetailWebsite", // "RetailWebsite" 
@@ -101,18 +102,19 @@ const genShippingPayload = (information : ProfileInformation, shipping : Profile
         "address-ui-widgets-delivery-instructions-data": {
             "initialCountryCode" : "US" // "US",
         },
+        "address-ui-widgets-address-wizard-interaction-id": dynamicParams['address-ui-widgets-address-wizard-interaction-id'], // "698c3310-b1cd-40c1-a05f-baa6f05bd933",
+        "address-ui-widgets-obfuscated-customerId": dynamicParams['address-ui-widgets-obfuscated-customerId'], // "A25HA1HE1RD42U",
         "address-ui-widgets-locationData": "", // "",
         "address-ui-widgets-locale": "", // "",
         "hasWorkingJavascript": "1", // "1",
         /** All of the below can be found within the html */
-        "address-ui-widgets-previous-address-form-state-token": dynamicParams['address-ui-widgets-previous-address-form-state-token'], // "eyJ6aXAiOiJERUYiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiQTI1NktXIn0.MMfU6kMpwX7aGLh6Q4HRoZrCRWz_dZu5o9ieFTXzzlyOn0cHi9wl1A.qLLI8hsrqNfx8lDS.cYzQpVDbc-Bk1N4Ov0qgrNsjYkXakv_fOVVxJolJF1Mc8GahXfZaKlDZ5X6piZY6NOHYxoKT5DGNOOhjt8apeboyFlakA90ZqfOBj7OjRtymC8czD3GTCiW-Pw8QmmtKkpVjD7BOWDB7OL2-95evfrRtzdfkHYimV73dLCAXW9bql3g5M8PgtmPb5Adjc-FQh-NAvkO9HXfnJmG8oKj6lWEIWMt_oSVsIo4xgF3dRw9w2Qw43PXu5MO4_WMelJo3wd-cTkn62-LmceT8ZLHe37jnOkJ6OUFCYzTw4YtpdpnPQaad3GE23dcLzvsP_ECMIWmdJ4GgjFavL4nlpLW-ME4MSODfxO3lQff4-e1QgzPf-xH6aYvoj16YRvVgKt3UwXi6j4afuY9OYKcCZ_Bv-12n7SZY6hMpuZSmBkbQqD0TqA-Rpg36neKRcPa2Sg.w52mQVh7kp87LI-GoEU0Eg",
-        "address-ui-widgets-address-wizard-interaction-id": dynamicParams['address-ui-widgets-address-wizard-interaction-id'], // "698c3310-b1cd-40c1-a05f-baa6f05bd933",
-        "address-ui-widgets-obfuscated-customerId": dynamicParams['address-ui-widgets-obfuscated-customerId'], // "A25HA1HE1RD42U",
         "purchaseId": dynamicParams['purchaseId'], // "106-2873896-2015404"
     }
 
     return payload;
 }
+
+export default genShippingPayload;
 
 
 // add address payload when editing
