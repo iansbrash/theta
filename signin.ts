@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import {
     returnParsedCookies,
     joinCookies,
@@ -10,17 +10,10 @@ import qs from 'qs';
 import CookieObject from './interfaces/CookieObject';
 import justinIsCracked from './genMetadata';
 import { AmazonUser, AmazonPass } from './sensitive/logins';
+import requestRetryWrapper from './requestRetryWrapper';
 
-const signIn = async () : Promise<string[]> => {
-
-    let allCookies : string[] = []
-
-    let allCookiesObject : CookieObject = {}; 
-
+const GETMainLoginPage = async (allCookies : string[]) : Promise<AxiosResponse> => {
     const AmazonBeginLoginUrl = 'https://www.amazon.com/ap/signin?openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&'
-
-
-    console.log('GETAmazonSignInUser')
 
     // returns only a session ID and a session-id-time
     const GETAmazonSignInUser = await axios({
@@ -47,71 +40,52 @@ const signIn = async () : Promise<string[]> => {
         }
     });
 
-   
+    return GETAmazonSignInUser;
+}
 
-    allCookies = accumulateCookies(allCookies,
-        returnParsedCookies(GETAmazonSignInUser.headers['set-cookie'])
-    );
+const GETMainLoginPageRetry : (allCookies : string[]) => Promise<AxiosResponse> = requestRetryWrapper(GETMainLoginPage, {
+    baseDelay: 3000,
+    numberOfTries: 3,
+    consoleRun: 'Getting Amazon login page',
+    consoleError: 'Error getting Amazon login page'
+})
 
-    allCookiesObject = convertCookieArrayToObject(allCookies);
+interface LoginQuerys {
+    appActionToken: string,
+    appAction: string,
+    prevRID: string,
+    workflowState: string,
+    email: string,
+    password?: string
+}
 
+const POSTMainLoginPage = async (allCookies : string[], sessionId: string, data : LoginQuerys) : Promise<AxiosResponse> => {
+    
+    const {
+        appActionToken,
+        appAction,
+        prevRID,
+        workflowState,
+        email
+    } = data;
 
-
-
-
-
-
-
-
-
-   
-
-    const findNewCookiesData = GETAmazonSignInUser.data;
-
-    // console.log(findNewCookiesData)
-    // return;
-
-    let appActionToken = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="appActionToken" value="', '" />');
-    console.log(`appActionToken: ${appActionToken}`)
-    let appAction = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="appAction" value="', '" />');
-    console.log(`appAction: ${appAction}`)
-    let prevRID = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="prevRID" value="', '" />');
-    console.log(`prevRID: ${prevRID}`)
-    // const metadata1 = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="metadata1" value="', '"/>');
-    // console.log(`metadata1: ${metadata1}`)
-    // perhaps this comes on the second page?
-    let workflowState = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="workflowState" value="', '" />');
-    console.log(`workflowState: ${workflowState}`)
-
-    console.log('POSTAmazonSignInUserTwo')
-    console.log(`https://www.amazon.com/ap/signin/${allCookiesObject['session-id']}`)
-    console.log(joinCookies(allCookies))
-
-    // console.log(findNewCookiesData)
-
-    let wahckConfig = {
-        appActionToken: appActionToken, // neccessary
-        appAction: 'SIGNIN_PWD_COLLECT',           
+    let POSTConfig = {
+        appActionToken: appActionToken,
+        appAction: appAction,           
         subPageType: "SignInClaimCollect",
-        // metadata1
-        // "openid.return_to": openidDOTreturn_to,
         create: 0,
         prevRID: prevRID,
-        workflowState: workflowState, // neccessary
-        email: 'brash@usc.edu', // neccessary,
+        workflowState: workflowState,
+        email: email,
         password: ''
-        // encryptedPwd: encryptedPwd, // neccessary
-        // encryptedPwdExpected: ''
     }
-    console.log(wahckConfig);
 
-    var POSTAmazonSignInUserTwoData = qs.stringify(wahckConfig);
+    let POSTMainLoginPageData : string = qs.stringify(POSTConfig);
 
-    // console.log(joinCookies(allCookies));
 
-    const POSTAmazonSignInUserTwo = await axios({
+    const POSTMainLoginPageResponse : AxiosResponse = await axios({
         method: 'post',
-        url: `https://www.amazon.com/ap/signin/${allCookiesObject['session-id']}`,
+        url: `https://www.amazon.com/ap/signin/${sessionId}`,
         headers: {
             'authority': 'www.amazon.com', 
             'cache-control': 'max-age=0', 
@@ -131,88 +105,46 @@ const signIn = async () : Promise<string[]> => {
             'accept-language': 'en-US,en;q=0.9', 
             cookie: joinCookies(allCookies),
         },
-        data : POSTAmazonSignInUserTwoData
+        data : POSTMainLoginPageData
     });
 
-    allCookies = accumulateCookies(allCookies,
-        returnParsedCookies(POSTAmazonSignInUserTwo.headers['set-cookie'])    
-    );
+    return POSTMainLoginPageResponse;
+}
 
-    console.log(allCookies)
+const POSTMainLoginPageRetry : (allCookies : string[], sessionId: string, data : LoginQuerys) => Promise<AxiosResponse> = requestRetryWrapper(POSTMainLoginPage, {
+    baseDelay: 3000,
+    numberOfTries: 3,
+    consoleRun: 'Posting to Amazon main login page',
+    consoleError: 'Error posting to Amazon main login page'
+})
 
+const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data : LoginQuerys) : Promise<AxiosResponse> => {
 
-
-
-
-
-
-    
-    
-    // const metadata1 = getValueByDelimiters(findNewCookiesData, '<input name="metadata1" type="hidden" value="', '">');
-    const openidDOTreturn_to = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="openid.return_to" value="', '">');
-    // console.log(openidDOTreturn_to)
-
-    
-
-    const encryptedPasswordExpected = '';
-    // const encryptedPasswordExpected = getValueByDelimiters(findNewCookiesData, '<input name="metadata1" type="hidden" value="', '">');
+    const {
+        appActionToken,
+        appAction,
+        prevRID,
+        workflowState,
+        email,
+        password
+    } = data;
 
 
+    const metaCracked = justinIsCracked()
 
-    appActionToken = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="appActionToken" value="', '" />');
-    console.log(`appActionToken: ${appActionToken}`)
-    appAction = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="appAction" value="', '" />');
-    console.log(`appAction: ${appAction}`)
-    prevRID = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="prevRID" value="', '" />');
-    console.log(`prevRID: ${prevRID}`)
-    // const metadata1 = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="metadata1" value="', '"/>');
-    // console.log(`metadata1: ${metadata1}`)
-    // perhaps this comes on the second page?
-    workflowState = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="workflowState" value="', '" />');
-    console.log(`workflowState: ${workflowState}`)
-    
-
-    // console.log(GETAmazonSignInUser);
-    // return;
-
-    let metaCracked = justinIsCracked()
-
-    console.log(metaCracked)
-
-    // await delay(20000);
-
-
-    const whackObj2 = {
-        appActionToken: appActionToken, // neccessary
+    const POSTConfig = {
+        appActionToken: appActionToken, 
         appAction: appAction,           
         metadata1: metaCracked,
-        // "openid.return_to": openidDOTreturn_to,
         prevRID: prevRID,
-        workflowState: workflowState, // neccessary
-        email: AmazonUser, // neccessary
-        // encryptedPwd: encryptedPwd, // neccessary
-        // encryptedPwdExpected: ''
-        password: AmazonPass
+        workflowState: workflowState, 
+        email: email, 
+        password: password
     };
 
-    var data = qs.stringify(whackObj2);
+    const POSTSubData = qs.stringify(POSTConfig);
 
-    // Form Data Fields:
-    //      appActionToken
-    //      appAction                   (SIGNIN_PWD_COLLECT)
-    //      metadata1
-    //      openid.return_to
-    //      prevRID
-    //      workflowState
-    //      email                       (brash@usc.edu)
-    //      encryptedPwd
-    //      encryptedPwdExpected
-
-    console.log(convertCookieArrayToObject(allCookies));
-    console.log(whackObj2);
-
-
-    const POSTAmazonSignIn = await axios({
+    const POSTSubLoginPageResponse = await axios({
         method: 'post',
         url: 'https://www.amazon.com/ap/signin',
         headers: {
@@ -233,19 +165,77 @@ const signIn = async () : Promise<string[]> => {
             'sec-fetch-mode': 'navigate', 
             'sec-fetch-user': '?1', 
             'sec-fetch-dest': 'document', 
-            'referer': `https://www.amazon.com/ap/signin/${allCookiesObject['session-id']}`, 
+            'referer': `https://www.amazon.com/ap/signin/${sessionId}`, 
             'accept-language': 'en-US,en;q=0.9', 
             "cookie": joinCookies(allCookies)
         },
-        data : data
+        data : POSTSubData
+    })
+
+    return POSTSubLoginPageResponse;
+}
+
+const POSTSubLoginPageRetry : (allCookies : string[], sessionId: string, data : LoginQuerys) => Promise<AxiosResponse> = requestRetryWrapper(POSTSubLoginPage, {
+    baseDelay: 3000,
+    numberOfTries: 3,
+    consoleRun: 'Posting to Amazon sub login page',
+    consoleError: 'Error posting to Amazon sub login page'
+})
+
+const signIn = async (email : string, password : string) : Promise<string[]> => {
+
+    let allCookies : string[] = []
+    let allCookiesObject : CookieObject = {}; 
+
+
+    const MainLoginPageRetryResponse : AxiosResponse = await GETMainLoginPageRetry(allCookies);
+
+    allCookies = accumulateCookies(allCookies,
+        returnParsedCookies(MainLoginPageRetryResponse.headers['set-cookie'])
+    );
+    allCookiesObject = convertCookieArrayToObject(allCookies);
+    const findNewCookiesData = MainLoginPageRetryResponse.data;
+
+    let appActionToken = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="appActionToken" value="', '" />');
+    let appAction = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="appAction" value="', '" />');
+    let prevRID = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="prevRID" value="', '" />');
+    let workflowState = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="workflowState" value="', '" />');
+
+    const POSTMainLoginPageResponse = await POSTMainLoginPageRetry(allCookies, allCookiesObject['session-id'], {
+        appActionToken,
+        appAction,
+        prevRID,
+        workflowState,
+        email
+    });
+
+    allCookies = accumulateCookies(allCookies,
+        returnParsedCookies(POSTMainLoginPageResponse.headers['set-cookie'])    
+    );
+
+    appActionToken = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="appActionToken" value="', '" />');
+    appAction = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="appAction" value="', '" />');
+    prevRID = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="prevRID" value="', '" />');
+    workflowState = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="workflowState" value="', '" />');
+
+    const POSTSubLoginPageRetryResponse = await POSTSubLoginPageRetry(allCookies, allCookiesObject['session-id'], {
+        appActionToken,
+        appAction,
+        prevRID,
+        workflowState,
+        email,
+        password
     })
 
     allCookies = accumulateCookies(
         allCookies,
-        returnParsedCookies(POSTAmazonSignIn.headers['set-cookie'])
-    );
+        returnParsedCookies(POSTSubLoginPageRetryResponse.headers['set-cookie'])
+    )
 
     return allCookies;
 }
 
+// (async () => {
+//     await signIn(AmazonUser, AmazonPass);
+// })();
 export default signIn;

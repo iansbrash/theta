@@ -34,7 +34,7 @@ export const returnParsedCookies = (cookieArray : string | string[] ) : string[]
     
             let toAppend = cookie.substring(0, cookie.indexOf(';'));
             if (toAppend.substring(toAppend.length - 2) === '""'){
-                console.log('Shitty cookie. Discarding.')
+                // console.log('Shitty cookie. Discarding.')
             }
             else {
                 arr.push(toAppend);
