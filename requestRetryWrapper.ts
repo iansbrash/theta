@@ -12,20 +12,6 @@ interface requestWrapperOptions {
     delay: number
 }
 
-// export const limitedRequestWrapper = async (
-//     options : requestWrapperOptions,
-//     callback : () => Promise<any>
-// ) => {
-//     function recursiveRetry (...params : any) {
-//         console.log(params);
-//     }
-//     // const recursiveRetry = (retryNumber : number = 1) => {
-//     //     try {
-//     //         const res = await callback(params)
-//     //     }
-//     // }
-// }
-
 interface RetryWrapperOptions {
     baseDelay: number,
     numberOfTries: number,
