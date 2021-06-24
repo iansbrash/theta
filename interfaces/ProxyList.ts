@@ -1,4 +1,4 @@
-interface ProxyGroup {
+interface ProxyList {
     name: string,
     favorite: boolean,
     proxies: Proxy[]
@@ -7,9 +7,9 @@ interface ProxyGroup {
 // parse proxies on add, rather than in-task
 export interface Proxy {
     ip: string,
-    port: string,
+    port: number,
     username: string,
     password: string
 }
 
-export default ProxyGroup;
+export default ProxyList;

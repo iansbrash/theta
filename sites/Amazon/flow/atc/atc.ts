@@ -6,7 +6,6 @@ import {
     convertCookieArrayToObject,
     getValueByDelimiters
 } from '../../../../requestFunctions';
-import qs from 'qs';
 import CookieObject from '../../../../interfaces/CookieObject';
 import {
     GETProductRetry
@@ -15,11 +14,12 @@ import {
     POSTAddToCartRetry
 } from './POSTAmazonATC';
 import timestampLogger from '../../../../logger';
+import { Proxy } from '../../../../interfaces/ProxyList';
 
-const AddToCart = async (allCookies : string[], product : string = 'B07W4FMQ5Y') : Promise<string[]> => {
+const AddToCart = async (allCookies : string[], product : string = 'B07W4FMQ5Y', proxy : Proxy) : Promise<string[]> => {
     let allCookiesObject : CookieObject = {}; 
 
-    const GETAmazonProductRes : AxiosResponse = await GETProductRetry(allCookies, product)
+    const GETAmazonProductRes : AxiosResponse = await GETProductRetry(allCookies, product, proxy)
 
     const FindCSRFData : string= GETAmazonProductRes.data;
     const CSRFDelimiter : string = '<input type="hidden" name="CSRF" value="';
@@ -39,7 +39,8 @@ const AddToCart = async (allCookies : string[], product : string = 'B07W4FMQ5Y')
         offerListingID,
         allCookiesObject['session-id'],
         product,
-        allCookiesObject['session-id']
+        allCookiesObject['session-id'],
+        proxy
     )
 
     allCookies = accumulateCookies(

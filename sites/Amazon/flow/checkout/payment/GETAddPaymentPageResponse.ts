@@ -1,8 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
 import { joinCookies } from '../../../../../requestFunctions';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
+import { Proxy } from '../../../../../interfaces/ProxyList';
 
-const GETAddPaymentPage = async (allCookies : string[]) : Promise<AxiosResponse> => {
+
+const GETAddPaymentPage = async (allCookies : string[], proxy : Proxy) : Promise<AxiosResponse> => {
     const GETAddPaymentPageResponse = await axios({
         method: 'get',
         url: 'https://www.amazon.com/gp/buy/payselect/handlers/display.html?hasWorkingJavascript=1',
@@ -24,6 +26,15 @@ const GETAddPaymentPage = async (allCookies : string[]) : Promise<AxiosResponse>
             'accept-language': 'en-US,en;q=0.9', 
             cookie: joinCookies(allCookies)
         },
+        proxy: {
+            protocol: 'https',
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password,
+            }
+        },
         maxRedirects: 0,
         validateStatus: () => {return true;}
     })
@@ -31,7 +42,7 @@ const GETAddPaymentPage = async (allCookies : string[]) : Promise<AxiosResponse>
     return GETAddPaymentPageResponse;
 }
 
-export const GETAddPaymentPageRetry : (allCookies : string[]) => Promise<AxiosResponse> = requestRetryWrapper(GETAddPaymentPage, {
+export const GETAddPaymentPageRetry : (allCookies : string[], proxy : Proxy) => Promise<AxiosResponse> = requestRetryWrapper(GETAddPaymentPage, {
     baseDelay: 3000,
     numberOfTries: 3,
     consoleRun: 'Getting add payment page',

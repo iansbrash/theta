@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import qs from 'qs';
+import { Proxy } from "../../../../interfaces/ProxyList";
 import {
     joinCookies
 } from '../../../../requestFunctions';
@@ -11,7 +12,8 @@ const POSTAddToCart = async (
     offerListingID: string,
     sessionId: string,
     ASIN: string,
-    rsid: string
+    rsid: string,
+    proxy : Proxy
 ) : Promise<AxiosResponse>=> {
 
     var data = qs.stringify({
@@ -61,6 +63,15 @@ const POSTAddToCart = async (
             "x-requested-with": "XMLHttpRequest",
             cookie: joinCookies(allCookies)
         },
+        proxy: {
+            protocol: 'https',
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password,
+            }
+        },
         data : data
     });
 
@@ -73,7 +84,8 @@ export const POSTAddToCartRetry : (
     offerListingID: string,
     sessionId: string,
     ASIN: string,
-    rsid: string
+    rsid: string,
+    proxy : Proxy
 ) => Promise<AxiosResponse> = requestRetryWrapper(POSTAddToCart, {
     baseDelay: 3000,
     numberOfTries: 3,

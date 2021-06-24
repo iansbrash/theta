@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from 'axios';
 import { joinCookies } from '../../../../../requestFunctions';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
 import qs from 'qs';
+import { Proxy } from '../../../../../interfaces/ProxyList';
+
 
 interface POSTRegisterDynamicParams {
     widgetState: string,
@@ -9,7 +11,7 @@ interface POSTRegisterDynamicParams {
     parentWidgetInstanceId: string
 }
 
-const POSTRegister = async (allCookies : string[], params : POSTRegisterDynamicParams) => {
+const POSTRegister = async (allCookies : string[], params : POSTRegisterDynamicParams, proxy : Proxy) => {
 
     const POSTRegisterUrl = 'https://apx-security.amazon.com/cpe/pm/register';
 
@@ -57,14 +59,23 @@ const POSTRegister = async (allCookies : string[], params : POSTRegisterDynamicP
             referrer: 'https://www.amazon.com/',
             cookie: joinCookies(allCookies)
         },
-        data : POSTRegisterData
+        data : POSTRegisterData,
+        proxy: {
+            protocol: 'https',
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password,
+            }
+        }
     })
 
     return POSTRegisterResponse
 
 }
 
-export const POSTRegisterRetry : (allCookies : string[], params : POSTRegisterDynamicParams) => Promise<AxiosResponse> = requestRetryWrapper(POSTRegister, {
+export const POSTRegisterRetry : (allCookies : string[], params : POSTRegisterDynamicParams, proxy : Proxy) => Promise<AxiosResponse> = requestRetryWrapper(POSTRegister, {
     baseDelay: 3000,
     numberOfTries: 3,
     consoleRun: 'Getting payment iframe',

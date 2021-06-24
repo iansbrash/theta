@@ -5,9 +5,9 @@ import ProxyList from './ProxyList';
 import TaskConfig from './site_task_config/TaskConfig'
 
 interface Task {
-    identifier: string,
-    site?: Site,
-    siteConfig?: TaskConfig,
+    identifier: number,
+    site: Site,
+    // siteConfig: TaskConfig,
     profile: ProfileObject,
     size: Size[],
     proxyList: ProxyList

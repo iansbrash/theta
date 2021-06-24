@@ -5,8 +5,9 @@ import {
     joinCookies
 } from '../../../../requestFunctions'
 import requestRetryWrapper from '../../../../requestRetryWrapper';
+import { Proxy } from '../../../../interfaces/ProxyList';
 
-const POSTMainLoginPage = async (allCookies : string[], sessionId: string, data : LoginQuerys) : Promise<AxiosResponse> => {
+const POSTMainLoginPage = async (allCookies : string[], sessionId: string, data : LoginQuerys, proxy : Proxy) : Promise<AxiosResponse> => {
     
     const {
         appActionToken,
@@ -52,13 +53,22 @@ const POSTMainLoginPage = async (allCookies : string[], sessionId: string, data 
             'accept-language': 'en-US,en;q=0.9', 
             cookie: joinCookies(allCookies),
         },
+        proxy: {
+            protocol: 'https',
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password,
+            }
+        },
         data : POSTMainLoginPageData
     });
 
     return POSTMainLoginPageResponse;
 }
 
-export const POSTMainLoginPageRetry : (allCookies : string[], sessionId: string, data : LoginQuerys) => Promise<AxiosResponse> = requestRetryWrapper(POSTMainLoginPage, {
+export const POSTMainLoginPageRetry : (allCookies : string[], sessionId: string, data : LoginQuerys, proxy : Proxy) => Promise<AxiosResponse> = requestRetryWrapper(POSTMainLoginPage, {
     baseDelay: 3000,
     numberOfTries: 3,
     consoleRun: 'Posting to Amazon main login page',

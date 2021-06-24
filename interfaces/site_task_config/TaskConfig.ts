@@ -1,7 +1,7 @@
 import Site from '../enums/Site';
 
 interface TaskConfig {
-    site: Site
+    [key: string]: any
 }
 
 export default TaskConfig;

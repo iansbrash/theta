@@ -6,8 +6,9 @@ import {
 } from '../../../../requestFunctions'
 import requestRetryWrapper from '../../../../requestRetryWrapper';
 import justinIsCracked from '../../logic/genMetadata';
+import { Proxy } from '../../../../interfaces/ProxyList';
 
-const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data : LoginQuerys) : Promise<AxiosResponse> => {
+const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data : LoginQuerys, proxy : Proxy) : Promise<AxiosResponse> => {
 
     const {
         appActionToken,
@@ -60,13 +61,22 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
         },
         maxRedirects: 0,
         validateStatus: function (a) {return true;},
-        data : POSTSubData
+        data : POSTSubData,
+        proxy: {
+            protocol: 'https',
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password,
+            }
+        }
     })
 
     return POSTSubLoginPageResponse;
 }
 
-export const POSTSubLoginPageRetry : (allCookies : string[], sessionId: string, data : LoginQuerys) => Promise<AxiosResponse> = requestRetryWrapper(POSTSubLoginPage, {
+export const POSTSubLoginPageRetry : (allCookies : string[], sessionId: string, data : LoginQuerys, proxy : Proxy) => Promise<AxiosResponse> = requestRetryWrapper(POSTSubLoginPage, {
     baseDelay: 3000,
     numberOfTries: 3,
     consoleRun: 'Posting to Amazon sub login page',

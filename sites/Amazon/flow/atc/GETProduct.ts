@@ -1,10 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
+import { Proxy } from '../../../../interfaces/ProxyList';
 import {
     joinCookies
 } from '../../../../requestFunctions';
 import requestRetryWrapper from '../../../../requestRetryWrapper';
 
-const GETProduct = async (allCookies : string[], product : string) : Promise<AxiosResponse> => {
+const GETProduct = async (allCookies : string[], product : string, proxy : Proxy) : Promise<AxiosResponse> => {
     const GETAmazonProductRes : any = await axios({
         method: 'get',
         url: `https://amazon.com/dp/${product}`,
@@ -20,13 +21,22 @@ const GETProduct = async (allCookies : string[], product : string) : Promise<Axi
             "sec-fetch-user": "?1",
             "upgrade-insecure-requests": "1",
             cookie: joinCookies(allCookies)
+        },
+        proxy: {
+            protocol: 'https',
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password,
+            }
         }
     });
 
     return GETAmazonProductRes;
 }
 
-export const GETProductRetry : (allCookies : string[], product : string) => Promise<AxiosResponse> = requestRetryWrapper(GETProduct, {
+export const GETProductRetry : (allCookies : string[], product : string, proxy : Proxy) => Promise<AxiosResponse> = requestRetryWrapper(GETProduct, {
     baseDelay: 3000,
     numberOfTries: 3,
     consoleRun: `Retrieving product`,

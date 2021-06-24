@@ -4,9 +4,10 @@ import { genShippingPayloadParams } from '../../../logic/genShippingPayload';
 import { joinCookies } from '../../../../../requestFunctions';
 import tsLogger from '../../../../../logger';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
+import { Proxy } from '../../../../../interfaces/ProxyList';
 
 //https://www.amazon.com/gp/identity/address/widgets/form/handlers/create-address-form-handler.html
-const POSTAddShippingAddressFormHandler = async (allCookies : string[], shippingPayload : genShippingPayloadParams) : Promise<any>=> {
+const POSTAddShippingAddressFormHandler = async (allCookies : string[], shippingPayload : genShippingPayloadParams, proxy : Proxy) : Promise<any>=> {
     const POSTAddShippingUrl = 'https://www.amazon.com/gp/identity/address/widgets/form/handlers/create-address-form-handler.html';
 
     let POSTAddShippingConfigData : string = JSON.stringify(shippingPayload)
@@ -35,6 +36,15 @@ const POSTAddShippingAddressFormHandler = async (allCookies : string[], shipping
             referrer: 'https://www.amazon.com/gp/buy/addressselect/handlers/display.html?hasWorkingJavascript=1',
             cookie: joinCookies(allCookies)
         },
+        proxy: {
+            protocol: 'https',
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password,
+            }
+        },
         data : 'payLoad=' + encodeURIComponent(POSTAddShippingConfigData)
     })
 
@@ -48,7 +58,7 @@ const POSTAddShippingAddressFormHandler = async (allCookies : string[], shipping
     }
 }
 
-export const POSTAddShippingAddressFormHandlerRetry : (allCookies : string[], shippingPayload : genShippingPayloadParams) => Promise<AxiosResponse> = requestRetryWrapper(POSTAddShippingAddressFormHandler, {
+export const POSTAddShippingAddressFormHandlerRetry : (allCookies : string[], shippingPayload : genShippingPayloadParams, proxy : Proxy) => Promise<AxiosResponse> = requestRetryWrapper(POSTAddShippingAddressFormHandler, {
     baseDelay: 3000,
     numberOfTries: 3,
     consoleRun: 'Adding shipping information',

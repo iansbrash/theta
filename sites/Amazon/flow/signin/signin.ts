@@ -6,24 +6,18 @@ import {
     getValueByDelimiters
 } from '../../../../requestFunctions';
 import CookieObject from '../../../../interfaces/CookieObject';
-import {
-    GETMainLoginPageRetry
-} from './GETMainLoginPage';
-import {
-    POSTMainLoginPageRetry
-} from './POSTMainLoginPage';
-import {
-    POSTSubLoginPageRetry
-} from './POSTSubLoginPage';
+import { GETMainLoginPageRetry } from './GETMainLoginPage';
+import { POSTMainLoginPageRetry } from './POSTMainLoginPage';
+import { POSTSubLoginPageRetry } from './POSTSubLoginPage';
+import { Proxy } from '../../../../interfaces/ProxyList';
 
-
-const signIn = async (email : string, password : string) : Promise<string[]> => {
+const SignIn = async (email : string, password : string, proxy : Proxy) : Promise<string[]> => {
 
     let allCookies : string[] = []
     let allCookiesObject : CookieObject = {}; 
 
 
-    const MainLoginPageRetryResponse : AxiosResponse = await GETMainLoginPageRetry(allCookies);
+    const MainLoginPageRetryResponse : AxiosResponse = await GETMainLoginPageRetry(allCookies, proxy);
 
     allCookies = accumulateCookies(allCookies,
         returnParsedCookies(MainLoginPageRetryResponse.headers['set-cookie'])
@@ -42,7 +36,7 @@ const signIn = async (email : string, password : string) : Promise<string[]> => 
         prevRID,
         workflowState,
         email
-    });
+    }, proxy);
 
     allCookies = accumulateCookies(allCookies,
         returnParsedCookies(POSTMainLoginPageResponse.headers['set-cookie'])    
@@ -60,7 +54,7 @@ const signIn = async (email : string, password : string) : Promise<string[]> => 
         workflowState,
         email,
         password
-    })
+    }, proxy)
 
     allCookies = accumulateCookies(
         allCookies,
@@ -70,4 +64,4 @@ const signIn = async (email : string, password : string) : Promise<string[]> => 
     return allCookies;
 }
 
-export default signIn;
+export default SignIn;

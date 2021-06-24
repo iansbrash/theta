@@ -2,8 +2,9 @@ import axios, { AxiosResponse } from 'axios';
 import { joinCookies } from '../../../../../requestFunctions';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
 import qs from 'qs';
+import { Proxy } from '../../../../../interfaces/ProxyList';
 
-const POSTSubmitOrder = async (allCookies : string[], data : object) => {
+const POSTSubmitOrder = async (allCookies : string[], data : object, proxy : Proxy) => {
     const POSTSubmitOrderUrl = 'https://www.amazon.com/gp/buy/spc/handlers/static-submit-decoupled.html/ref=ox_spc_place_order?ie=UTF8&hasWorkingJavascript='
 
 
@@ -34,13 +35,22 @@ const POSTSubmitOrder = async (allCookies : string[], data : object) => {
             'accept-language': 'en-US,en;q=0.9', 
             cookie: joinCookies(allCookies)
         },
-        data : POSTSubmitOrderData
+        data : POSTSubmitOrderData,
+        proxy: {
+            protocol: 'https',
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password,
+            }
+        }
     })
 
     return POSTSubmitOrderResponse;
 }
 
-export const POSTSubmitOrderRetry : (allCookies : string[], data : object) => Promise<AxiosResponse> = requestRetryWrapper(POSTSubmitOrder, {
+export const POSTSubmitOrderRetry : (allCookies : string[], data : object, proxy : Proxy) => Promise<AxiosResponse> = requestRetryWrapper(POSTSubmitOrder, {
     baseDelay: 3000,
     numberOfTries: 3,
     consoleRun: 'Submitting order...',

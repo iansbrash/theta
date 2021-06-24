@@ -1,15 +1,14 @@
 import axios, { AxiosResponse } from 'axios';
 import { joinCookies } from '../../../../../requestFunctions';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
-import qs from 'qs';
-
+import { Proxy } from '../../../../../interfaces/ProxyList';
 
 interface POSTSelectPaymentMethodDynamicProps {
     "ppw-widgetState": string,
     "ppw-paymentMethodId": string,
 }
 
-const POSTSelectPaymentMethod = async (allCookies : string[], customerId : string, params : POSTSelectPaymentMethodDynamicProps) : Promise<AxiosResponse> => {
+const POSTSelectPaymentMethod = async (allCookies : string[], customerId : string, params : POSTSelectPaymentMethodDynamicProps, proxy : Proxy) : Promise<AxiosResponse> => {
     const POSTSelectPaymentMethodUrl = `https://www.amazon.com/payments-portal/data/f1/widgets2/v1/customer/${customerId}/continueWidget`
 
     const ppwWidgetState = params["ppw-widgetState"];
@@ -45,13 +44,22 @@ const POSTSelectPaymentMethod = async (allCookies : string[], customerId : strin
             "x-requested-with": "XMLHttpRequest",
             cookie: joinCookies(allCookies)
         },
-        data : otherData
+        data : otherData,
+        proxy: {
+            protocol: 'https',
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password,
+            }
+        }
     })
 
     return POSTSelectPaymentMethodResponse;
 }
 
-export const POSTSelectPaymentMethodRetry : (allCookies : string[], customerId : string, params : POSTSelectPaymentMethodDynamicProps) => Promise<AxiosResponse> = requestRetryWrapper(POSTSelectPaymentMethod, {
+export const POSTSelectPaymentMethodRetry : (allCookies : string[], customerId : string, params : POSTSelectPaymentMethodDynamicProps, proxy : Proxy) => Promise<AxiosResponse> = requestRetryWrapper(POSTSelectPaymentMethod, {
     baseDelay: 3000,
     numberOfTries: 3,
     consoleRun: 'Selecting payment method',

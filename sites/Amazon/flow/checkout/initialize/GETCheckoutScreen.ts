@@ -2,8 +2,10 @@ import axios, { AxiosResponse } from "axios";
 import { joinCookies } from "../../../../../requestFunctions";
 import tsLogger from "../../../../../logger";
 import requestRetryWrapper from "../../../../../requestRetryWrapper";
+import { Proxy } from "../../../../../interfaces/ProxyList";
 
-const GETCheckoutScreen = async (allCookies : string[], email : string, password : string) : Promise<AxiosResponse> => {
+const GETCheckoutScreen = async (allCookies : string[], proxy : Proxy) : Promise<AxiosResponse> => {
+
     const cartInitiateId = (new Date).getTime();
     const CartUrlBeforeRedirect = `https://www.amazon.com/gp/cart/desktop/go-to-checkout.html/ref=ox_sc_proceed?partialCheckoutCart=1&isToBeGiftWrappedBefore=0&proceedToRetailCheckout=Proceed+to+checkout&proceedToCheckout=1&cartInitiateId=${cartInitiateId}`
     const GETCheckoutScreenResponse : AxiosResponse = await axios({
@@ -24,6 +26,15 @@ const GETCheckoutScreen = async (allCookies : string[], email : string, password
             "upgrade-insecure-requests": "1",
             "referrer": "https://www.amazon.com/gp/cart/view.html?ref_=nav_cart",
             cookie: joinCookies(allCookies)
+        },
+        proxy: {
+            protocol: 'https',
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password,
+            }
         }
     });
 
@@ -39,7 +50,7 @@ const GETCheckoutScreen = async (allCookies : string[], email : string, password
     }
 }
 
-export const GETCheckoutScreenRetry : (allCookies : string[], username : string, password : string) => Promise<AxiosResponse> = requestRetryWrapper(GETCheckoutScreen, {
+export const GETCheckoutScreenRetry : (allCookies : string[], proxy : Proxy) => Promise<AxiosResponse> = requestRetryWrapper(GETCheckoutScreen, {
     baseDelay: 3000,
     numberOfTries: 3,
     consoleRun: 'Getting checkout screen',

@@ -3,8 +3,9 @@ import {
     joinCookies
 } from '../../../../requestFunctions'
 import requestRetryWrapper from '../../../../requestRetryWrapper';
+import { Proxy } from '../../../../interfaces/ProxyList';
 
-const GETMainLoginPage = async (allCookies : string[]) : Promise<AxiosResponse> => {
+const GETMainLoginPage = async (allCookies : string[], proxy : Proxy) : Promise<AxiosResponse> => {
     const AmazonBeginLoginUrl = 'https://www.amazon.com/ap/signin?openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&'
 
     // returns only a session ID and a session-id-time
@@ -29,13 +30,22 @@ const GETMainLoginPage = async (allCookies : string[]) : Promise<AxiosResponse> 
             'accept-language': 'en-US,en;q=0.9', 
             'referer': 'https://www.amazon.com/ap/signin?openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&',
             cookie: joinCookies(allCookies)
+        },
+        proxy: {
+            protocol: 'https',
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password,
+            }
         }
     });
 
     return GETAmazonSignInUser;
 }
 
-export const GETMainLoginPageRetry : (allCookies : string[]) => Promise<AxiosResponse> = requestRetryWrapper(GETMainLoginPage, {
+export const GETMainLoginPageRetry : (allCookies : string[], proxy : Proxy) => Promise<AxiosResponse> = requestRetryWrapper(GETMainLoginPage, {
     baseDelay: 3000,
     numberOfTries: 3,
     consoleRun: 'Getting Amazon login page',
