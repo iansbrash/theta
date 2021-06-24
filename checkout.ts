@@ -604,6 +604,43 @@ const POSTAsyncContinueAfterSelection = async (allCookies : string[], params : P
     return POSTAsyncContinueAfterSelectionResponse;
 }
 
+const POSTSubmitOrder = async (allCookies : string[], data : object) => {
+    const POSTSubmitOrderUrl = 'https://www.amazon.com/gp/buy/spc/handlers/static-submit-decoupled.html/ref=ox_spc_place_order?ie=UTF8&hasWorkingJavascript='
+
+
+    const POSTSubmitOrderData = qs.stringify(data)
+
+    const POSTSubmitOrderResponse = await axios({
+        method: 'post',
+        url: POSTSubmitOrderUrl,
+        headers: {
+            'authority': 'www.amazon.com', 
+            'cache-control': 'max-age=0', 
+            'rtt': '50', 
+            'downlink': '10', 
+            'ect': '4g', 
+            'sec-ch-ua': '" Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"', 
+            'sec-ch-ua-mobile': '?0', 
+            'origin': 'https://www.amazon.com', 
+            'upgrade-insecure-requests': '1', 
+            'dnt': '1', 
+            'content-type': 'application/x-www-form-urlencoded', 
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36', 
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9', 
+            'sec-fetch-site': 'same-origin', 
+            'sec-fetch-mode': 'navigate', 
+            'sec-fetch-user': '?1', 
+            'sec-fetch-dest': 'document', 
+            'referer': 'https://www.amazon.com/gp/buy/payselect/handlers/display.html?hasWorkingJavascript=1', 
+            'accept-language': 'en-US,en;q=0.9', 
+            cookie: joinCookies(allCookies)
+        },
+        data : POSTSubmitOrderData
+    })
+
+    return POSTSubmitOrderResponse;
+}
+
 // x-amz-id-1: YZB2GTVGYTXEKX7MDMEC
 // x-amz-rid: YZB2GTVGYTXEKX7MDMEC
 // x-amz-cf-id: E6Nt_4c1UKLSPvJYlahZIWwbUtWOzpbGc-EcFWHHtPf_sZdbMyObcQ==
@@ -856,6 +893,10 @@ const checkout = async (allCookies : string[]) => {
     console.log(fuckData.panels)
     console.log(fuckData.panels[7]);
 
+    const POSTAsyncContinueAfterSelectionResponseCollectedData = fuckData.panels.map((panel : object) => JSON.stringify(panel)).join(' ')
+
+    console.log(POSTAsyncContinueAfterSelectionResponseCollectedData);
+
     const finalData = {
         // 'purchaseLevelMessageIds': 'saveDefaults',
         // 'purchaseLevelMessageIds': 'shopWithPoints',
@@ -864,7 +905,7 @@ const checkout = async (allCookies : string[]) => {
         'countdownThreshold': '86400',
         'showSimplifiedCountdown': '0',
         'countdownId': 'countdownId-0',
-        'quantity.A07053882I1E1NHCOX9GE:': '1',
+        // 'quantity.A07053882I1E1NHCOX9GE:': '1',
         'gift-message-text': '',
         'dupOrderCheckArgs': 'B07W4FMQ5Y|1|mhnntomnsqkq|A17RGBHHDMOPR5',
         'order0': 'next-1dc',
@@ -891,7 +932,7 @@ const checkout = async (allCookies : string[]) => {
         'shippriority.0.shipWhenever': 'shipWhenever',
         'groupcount': '1',
         'shiptrialprefix': 'H4TE1S1QDTHHHAJFM2HZ',
-        'csrfToken': 'gMA5XFXSaQsurAt4xeYYEQjv+oFp0qXICxgsOjoAAAAMAAAAAGDUB6hyYXcAAAAA',
+        // 'csrfToken': 'gMA5XFXSaQsurAt4xeYYEQjv+oFp0qXICxgsOjoAAAAMAAAAAGDUB6hyYXcAAAAA',
         'fromAnywhere': '0',
         'redirectOnSuccess': '0',
         'purchaseTotal': '15.35',
@@ -900,17 +941,56 @@ const checkout = async (allCookies : string[]) => {
         'purchaseCustomerId': 'A25HA1HE1RD42U',
         'useCtb': '1',
         'scopeId': 'H4TE1S1QDTHHHAJFM2HZ',
-        'isQuantityInvariant': '',
+        // 'isQuantityInvariant': '',
         'promiseTime-0': '1624950000',
         'promiseAsin-0': 'B07W4FMQ5Y',
         'selectedPaymentPaystationId': 'amzn1.pm.wallet.MGhfUFVfQ1VTXzExMDA4ZDM0LTQ1ZjQtNDlkYy1hN2VlLWI4MDU0Yzc3MjIyNQ.QTI1SEExSEUxUkQ0MlU',
         'hasWorkingJavascript': '1',
-        'placeYourOrder1': '1',
-        'isfirsttimecustomer': '0',
-        'isTFXEligible': '',
-        'isFxEnabled': '',
-        'isFXTncShown': '' 
-      }
+        // 'placeYourOrder1': '1',
+        // 'isfirsttimecustomer': '0',
+        // 'isTFXEligible': '',
+        // 'isFxEnabled': '',
+        // 'isFXTncShown': '' 
+    }
+
+    interface newFinalDataType {
+        [key: string]: string
+    }
+
+    let newFinalData : newFinalDataType = {};
+
+    Object.keys(finalData).forEach((key : string) => {
+        let toAppend = getValueByDelimiters(POSTAsyncContinueAfterSelectionResponseCollectedData, 'name=\\"' + key + '\\" value=\\"', '\\"')
+        newFinalData[key] = toAppend;
+    })
+
+    // dynamic qty
+    const dynamicQuantity = 'quantity.' + getValueByDelimiters(POSTAsyncContinueAfterSelectionResponseCollectedData, 'name=\\"quantity.', '\\"')
+    const purchaseQty = 1;
+    newFinalData[dynamicQuantity] = purchaseQty + '';
+
+    // csrf
+    newFinalData['csrfToken'] = getValueByDelimiters(POSTAsyncContinueAfterSelectionResponseCollectedData, 'name=\\"csrfToken\\" value=\\"', '\\"').split('/').join('')
+
+    // rest
+    newFinalData['isQuantityInvariant'] = "1";
+    newFinalData['placeYourOrder1'] = "1";
+    newFinalData['isfirsttimecustomer'] = "0";
+    newFinalData['isTFXEligible'] = "";
+    newFinalData['isFxEnabled'] = "";
+    newFinalData['isFXTncShown'] = "";
+
+
+    console.log(newFinalData);
+
+    const POSTSubmitOrderResponse = await POSTSubmitOrder(
+        allCookies,
+        newFinalData
+    )
+
+    console.log(POSTSubmitOrderResponse);
+
+    
 
 
     return;
