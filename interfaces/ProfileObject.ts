@@ -35,6 +35,7 @@ export interface ProfileBilling {
 }
 
 export interface ProfilePayment {
+    name: string,
     number: string,
     expiryMonth: string,
     expiryYear: string,
