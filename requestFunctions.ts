@@ -20,7 +20,7 @@ export const getValueByDelimiters = (data: string, start : string, end : string)
 // returns the cookie by itself in an array
 export const returnParsedCookies = (cookieArray : string | string[] ) : string[] => {
 
-    if (cookieArray === '' || cookieArray === []) {
+    if (cookieArray === '' || cookieArray === [] || cookieArray === undefined) {
         return [];
     }
 
