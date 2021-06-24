@@ -1,7 +1,7 @@
 import {
     ProfileShipping,
     ProfileInformation
-} from './interfaces/ProfileObject';
+} from '../../../interfaces/ProfileObject';
 
 interface addressUIWidgetsDeliveryInstructionsDesktopExpanderContextParams {
     "deliveryInstructionsDisplayMode": string, //"CDP_ONLY", 
