@@ -6,10 +6,10 @@ interface AmazonTaskConfig extends TaskConfig {
     account: Account
 }
 
-enum AmazonModes {
-    "normal",
-    "fast",
-    "preload"
+export enum AmazonModes {
+    "Normal",
+    "Fast",
+    "Preload"
 }
 
 export default AmazonTaskConfig;

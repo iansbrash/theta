@@ -5,6 +5,7 @@ import { joinCookies } from '../../../../../requestFunctions';
 import tsLogger from '../../../../../logger';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
 import { Proxy } from '../../../../../interfaces/ProxyList';
+import HttpsProxyAgent from 'https-proxy-agent'
 
 //https://www.amazon.com/gp/identity/address/widgets/form/handlers/create-address-form-handler.html
 const POSTAddShippingAddressFormHandler = async (allCookies : string[], shippingPayload : genShippingPayloadParams, proxy : Proxy) : Promise<any>=> {
@@ -36,15 +37,7 @@ const POSTAddShippingAddressFormHandler = async (allCookies : string[], shipping
             referrer: 'https://www.amazon.com/gp/buy/addressselect/handlers/display.html?hasWorkingJavascript=1',
             cookie: joinCookies(allCookies)
         },
-        proxy: {
-            protocol: 'https',
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password,
-            }
-        },
+        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
         data : 'payLoad=' + encodeURIComponent(POSTAddShippingConfigData)
     })
 

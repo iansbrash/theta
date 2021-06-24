@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { joinCookies } from '../../../../../requestFunctions';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
 import { Proxy } from '../../../../../interfaces/ProxyList';
+import HttpsProxyAgent from 'https-proxy-agent'
 
 
 const GETAddPaymentPage = async (allCookies : string[], proxy : Proxy) : Promise<AxiosResponse> => {
@@ -26,15 +27,7 @@ const GETAddPaymentPage = async (allCookies : string[], proxy : Proxy) : Promise
             'accept-language': 'en-US,en;q=0.9', 
             cookie: joinCookies(allCookies)
         },
-        proxy: {
-            protocol: 'https',
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password,
-            }
-        },
+        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
         maxRedirects: 0,
         validateStatus: () => {return true;}
     })

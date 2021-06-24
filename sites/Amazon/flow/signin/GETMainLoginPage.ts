@@ -4,6 +4,7 @@ import {
 } from '../../../../requestFunctions'
 import requestRetryWrapper from '../../../../requestRetryWrapper';
 import { Proxy } from '../../../../interfaces/ProxyList';
+import HttpsProxyAgent from 'https-proxy-agent'
 
 const GETMainLoginPage = async (allCookies : string[], proxy : Proxy) : Promise<AxiosResponse> => {
     const AmazonBeginLoginUrl = 'https://www.amazon.com/ap/signin?openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&'
@@ -31,15 +32,7 @@ const GETMainLoginPage = async (allCookies : string[], proxy : Proxy) : Promise<
             'referer': 'https://www.amazon.com/ap/signin?openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&',
             cookie: joinCookies(allCookies)
         },
-        proxy: {
-            protocol: 'https',
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password,
-            }
-        }
+        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     });
 
     return GETAmazonSignInUser;

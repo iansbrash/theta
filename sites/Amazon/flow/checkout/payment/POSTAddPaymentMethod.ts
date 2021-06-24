@@ -4,6 +4,7 @@ import requestRetryWrapper from '../../../../../requestRetryWrapper';
 import qs from 'qs';
 import { ProfilePayment } from '../../../../../interfaces/ProfileObject';
 import { Proxy } from '../../../../../interfaces/ProxyList';
+import HttpsProxyAgent from 'https-proxy-agent'
 
 const splitCC = (cc : string) : string[] => {
     return cc.match(/.{1,4}/g)!;
@@ -52,15 +53,7 @@ const POSTAddPaymentMethod = async (allCookies : string[], customerId : string, 
             cookie: joinCookies(allCookies)
         },
         data : tempData2,
-        proxy: {
-            protocol: 'https',
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password,
-            }
-        }
+        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     });
     return POSTAddPaymentMethodResponse;
 }

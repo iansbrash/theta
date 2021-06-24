@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { joinCookies } from '../../../../../requestFunctions';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
 import { Proxy } from '../../../../../interfaces/ProxyList';
+import HttpsProxyAgent from 'https-proxy-agent'
 
 interface POSTSelectPaymentMethodDynamicProps {
     "ppw-widgetState": string,
@@ -45,15 +46,7 @@ const POSTSelectPaymentMethod = async (allCookies : string[], customerId : strin
             cookie: joinCookies(allCookies)
         },
         data : otherData,
-        proxy: {
-            protocol: 'https',
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password,
-            }
-        }
+        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     })
 
     return POSTSelectPaymentMethodResponse;

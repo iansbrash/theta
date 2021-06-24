@@ -3,6 +3,7 @@ import { joinCookies } from '../../../../../requestFunctions';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
 import qs from 'qs';
 import { Proxy } from '../../../../../interfaces/ProxyList';
+import HttpsProxyAgent from 'https-proxy-agent'
 
 
 interface POSTRegisterDynamicParams {
@@ -60,15 +61,7 @@ const POSTRegister = async (allCookies : string[], params : POSTRegisterDynamicP
             cookie: joinCookies(allCookies)
         },
         data : POSTRegisterData,
-        proxy: {
-            protocol: 'https',
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password,
-            }
-        }
+        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     })
 
     return POSTRegisterResponse

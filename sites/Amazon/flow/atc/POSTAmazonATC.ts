@@ -5,6 +5,7 @@ import {
     joinCookies
 } from '../../../../requestFunctions';
 import requestRetryWrapper from '../../../../requestRetryWrapper';
+import HttpsProxyAgent from 'https-proxy-agent'
 
 const POSTAddToCart = async (
     allCookies : string[], 
@@ -63,15 +64,7 @@ const POSTAddToCart = async (
             "x-requested-with": "XMLHttpRequest",
             cookie: joinCookies(allCookies)
         },
-        proxy: {
-            protocol: 'https',
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password,
-            }
-        },
+        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
         data : data
     });
 

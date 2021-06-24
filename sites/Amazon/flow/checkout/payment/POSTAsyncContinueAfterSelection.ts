@@ -3,6 +3,7 @@ import { joinCookies } from '../../../../../requestFunctions';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
 import qs from 'qs';
 import { Proxy } from '../../../../../interfaces/ProxyList';
+import HttpsProxyAgent from 'https-proxy-agent'
 
 export interface POSTAsyncContinueSuperDynamicParams {
     [key: string]: string
@@ -81,15 +82,7 @@ const POSTAsyncContinueAfterSelection = async (allCookies : string[], params : P
             'accept-language': 'en-US,en;q=0.9', 
             cookie: joinCookies(allCookies)
         },
-        proxy: {
-            protocol: 'https',
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password,
-            }
-        },
+        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
         data : data2p1 + data2p2 //`ppw-widgetState=${ppwWidgetState}&` + a3.join('&') //testData
     })
 

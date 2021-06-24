@@ -7,6 +7,7 @@ import {
 import requestRetryWrapper from '../../../../requestRetryWrapper';
 import justinIsCracked from '../../logic/genMetadata';
 import { Proxy } from '../../../../interfaces/ProxyList';
+import HttpsProxyAgent from 'https-proxy-agent'
 
 const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data : LoginQuerys, proxy : Proxy) : Promise<AxiosResponse> => {
 
@@ -62,15 +63,7 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
         maxRedirects: 0,
         validateStatus: function (a) {return true;},
         data : POSTSubData,
-        proxy: {
-            protocol: 'https',
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password,
-            }
-        }
+        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     })
 
     return POSTSubLoginPageResponse;

@@ -1,16 +1,18 @@
-import axios, { AxiosResponse } from 'axios';
-import { Proxy } from '../../../../interfaces/ProxyList';
-import timestampLogger from '../../../../logger';
-import {
-    joinCookies
-} from '../../../../requestFunctions';
-import requestRetryWrapper from '../../../../requestRetryWrapper';
+import timestampLogger from "../../../../logger";
+import { Proxy } from "../../../../interfaces/ProxyList";
+import axios, {AxiosResponse} from "axios";
+import { joinCookies } from "../../../../requestFunctions";
+import testProxyList from "../../../../sensitive/testInterfaces/testProxyList";
+import https from 'https';
 import HttpsProxyAgent from 'https-proxy-agent'
+
 
 const GETProduct = async (allCookies : string[], product : string, proxy : Proxy) : Promise<AxiosResponse> => {
     
     timestampLogger(`ProductURL: ${`https://amazon.com/dp/${product}`}`)
-    
+
+    const httpsAgent = new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+
     const GETAmazonProductRes : any = await axios({
         method: 'get',
         url: `https://amazon.com/dp/${product}`,
@@ -27,19 +29,33 @@ const GETProduct = async (allCookies : string[], product : string, proxy : Proxy
             "upgrade-insecure-requests": "1",
             cookie: joinCookies(allCookies)
         },
-        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
-        // httpsAgent: {rejectUnathored: false}
+        // proxy: {
+        //     protocol: 'http',
+        //     host: proxy.ip,
+        //     port: proxy.port,
+        //     auth: {
+        //         username: proxy.username,
+        //         password: proxy.password,
+        //     }
+        // },
+        proxy: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
         // httpsAgent: new https.Agent({ rejectUnauthorized: false })
+        // httpsAgent: httpsAgent
+        // httpsAgent: {rejectUnathorized: false}
     });
 
     return GETAmazonProductRes;
-}
+};
 
-export const GETProductRetry : (allCookies : string[], product : string, proxy : Proxy) => Promise<AxiosResponse> = requestRetryWrapper(GETProduct, {
-    baseDelay: 3000,
-    numberOfTries: 3,
-    consoleRun: `Retrieving product`,
-    consoleError: 'Error retrieving product'
-})
+(async () => {
 
-export default GETProduct;
+    try {
+        const res = await GETProduct([], 'B07W4FMQ5Y', testProxyList.proxies[0]);
+        console.log(res);
+    }
+    catch (err) {
+        console.log(err)
+    }
+
+
+})();

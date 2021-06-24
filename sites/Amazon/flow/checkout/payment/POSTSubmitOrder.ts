@@ -3,6 +3,7 @@ import { joinCookies } from '../../../../../requestFunctions';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
 import qs from 'qs';
 import { Proxy } from '../../../../../interfaces/ProxyList';
+import HttpsProxyAgent from 'https-proxy-agent'
 
 const POSTSubmitOrder = async (allCookies : string[], data : object, proxy : Proxy) => {
     const POSTSubmitOrderUrl = 'https://www.amazon.com/gp/buy/spc/handlers/static-submit-decoupled.html/ref=ox_spc_place_order?ie=UTF8&hasWorkingJavascript='
@@ -36,15 +37,7 @@ const POSTSubmitOrder = async (allCookies : string[], data : object, proxy : Pro
             cookie: joinCookies(allCookies)
         },
         data : POSTSubmitOrderData,
-        proxy: {
-            protocol: 'https',
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password,
-            }
-        }
+        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     })
 
     return POSTSubmitOrderResponse;

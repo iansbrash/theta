@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { joinCookies } from '../../../../../requestFunctions';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
 import { Proxy } from '../../../../../interfaces/ProxyList';
+import HttpsProxyAgent from 'https-proxy-agent'
 
 const POSTSelectShippingAddress = async (allCookies : string[], addressId : string, purchaseId : string, proxy : Proxy) : Promise<AxiosResponse> => {
     const POSTSelectShippingAddressResponse = await axios({
@@ -25,15 +26,7 @@ const POSTSelectShippingAddress = async (allCookies : string[], addressId : stri
             referrer: 'https://www.amazon.com/gp/buy/addressselect/handlers/display.html?hasWorkingJavascript=1',
             cookie: joinCookies(allCookies)
         },
-        proxy: {
-            protocol: 'https',
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password,
-            }
-        },
+        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
         data : `action=select-shipping&addressID=${addressId}&purchaseId=${purchaseId}&isClientTimeBased=1&handler=/gp/buy/addressselect/handlers/continue.html`
     })
 

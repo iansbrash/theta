@@ -3,6 +3,7 @@ import { joinCookies } from "../../../../../requestFunctions";
 import tsLogger from "../../../../../logger";
 import requestRetryWrapper from "../../../../../requestRetryWrapper";
 import { Proxy } from "../../../../../interfaces/ProxyList";
+import HttpsProxyAgent from 'https-proxy-agent'
 
 const GETCheckoutScreen = async (allCookies : string[], proxy : Proxy) : Promise<AxiosResponse> => {
 
@@ -28,20 +29,22 @@ const GETCheckoutScreen = async (allCookies : string[], proxy : Proxy) : Promise
             cookie: joinCookies(allCookies)
         },
         proxy: {
-            protocol: 'https',
+            protocol: 'http',
             host: proxy.ip,
             port: proxy.port,
             auth: {
                 username: proxy.username,
-                password: proxy.password,
-            }
+                password: proxy.password
+                }
         }
+        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     });
 
     const needsToResignIn = GETCheckoutScreenResponse.request.res.responseUrl.includes('/ap/signin')
 
     if (needsToResignIn) {
         tsLogger('Error: Redirected, logging in again')
+        console.log(GETCheckoutScreenResponse)
         throw "Redirect error";
     }
     else {
