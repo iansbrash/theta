@@ -76,7 +76,6 @@ const Task : FC<TaskProps> = ({
                         </svg>
                     </div>
                 </button>
-
                 <button>
                     <div className="text-yellow-200">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -85,7 +84,6 @@ const Task : FC<TaskProps> = ({
                         </svg>
                     </div>
                 </button>
-                
                 <button>
                     <div className="text-red-200">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -93,7 +91,6 @@ const Task : FC<TaskProps> = ({
                         </svg>
                     </div>
                 </button>
-
             </div>
         </div>
     )
@@ -123,8 +120,8 @@ const Tasks : FC = () => {
                         <div className="h-0.5 w-full bg-indigo-500 mx-3 my-2"></div>
                     </div>
 
-                    <div className="w-full h-full px-4 flex flex-col">
-                        {[dummyTask, dummyTask, dummyTask, dummyTask].map(task => (
+                    <div className="w-full h-full px-4 flex flex-col overflow-y-scroll scrollbar-hide">
+                        {[dummyTask,dummyTask,dummyTask,dummyTask,dummyTask, dummyTask, dummyTask, dummyTask, dummyTask, dummyTask, dummyTask, dummyTask, dummyTask, dummyTask,dummyTask,dummyTask].map(task => (
                             <>
                                 <Task {...task}/>
                                 <div className="h-0.25 w-full bg-indigo-900"></div>

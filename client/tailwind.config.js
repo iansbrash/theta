@@ -20,6 +20,7 @@ module.exports = {
         extend: {},
     },
     plugins: [
-        require('tailwind-caret-color')
+        require('tailwind-caret-color'),
+        require('tailwind-scrollbar-hide')
     ],
 }

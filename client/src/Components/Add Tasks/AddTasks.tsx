@@ -12,7 +12,7 @@ interface AbstractSelectorProps {
     selectionOptions: string[]
 }
 
-const AbstractSelector : FC<AbstractSelectorProps> = ({
+export const AbstractSelector : FC<AbstractSelectorProps> = ({
     width,
     defaultText,
     selection,

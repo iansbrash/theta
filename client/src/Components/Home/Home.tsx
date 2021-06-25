@@ -54,8 +54,8 @@ const Home : FC = () => {
                 </div>
             </div>
 
-            <div className="w-full px-5 m-2 h-full flex flex-col">
-                <div className="w-full bg-indigo-950 rounded-xl shadow-md h-full shadow-lg flex flex-col justify-start items-center">
+            <div className="w-full px-5 pb-3 m-2 h-full flex flex-col">
+                <div className="w-full bg-indigo-950 rounded-xl shadow-xl h-full shadow-lg flex flex-col justify-start items-center">
                     {[1, 2, 3, 4].map(n => <Checkout />)}
                 </div>
             </div>
