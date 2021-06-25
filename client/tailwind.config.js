@@ -9,11 +9,17 @@ module.exports = {
                 'indigo-975': '#211f57',
                 'indigo-1000': '#1f1d52',
                 'indigo-1100': '#16153b'
+            },
+            height: {
+                '0.25': '0.0625rem'
             }
         },
     },
     variants: {
+        caretColor: ['dark', 'active'], // Default variants
         extend: {},
     },
-    plugins: [],
+    plugins: [
+        require('tailwind-caret-color')
+    ],
 }
