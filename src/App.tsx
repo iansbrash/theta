@@ -1,4 +1,7 @@
-import React from "react";
+import React, {
+    FC,
+    useState
+} from "react";
 import {
     HashRouter,
     BrowserRouter as Router,
@@ -14,6 +17,7 @@ import Tasks from "./Components/Tasks/Tasks";
 import Accounts from "./Components/Accounts/Accounts";
 import Proxies from "./Components/Proxies/Proxies";
 
+import Task from "./Logic/interfaces/Task";
 
 
 const HomeIcon = () => (
@@ -82,6 +86,8 @@ const App = () => {
         '/settings'
     ]
 
+    const [tasks, setTasks] = useState<Task[]>([]);
+
 
     return (
         <HashRouter>
@@ -116,12 +122,16 @@ const App = () => {
 
                 {/* AddTasks */}
                 <Route path="/addtasks">
-                    <AddTasks />
+                    <AddTasks 
+                        setTasks={setTasks}
+                    />
                 </Route>
                 
                 {/* Tasks */}
                 <Route path="/tasks">
-                    <Tasks />
+                    <Tasks 
+                        tasks={tasks}
+                    />
                 </Route>
 
                 {/* Home */}

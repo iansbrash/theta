@@ -1,8 +1,5 @@
 import React, { FC, useState } from "react";
 
-
-
-
 interface SettingsInputProps {
     input: string,
     setInput: (s : string) => void,
@@ -10,6 +7,7 @@ interface SettingsInputProps {
     placeholder: string,
     width: string
 }
+
 
 const SettingsInput : FC<SettingsInputProps> = ({
     input,

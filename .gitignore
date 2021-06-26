@@ -121,5 +121,4 @@ dist
 sensitive
 
 # test files
-Amazon Sign-In_files
-testing
+src/Logic/sensitive

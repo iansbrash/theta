@@ -1,8 +1,13 @@
 import React, { 
     FC, useState
 } from "react";
-
-
+import Task from '../../Logic/interfaces/Task';
+import Size from '../../Logic/interfaces/enums/Size'
+import Site from '../../Logic/interfaces/enums/Site'
+import testProfile from '../../Logic/sensitive/testInterfaces/testProfile';
+import testProxyList from '../../Logic/sensitive/testInterfaces/testProxyList';
+import testAccount from '../../Logic/sensitive/testInterfaces/testAccount';
+import { AmazonModes } from '../../Logic/interfaces/site_task_config/AmazonTaskConfig';
 
 interface AbstractSelectorProps {
     width: string,
@@ -113,7 +118,14 @@ const AmazonSiteConfig = () => {
     )
 }
 
-const AddTasks : FC = () => {
+
+interface AddTasksProps {
+    setTasks: (tasks : [Task]) => void
+}
+
+const AddTasks : FC<AddTasksProps> = ({
+    setTasks
+} : AddTasksProps) => {
 
     const [site, setSite] = useState<string>('');
     const [size, setSize] = useState<string>('');
@@ -124,6 +136,20 @@ const AddTasks : FC = () => {
     const handleUrlChange = (e : React.ChangeEvent<HTMLInputElement>) => {
         setUrl(e.target.value);
     } 
+
+
+    const task = {
+        identifier: 1,
+        site: Site.Amazon,
+        profile: testProfile,
+        size: [Size.OS],
+        proxyList: testProxyList
+    }
+
+    const amazonTaskConfig = {
+        mode: AmazonModes.Normal,
+        account: testAccount
+    }
 
   
 

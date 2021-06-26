@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-
+import TaskInterface from '../../Logic/interfaces/Task';
 
 interface TaskProps {
     identifier: number,
@@ -96,7 +96,13 @@ const Task : FC<TaskProps> = ({
     )
 }
 
-const Tasks : FC = () => {
+interface TaskScreenProps {
+    tasks: TaskInterface[]
+}
+
+const Tasks : FC<TaskScreenProps> = ({
+    tasks
+} : TaskScreenProps) => {
 
     const dummyTask = {
         identifier: 1,
