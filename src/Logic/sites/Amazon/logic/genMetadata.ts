@@ -1,3 +1,5 @@
+/* eslint-disable */ 
+
 const lsubid = () : string => {
     var t = 402871197;
     function e(e : any) {

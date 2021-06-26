@@ -8,6 +8,10 @@ import testProfile from '../../Logic/sensitive/testInterfaces/testProfile';
 import testProxyList from '../../Logic/sensitive/testInterfaces/testProxyList';
 import testAccount from '../../Logic/sensitive/testInterfaces/testAccount';
 import { AmazonModes } from '../../Logic/interfaces/site_task_config/AmazonTaskConfig';
+import AmazonTaskConfig from '../../Logic/interfaces/site_task_config/AmazonTaskConfig'
+import TaskClass from "../../Logic/sites/classes/TaskClass";
+import AmazonTaskClass from "../../Logic/sites/Amazon/classes/AmazonTaskClass";
+
 
 interface AbstractSelectorProps {
     width: string,
@@ -120,10 +124,12 @@ const AmazonSiteConfig = () => {
 
 
 interface AddTasksProps {
-    setTasks: (tasks : [Task]) => void
+    tasks: TaskClass[]
+    setTasks: (tasks : TaskClass[]) => void
 }
 
 const AddTasks : FC<AddTasksProps> = ({
+    tasks,
     setTasks
 } : AddTasksProps) => {
 
@@ -138,21 +144,24 @@ const AddTasks : FC<AddTasksProps> = ({
     } 
 
 
-    const task = {
-        identifier: 1,
-        site: Site.Amazon,
-        profile: testProfile,
-        size: [Size.OS],
-        proxyList: testProxyList
-    }
-
-    const amazonTaskConfig = {
+    const amazonTaskConfig : AmazonTaskConfig = {
         mode: AmazonModes.Normal,
         account: testAccount
     }
 
-  
-
+    const task : AmazonTaskClass  = new AmazonTaskClass(
+        1,
+        Site.Amazon,
+        testProfile,
+        [Size.OS],
+        testProxyList,
+        undefined,
+        amazonTaskConfig,
+    )
+    
+    const AddTaskHandler = () => {
+        setTasks([...tasks, task])
+    }
 
     return (
         <div className="flex flex-col flex-1 justify-center items-center text-lg h-full shadow-lg bg-indigo-1000">
@@ -232,7 +241,9 @@ const AddTasks : FC<AddTasksProps> = ({
                                 selectionOptions={['Profile 1', 'Real Card', 'Mom Cardasdasdasdasdasdasd']}
                             />
                             <div className="w-full flex justify-start px-5 py-1">
-                                <button>
+                                <button
+                                onClick={() => AddTaskHandler()}
+                                >
                                     <div className="p-1 bg-gradient-to-r from-indigo-600 to-indigo-400 w-64 mt-2 rounded-lg flex justify-center items-center border">
                                         <div className="text-2xl text-indigo-100">
                                             Add Task

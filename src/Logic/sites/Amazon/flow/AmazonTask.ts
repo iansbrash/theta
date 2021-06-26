@@ -12,10 +12,13 @@ const printProxy = (proxy : Proxy) => {
     return Object.values(proxy).join(':');
 }
 
-const AmazonTask = async (task : Task, taskConfig : AmazonTaskConfig) => {
+const AmazonTask = async (task : Task, taskConfig : AmazonTaskConfig, statusWatcher : (s : string) => void) => {
 
     // look into axios 'cancel tokens'
     // const CancelToken = axios.CancelToken;
+
+    //@ts-ignore
+    // const taskConfig : AmazonTaskConfig = task.siteConfig;
 
     const {
         identifier,
@@ -30,10 +33,13 @@ const AmazonTask = async (task : Task, taskConfig : AmazonTaskConfig) => {
     const product = 'B07W4FMQ5Y';
 
     tsLogger(`Starting task ${identifier} on ${Site[site]} using proxy ${printProxy(proxy)} on profile ${profile.information.name} for size ${size} with account ${taskConfig.account.username} using ${taskConfig.mode} mode`)
-    let allCookies = await signIn(taskConfig.account.username, taskConfig.account.password, proxy);
-
+    statusWatcher('Signing in...')
+    let allCookies = await signIn(taskConfig.account.username, taskConfig.account.password, proxy, statusWatcher);
+    
+    statusWatcher('Adding to cart...')
     allCookies = await AddToCart(allCookies, product, proxy);
     
+    statusWatcher('Checking out...')
     await Checkout(allCookies, proxy);
     tsLogger('Finished')
 }

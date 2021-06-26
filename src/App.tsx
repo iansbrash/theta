@@ -16,8 +16,8 @@ import Settings from "./Components/Settings/Settings";
 import Tasks from "./Components/Tasks/Tasks";
 import Accounts from "./Components/Accounts/Accounts";
 import Proxies from "./Components/Proxies/Proxies";
-
 import Task from "./Logic/interfaces/Task";
+import TaskClass from "./Logic/sites/classes/TaskClass";
 
 
 const HomeIcon = () => (
@@ -86,7 +86,7 @@ const App = () => {
         '/settings'
     ]
 
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const [tasks, setTasks] = useState<TaskClass[]>([]);
 
 
     return (
@@ -123,6 +123,7 @@ const App = () => {
                 {/* AddTasks */}
                 <Route path="/addtasks">
                     <AddTasks 
+                        tasks={tasks}
                         setTasks={setTasks}
                     />
                 </Route>
@@ -131,6 +132,7 @@ const App = () => {
                 <Route path="/tasks">
                     <Tasks 
                         tasks={tasks}
+                        setTasks={setTasks}
                     />
                 </Route>
 

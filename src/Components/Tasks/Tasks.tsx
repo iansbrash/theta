@@ -1,27 +1,42 @@
-import React, { FC } from "react";
+import React, { FC, useState, useEffect } from "react";
 import TaskInterface from '../../Logic/interfaces/Task';
+import AmazonTaskClass from "../../Logic/sites/Amazon/classes/AmazonTaskClass";
+import TaskClass from "../../Logic/sites/classes/TaskClass";
+import AmazonTaskConfig, { AmazonModes } from '../../Logic/interfaces/site_task_config/AmazonTaskConfig';
+import testAccount from '../../Logic/sensitive/testInterfaces/testAccount';
+// interface TaskProps {
+//     identifier: number,
+//     site: string,
+//     // siteConfig: TaskConfig,
+//     profile: string,
+//     size: string,
+//     proxyList: string,
+//     siteConfig: string
+// }
 
-interface TaskProps {
-    identifier: number,
-    site: string,
-    // siteConfig: TaskConfig,
-    profile: string,
-    size: string,
-    proxyList: string,
-    siteConfig: string
+interface TaskFunctionProps {
+    task: TaskClass,
+    deleteFunction: (t : TaskClass) => void
 }
 
-const Task : FC<TaskProps> = ({
-    identifier,
-    site,
-    profile,
-    size,
-    proxyList,
-    siteConfig
-} : TaskProps) => {
+const Task : FC<TaskFunctionProps> = ({
+    task,
+    deleteFunction
+} : TaskFunctionProps) => {
 
     const product = 'https://amazon.com/asdasdasdasdasdasdasd/dp/DPPRODID';
 
+    const [statusWatcher, setStatusWatcher] = useState<string>('');
+
+    const amazonTaskConfig : AmazonTaskConfig = {
+        mode: AmazonModes.Normal,
+        account: testAccount
+    }
+
+    useEffect(() => {
+        task.setStatusWatcher(setStatusWatcher);
+        setStatusWatcher('Idle');
+    }, [])
 
 
     return (
@@ -42,10 +57,10 @@ const Task : FC<TaskProps> = ({
 
                     <div className="w-1/4 text-indigo-100 h-10 flex flex-row justify-left items-center">
                         <div className="w-1/2 text-indigo-100 truncate">
-                            {profile}
+                            {task.profile.information.name}
                         </div>
                         <div className="w-1/2 text-indigo-100 truncate">
-                            {proxyList}
+                            {task.proxyList.name}
                         </div>
 
                     </div>
@@ -57,7 +72,9 @@ const Task : FC<TaskProps> = ({
                         //     whiteSpace: 'nowrap'
                         // }}
                         >
-                            Waiting for product...
+                            {/* Waiting for product... */}
+                            
+                            {statusWatcher}
                         </div>
                     </div>
 
@@ -68,7 +85,9 @@ const Task : FC<TaskProps> = ({
 
             {/* Start, Stop, Edit */}
             <div className="flex flex-row justify-center items-center space-x-1">
-                <button>
+                <button
+                onClick={() => task.start()}
+                >
                     <div className="text-green-200">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -76,7 +95,9 @@ const Task : FC<TaskProps> = ({
                         </svg>
                     </div>
                 </button>
-                <button>
+                <button
+                onClick={() => task.stop()}
+                >
                     <div className="text-yellow-200">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -84,7 +105,9 @@ const Task : FC<TaskProps> = ({
                         </svg>
                     </div>
                 </button>
-                <button>
+                <button
+                onClick={() => deleteFunction(task)}
+                >
                     <div className="text-red-200">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -97,12 +120,20 @@ const Task : FC<TaskProps> = ({
 }
 
 interface TaskScreenProps {
-    tasks: TaskInterface[]
+    tasks: TaskClass[]
+    setTasks: (ta : TaskClass[]) => void
 }
 
 const Tasks : FC<TaskScreenProps> = ({
-    tasks
+    tasks,
+    setTasks
 } : TaskScreenProps) => {
+
+
+    const deleteFunction = (t : TaskClass) => {
+        setTasks(tasks.filter((tc : TaskClass) => tc.getId() !== t.getId()))
+    }
+
 
     const dummyTask = {
         identifier: 1,
@@ -127,9 +158,9 @@ const Tasks : FC<TaskScreenProps> = ({
                     </div>
 
                     <div className="w-full h-full px-4 flex flex-col overflow-y-scroll scrollbar-hide">
-                        {[dummyTask,dummyTask,dummyTask,dummyTask,dummyTask, dummyTask, dummyTask, dummyTask, dummyTask, dummyTask, dummyTask, dummyTask, dummyTask, dummyTask,dummyTask,dummyTask].map(task => (
+                        {tasks.map(task => (
                             <>
-                                <Task {...task}/>
+                                <Task task={task} deleteFunction={deleteFunction}/>
                                 <div className="h-0.25 w-full bg-indigo-900"></div>
                             </>
                         ))}

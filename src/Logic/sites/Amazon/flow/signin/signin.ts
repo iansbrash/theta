@@ -11,7 +11,7 @@ import { POSTMainLoginPageRetry } from './POSTMainLoginPage';
 import { POSTSubLoginPageRetry } from './POSTSubLoginPage';
 import { Proxy } from '../../../../interfaces/ProxyList';
 
-const SignIn = async (email : string, password : string, proxy : Proxy) : Promise<string[]> => {
+const SignIn = async (email : string, password : string, proxy : Proxy, statusWatcher : (s : string) => void) : Promise<string[]> => {
 
     let allCookies : string[] = []
     let allCookiesObject : CookieObject = {}; 
