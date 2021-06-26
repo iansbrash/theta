@@ -60,7 +60,7 @@ const ProfilePartButton : FC<ProfilePartButtonProps> = ({
         <button
         onClick={() => setProfilePartSelected(profilePart[part])}
         >
-            <div className={`shadow-md px-3 py-1 rounded-md ${profilePartSelected === profilePart[part] ? 'bg-indigo-500 border-2' : 'bg-indigo-900'}`}>
+            <div className={`shadow-md px-3 py-1 rounded-md ${profilePartSelected === profilePart[part] ? 'bg-gradient-to-r from-indigo-600 to-indigo-400 border' : 'bg-indigo-900'}`}>
                 {part}
             </div>
         </button>
@@ -141,7 +141,7 @@ const Profiles : FC = () => {
                             className={`focus:outline-none bg-indigo-975 ${profileName === '' ?  'placeholder-indigo-400' : 'text-indigo-100'} caret-indigo-100 rounded-md p-1 w-64 text-2xl`}                          
                         />
                         <button>
-                            <div className="p-1 bg-indigo-500 w-64 rounded-lg flex justify-center items-center border-2">
+                            <div className="p-1 bg-gradient-to-r from-indigo-600 to-indigo-400 w-64 rounded-lg flex justify-center items-center border">
                                 <div className="text-2xl text-indigo-100">
                                     Save Profile
                                 </div>

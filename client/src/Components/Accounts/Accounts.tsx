@@ -6,7 +6,7 @@ import {
 const Accounts : FC = () => {
 
 
-    const [accountSiteSelection, setAccountSiteSelection] = useState<string>('')
+    const [accountSiteSelection, setAccountSiteSelection] = useState<string>('Select Site')
     const [accounts, setAccounts] = useState<string>('');
 
     const handleSiteSelectionChange = (s : string) => {
@@ -25,16 +25,18 @@ const Accounts : FC = () => {
                     </div>
 
                     {/* Name Proxy Group */}
-                    <div className="w-full flex justify-between py-1">
-                        <AbstractSelector 
-                            width={'w-64'}
-                            defaultText={'Select Site'}
-                            selection={accountSiteSelection}
-                            setSelection={handleSiteSelectionChange}
-                            selectionOptions={["Amazon"]}
-                        />
+                    <div className="w-full flex justify-between items-center py-1">
+                        <div className="-mt-3">
+                            <AbstractSelector 
+                                width={'w-64'}
+                                defaultText={'Select Site'}
+                                selection={accountSiteSelection}
+                                setSelection={handleSiteSelectionChange}
+                                selectionOptions={["Amazon"]}
+                            />
+                        </div>
                         <button className="mr-5">
-                            <div className="p-1 bg-indigo-500 w-64 rounded-lg flex justify-center items-center border-2">
+                            <div className="p-1 bg-gradient-to-r from-indigo-600 to-indigo-400 w-64 rounded-lg flex justify-center items-center border">
                                 <div className="text-2xl text-indigo-100">
                                     Save Accounts
                                 </div>
@@ -50,7 +52,7 @@ const Accounts : FC = () => {
                     <div className="h-2"></div>
 
                     {/* Accounts input */}
-                    <div className="w-full flex-1 flex justify-start px-5">
+                    <div className="w-full flex-1 flex justify-start px-5 -mt-1">
                         <textarea 
                             placeholder={'user1234@gmail.com:mysafepassword1234'}
                             value={accounts}

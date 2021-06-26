@@ -41,7 +41,7 @@ const Proxies : FC = () => {
                             className={`focus:outline-none bg-indigo-975 ${newGrpName === '' ?  'placeholder-indigo-400' : 'text-indigo-100'} caret-indigo-100 rounded-md p-1 w-64 text-2xl`}                          
                         />
                         <button>
-                            <div className="p-1 bg-indigo-500 w-64 rounded-lg flex justify-center items-center border-2">
+                            <div className="p-1 bg-gradient-to-r from-indigo-600 to-indigo-400 w-64 rounded-lg flex justify-center items-center border">
                                 <div className="text-2xl text-indigo-100">
                                     Save Proxies
                                 </div>

@@ -207,7 +207,7 @@ const AddTasks : FC = () => {
                             />
                             <div className="w-full flex justify-start px-5 py-1">
                                 <button>
-                                    <div className="p-1 bg-indigo-500 w-64 mt-2 rounded-lg flex justify-center items-center border-2">
+                                    <div className="p-1 bg-gradient-to-r from-indigo-600 to-indigo-400 w-64 mt-2 rounded-lg flex justify-center items-center border">
                                         <div className="text-2xl text-indigo-100">
                                             Add Task
                                         </div>
