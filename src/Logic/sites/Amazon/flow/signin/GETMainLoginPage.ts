@@ -7,7 +7,7 @@ import { Proxy } from '../../../../interfaces/ProxyList';
 import HttpsProxyAgent from 'https-proxy-agent'
 
 const GETMainLoginPage = async (allCookies : string[], proxy : Proxy) : Promise<AxiosResponse> => {
-    const AmazonBeginLoginUrl = 'https://trojan-confessions-cors.herokuapp.com/https://www.amazon.com/ap/signin?openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&'
+    const AmazonBeginLoginUrl = 'https://www.amazon.com/ap/signin?openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&'
 
     // returns only a session ID and a session-id-time
     const GETAmazonSignInUser = await axios({

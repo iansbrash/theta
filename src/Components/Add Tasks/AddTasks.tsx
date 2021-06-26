@@ -242,6 +242,7 @@ const AddTasks : FC<AddTasksProps> = ({
                             />
                             <div className="w-full flex justify-start px-5 py-1">
                                 <button
+                                className="focus:outline-none"
                                 onClick={() => AddTaskHandler()}
                                 >
                                     <div className="p-1 bg-gradient-to-r from-indigo-600 to-indigo-400 w-64 mt-2 rounded-lg flex justify-center items-center border">

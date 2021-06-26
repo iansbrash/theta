@@ -1,9 +1,8 @@
 import React, { FC, useState, useEffect } from "react";
-import TaskInterface from '../../Logic/interfaces/Task';
-import AmazonTaskClass from "../../Logic/sites/Amazon/classes/AmazonTaskClass";
 import TaskClass from "../../Logic/sites/classes/TaskClass";
 import AmazonTaskConfig, { AmazonModes } from '../../Logic/interfaces/site_task_config/AmazonTaskConfig';
 import testAccount from '../../Logic/sensitive/testInterfaces/testAccount';
+import electron from "electron";
 // interface TaskProps {
 //     identifier: number,
 //     site: string,
@@ -38,6 +37,16 @@ const Task : FC<TaskFunctionProps> = ({
         setStatusWatcher('Idle');
     }, [])
 
+    const startTask = async () => {
+
+
+        // console.log(ipcRenderer)
+        // console.log(ipcRenderer.invoke)
+        electron.ipcRenderer.invoke('StartAmazon', 'arg1', 'arg2').then(res => {
+            console.log('in thin')
+            return res;
+        })
+    }
 
     return (
         <div className="w-full px-2 flex flex-row justify-between items-center">
@@ -86,7 +95,7 @@ const Task : FC<TaskFunctionProps> = ({
             {/* Start, Stop, Edit */}
             <div className="flex flex-row justify-center items-center space-x-1">
                 <button
-                onClick={() => task.start()}
+                onClick={() => startTask()}
                 >
                     <div className="text-green-200">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">

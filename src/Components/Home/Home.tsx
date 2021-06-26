@@ -45,7 +45,7 @@ const Home : FC = () => {
                     <div className="mx-5 text-2xl">
                         Welcome back, 
                     </div>
-                    <div className="mx-5 h-12 text-4xl bg-clip-text text-transparent bg-gradient-to-b from-indigo-800 to-indigo-500 ">
+                    <div className="bg-clip-text mx-5 h-12 text-4xl  bg-gradient-to-b from-indigo-800 to-indigo-500 ">
                         WholeDayBusy
                     </div>
                 </div>

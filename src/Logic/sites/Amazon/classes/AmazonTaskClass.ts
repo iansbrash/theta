@@ -39,9 +39,13 @@ class AmazonTaskClass extends TaskClass {
                 size: this.size,
                 proxyList: this.proxyList
             }
+            // const res = await ipcRenderer.invoke('StartAmazon', 'testtask')
 
+            // return res;
+
+            console.log('wtf')
             // @ts-ignore
-            AmazonTask(t, this.config, this.statusWatcher);
+            return await AmazonTask(t, this.config, this.statusWatcher);
         }
         else {
             throw "StatusWatcher is undefined"

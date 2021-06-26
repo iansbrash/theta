@@ -16,6 +16,16 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 
+import AmazonTaskConfig from './Logic/interfaces/site_task_config/AmazonTaskConfig';
+import AmazonTaskClass from './Logic/sites/Amazon/classes/AmazonTaskClass';
+import { AmazonModes } from './Logic/interfaces/site_task_config/AmazonTaskConfig';
+import Site from './Logic/interfaces/enums/Site';
+import Size from './Logic/interfaces/enums/Size';
+import testAccount from './Logic/sensitive/testInterfaces/testAccount';
+import testProfile from './Logic/sensitive/testInterfaces/testProfile';
+import testProxyList from './Logic/sensitive/testInterfaces/testProxyList';
+import electron from 'electron';
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -79,6 +89,9 @@ const createWindow = async () => {
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
+  // open dev tools
+  mainWindow.webContents.openDevTools({ mode: 'detach' });
+
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('did-finish-load', () => {
@@ -123,10 +136,54 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.whenReady().then(createWindow).catch(console.log);
+app.whenReady().then(() => {
+
+    
+    electron.ipcMain.handle('StartAmazon', async (event, ...args) => {
+
+        const amazonTaskConfig : AmazonTaskConfig = {
+            mode: AmazonModes.Normal,
+            account: testAccount
+        }
+
+        const as = (s : string) => {
+            console.log("Status: " + s);
+        }
+
+        const testClass = new AmazonTaskClass(
+            1,
+            Site.Amazon,
+            testProfile,
+            [Size.OS],
+            testProxyList,
+            as, // status watcher
+            amazonTaskConfig
+        )
+
+        console.log('main: auth', event, args)
+
+        console.log('before testClass.start()')
+        const res = await testClass.start();
+    
+        return res;
+    })
+
+    createWindow();
+
+    
+}).catch(console.log);
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) createWindow();
+
+  
+    
+
 });
+
+
+
+
+
