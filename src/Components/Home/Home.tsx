@@ -45,7 +45,7 @@ const Home : FC = () => {
                     <div className="mx-5 text-2xl">
                         Welcome back, 
                     </div>
-                    <div className="mx-5 h-12 text-4xl text-transparent bg-clip-text bg-gradient-to-b from-indigo-800 to-indigo-500 ">
+                    <div className="mx-5 h-12 text-4xl bg-clip-text text-transparent bg-gradient-to-b from-indigo-800 to-indigo-500 ">
                         WholeDayBusy
                     </div>
                 </div>
@@ -59,7 +59,7 @@ const Home : FC = () => {
 
             <div className="w-full px-5 pb-3 m-2 h-full flex flex-col">
                 <div className="w-full bg-indigo-950 rounded-xl shadow-xl h-full shadow-lg flex flex-col justify-start items-center">
-                    {[1, 2, 3, 4].map(n => <Checkout />)}
+                    {[1, 2, 3, 4].map((n : number) => <Checkout />)}
                 </div>
             </div>
 

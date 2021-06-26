@@ -1,11 +1,8 @@
 import React, {
-    FC,
     useState
 } from "react";
 import {
     HashRouter,
-    BrowserRouter as Router,
-    Switch,
     Route,
     Link
 } from "react-router-dom";
@@ -16,8 +13,8 @@ import Settings from "./Components/Settings/Settings";
 import Tasks from "./Components/Tasks/Tasks";
 import Accounts from "./Components/Accounts/Accounts";
 import Proxies from "./Components/Proxies/Proxies";
-import Task from "./Logic/interfaces/Task";
 import TaskClass from "./Logic/sites/classes/TaskClass";
+import "./App.global.css";
 
 
 const HomeIcon = () => (
