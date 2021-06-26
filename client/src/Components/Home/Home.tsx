@@ -17,7 +17,7 @@ const Checkout = () => {
                         Playstation 5 Digital Edition
                     </div>
                     <div className="text-indigo-300">
-                        Amazon • <span className="text-indigo-100">$449</span>
+                        Amazon • <span className="text-indigo-100">$399</span>
                     </div>
                     <div className="text-indigo-500 text-sm">
                         6/25/2021
@@ -40,15 +40,18 @@ const Home : FC = () => {
     return (
         <div className="flex flex-col flex-1 justify-center items-center text-lg h-full shadow-lg bg-gradient-to-l from-indigo-1000 to-indigo-975">
             {/* Top Header */}
-            <div className="w-full mt-4">
-                <div className="w-full flex justify-between text-left font-bold text-4xl text-indigo-100">
-                    <div className="mx-5">
-                        Welcome back, Iaen#2317
+            <div className="z-10 w-full mt-4">
+                <div className="w-full flex justify-start flex-col text-left font-bold text-indigo-100">
+                    <div className="mx-5 text-2xl">
+                        Welcome back, 
+                    </div>
+                    <div className="mx-5 h-12 text-4xl text-transparent bg-clip-text bg-gradient-to-b from-indigo-800 to-indigo-500 ">
+                        WholeDayBusy
                     </div>
                 </div>
 
                 <div className="w-full flex justify-start">
-                    <div className="h-0.5 w-1/2 bg-gradient-to-r from-indigo-500 mx-5 my-2">
+                    <div className="h-0.5 w-1/2 bg-gradient-to-r from-indigo-500 to-indigo-1000 mx-5 my-2">
 
                     </div>
                 </div>
