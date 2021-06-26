@@ -33,13 +33,25 @@ const Proxies : FC = () => {
                     </div>
 
                     {/* Name Proxy Group */}
-                    <div className="w-full flex justify-start px-5 py-1">
+                    <div className="w-full flex justify-between px-5 py-1">
                         <input 
                             placeholder={'Residential Proxies'}
                             value={newGrpName}
                             onChange={(e) => handleProxyGrpChange(e)}
                             className={`focus:outline-none bg-indigo-975 ${newGrpName === '' ?  'placeholder-indigo-400' : 'text-indigo-100'} caret-indigo-100 rounded-md p-1 w-64 text-2xl`}                          
                         />
+                        <button>
+                            <div className="p-1 bg-indigo-500 w-64 rounded-lg flex justify-center items-center border-2">
+                                <div className="text-2xl text-indigo-100">
+                                    Save Proxies
+                                </div>
+                                <div className="text-indigo-100 ml-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </button>
                     </div>
 
                     <div className="h-2"></div>
