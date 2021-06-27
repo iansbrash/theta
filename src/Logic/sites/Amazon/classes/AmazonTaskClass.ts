@@ -4,11 +4,12 @@ import ProfileObject from "../../../interfaces/ProfileObject";
 import ProxyList from "../../../interfaces/ProxyList";
 import TaskClass, { internalStatus } from "../../classes/TaskClass";
 import AmazonTaskConfig from "../../../interfaces/site_task_config/AmazonTaskConfig";
-import AmazonTask from '../flow/AmazonTask';
+import electron from 'electron';
 
 class AmazonTaskClass extends TaskClass {
 
     config : AmazonTaskConfig;
+    allCookies : string[];
 
     constructor (
         identifier : number, 
@@ -16,15 +17,18 @@ class AmazonTaskClass extends TaskClass {
         profile : ProfileObject, 
         size : Size[], 
         proxyList : ProxyList, 
-        statusWatcher : undefined | ((s : string) => void), 
-        config : AmazonTaskConfig) {
+        input : string, 
+        config : AmazonTaskConfig
+    ) {
 
-        super(identifier, site, profile, size, proxyList, statusWatcher);
+        super(identifier, site, profile, size, proxyList, input);
         this.config = config;
+        this.allCookies = [];
     }
 
+    // deprecated ?
     async start() : Promise<void> {
-        if (this.setStatusWatcher !== undefined && this.internalStatus === internalStatus.Idle){
+        if (this.internalStatus === internalStatus.Idle){
 
             // @ts-ignore
             this.statusWatcher('Starting...');
@@ -43,24 +47,60 @@ class AmazonTaskClass extends TaskClass {
 
             // return res;
 
-            console.log('wtf')
-            // @ts-ignore
-            return await AmazonTask(t, this.config, this.statusWatcher);
+            const res = await electron.ipcRenderer.invoke('StartAmazon', 'arg1', 'arg2');
+
+            return res;
         }
         else {
-            throw "StatusWatcher is undefined"
+            throw "Task is not idle"
         }
     }
 
-    stop() : void {
-        if (this.setStatusWatcher !== undefined){
+    async signIn() : Promise<void> {
+        // user, pass, proxy
+        const res = await electron.ipcRenderer.invoke('AmazonSignIn', this.config.account.username, this.config.account.password, this.proxyList.proxies[0]);
+        this.allCookies = res;
+    }
 
-            // @ts-ignore
-            this.statusWatcher('Stopped');
-        }
-        else {
-            throw "StatusWatcher is undefined"
-        }
+    /** SignIn Flow via IPC */
+
+    async GETMainLoginPage() : Promise<void> {
+        // allCookies, proxy
+        const res = await electron.ipcRenderer.invoke('AmazonGETMainLoginPage', this.allCookies, this.proxyList.proxies[0]);
+        this.allCookies = res;
+    }
+
+    async POSTMainLoginPage() : Promise<void> {
+        // allCookies, allCookiesObject['session-id']
+        const res = await electron.ipcRenderer.invoke('AmazonPOSTMainLoginPage', this.allCookies, 'sessionId', 'props' , this.proxyList.proxies[0]);
+        this.allCookies = res;
+    }
+
+    async POSTSubLoginPage() : Promise<void> {
+        // allCookies, allCookiesObject['session-id']
+        const res = await electron.ipcRenderer.invoke('AmazonPOSTSubLoginPage', this.allCookies, 'sessionId', 'props' , this.proxyList.proxies[0]);
+        this.allCookies = res;
+    }
+
+    /** SignIn Flow via IPC */
+
+    async addToCart() : Promise<void> {
+        // allCookies, product, proxy
+        const product = 'B07W4FMQ5Y';
+
+
+        const res = await electron.ipcRenderer.invoke('AmazonATC', this.allCookies, product, this.proxyList.proxies[0]);
+        this.allCookies = res;
+    }
+
+    async checkout() : Promise<void> {
+        // allCookies, proxy
+        const res = await electron.ipcRenderer.invoke('AmazonCheckout', this.allCookies, this.proxyList.proxies[0]);
+        return res;
+    }
+
+    stop() : void {
+        console.log('stopping !')
     }
 }
 

@@ -2,16 +2,7 @@ import React, { FC, useState, useEffect } from "react";
 import TaskClass from "../../Logic/sites/classes/TaskClass";
 import AmazonTaskConfig, { AmazonModes } from '../../Logic/interfaces/site_task_config/AmazonTaskConfig';
 import testAccount from '../../Logic/sensitive/testInterfaces/testAccount';
-import electron from "electron";
-// interface TaskProps {
-//     identifier: number,
-//     site: string,
-//     // siteConfig: TaskConfig,
-//     profile: string,
-//     size: string,
-//     proxyList: string,
-//     siteConfig: string
-// }
+import AmazonTaskClass from '../../Logic/sites/Amazon/classes/AmazonTaskClass';
 
 interface TaskFunctionProps {
     task: TaskClass,
@@ -23,29 +14,39 @@ const Task : FC<TaskFunctionProps> = ({
     deleteFunction
 } : TaskFunctionProps) => {
 
-    const product = 'https://amazon.com/asdasdasdasdasdasdasd/dp/DPPRODID';
+    // const product = 'https://amazon.com/asdasdasdasdasdasdasd/dp/DPPRODID';
 
-    const [statusWatcher, setStatusWatcher] = useState<string>('');
+    const [statusWatcher, setStatusWatcher] = useState<string>('Idle');
 
-    const amazonTaskConfig : AmazonTaskConfig = {
-        mode: AmazonModes.Normal,
-        account: testAccount
-    }
+    // const amazonTaskConfig : AmazonTaskConfig = {
+    //     mode: AmazonModes.Normal,
+    //     account: testAccount
+    // }
 
-    useEffect(() => {
-        task.setStatusWatcher(setStatusWatcher);
-        setStatusWatcher('Idle');
-    }, [])
+    // useEffect(() => {
+    //     // task.setStatusWatcher(setStatusWatcher);
+    //     setStatusWatcher('Idle');
+    // }, [])
 
     const startTask = async () => {
 
 
         // console.log(ipcRenderer)
         // console.log(ipcRenderer.invoke)
-        electron.ipcRenderer.invoke('StartAmazon', 'arg1', 'arg2').then(res => {
-            console.log('in thin')
-            return res;
-        })
+        // electron.ipcRenderer.invoke('StartAmazon', 'arg1', 'arg2').then(res => {
+        //     console.log('in thin')
+        //     return res;
+        // })
+        setStatusWatcher('Signing in...')
+
+        await (task as AmazonTaskClass).signIn();
+        setStatusWatcher('Adding to cart...')
+
+        await (task as AmazonTaskClass).addToCart();
+        setStatusWatcher('Checking out...')
+
+        await (task as AmazonTaskClass).checkout();
+
     }
 
     return (
@@ -61,7 +62,7 @@ const Task : FC<TaskFunctionProps> = ({
                 <div className="flex-1 min-w-0 flex flex-row justify-center items-center space-x-2">
                     {/* Product */}
                     <div className="w-1/2 text-indigo-100 truncate">
-                        {product.substring(product.indexOf('dp/') + 3)}
+                        {task.input.substring(task.input.indexOf('dp/') + 3)}
                     </div>
 
                     <div className="w-1/4 text-indigo-100 h-10 flex flex-row justify-left items-center">

@@ -21,7 +21,9 @@ abstract class TaskClass implements Task {
 
     internalStatus : internalStatus;
     
-    statusWatcher : undefined | ((s : string) => void);
+    // statusWatcher : undefined | ((s : string) => void);
+    input: string;
+
 
     constructor(
         identifier : number, 
@@ -29,7 +31,7 @@ abstract class TaskClass implements Task {
         profile : ProfileObject, 
         size : Size[], 
         proxyList : ProxyList, 
-        statusWatcher : undefined | ((s : string) => void)
+        input : string
         ) {
         this.identifier = identifier;
         this.site = site;
@@ -37,7 +39,7 @@ abstract class TaskClass implements Task {
         this.size = size;
         this.proxyList = proxyList;
         this.status = 'Idle';
-        this.statusWatcher = statusWatcher;
+        this.input = input;
 
         this.internalStatus = internalStatus.Idle
     }
@@ -49,9 +51,9 @@ abstract class TaskClass implements Task {
         return this.identifier;
     }
 
-    setStatusWatcher(f : (s : string) => void) {
-        this.statusWatcher = f;
-    }
+    // setStatusWatcher(f : (s : string) => void) {
+    //     this.statusWatcher = f;
+    // }
 }
 
 export default TaskClass;

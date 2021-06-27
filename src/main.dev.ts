@@ -25,6 +25,11 @@ import testAccount from './Logic/sensitive/testInterfaces/testAccount';
 import testProfile from './Logic/sensitive/testInterfaces/testProfile';
 import testProxyList from './Logic/sensitive/testInterfaces/testProxyList';
 import electron from 'electron';
+import AmazonTask from './Logic/sites/Amazon/flow/AmazonTask';
+import Task from './Logic/interfaces/Task';
+import SignIn from './Logic/sites/Amazon/flow/signin/signin';
+import AddToCart from './Logic/sites/Amazon/flow/atc/atc';
+import Checkout from './Logic/sites/Amazon/flow/checkout/checkout';
 
 export default class AppUpdater {
   constructor() {
@@ -139,6 +144,7 @@ app.on('window-all-closed', () => {
 app.whenReady().then(() => {
 
     
+    // deprecated?
     electron.ipcMain.handle('StartAmazon', async (event, ...args) => {
 
         const amazonTaskConfig : AmazonTaskConfig = {
@@ -150,20 +156,104 @@ app.whenReady().then(() => {
             console.log("Status: " + s);
         }
 
-        const testClass = new AmazonTaskClass(
-            1,
-            Site.Amazon,
-            testProfile,
-            [Size.OS],
-            testProxyList,
-            as, // status watcher
-            amazonTaskConfig
-        )
+
+        const testTask : Task = {
+            identifier: 1,
+            site: Site.Amazon,
+            profile: testProfile,
+            size: [Size.OS],
+            proxyList: testProxyList,
+            // as, // status watcher
+            // amazonTaskConfig
+        }
 
         console.log('main: auth', event, args)
 
         console.log('before testClass.start()')
-        const res = await testClass.start();
+        const res = await AmazonTask(testTask, amazonTaskConfig, as);
+    
+        return res;
+    })
+
+    electron.ipcMain.handle('AmazonSignIn', async (event, ...args) => {
+        // args:
+        // user, pass, proxy
+        const user = args[0];
+        const pass = args[1];
+        const proxy = args[2];
+
+       
+        // res is cookies
+        const res = await SignIn(user, pass, proxy);
+    
+        return res;
+    });
+
+    (() => {electron.ipcMain.handle('AmazonGETMainLoginPage', async (event, ...args) => {
+        // args:
+        // user, pass, proxy
+        const user = args[0];
+        const pass = args[1];
+        const proxy = args[2];
+
+       
+        // res is cookies
+        const res = await SignIn(user, pass, proxy);
+    
+        return res;
+    })})();
+
+    electron.ipcMain.handle('AmazonPOSTMainLoginPage', async (event, ...args) => {
+        // args:
+        // user, pass, proxy
+        const user = args[0];
+        const pass = args[1];
+        const proxy = args[2];
+
+       
+        // res is cookies
+        const res = await SignIn(user, pass, proxy);
+    
+        return res;
+    })
+
+    electron.ipcMain.handle('AmazonPOSTSubLoginPage', async (event, ...args) => {
+        // args:
+        // user, pass, proxy
+        const user = args[0];
+        const pass = args[1];
+        const proxy = args[2];
+
+       
+        // res is cookies
+        const res = await SignIn(user, pass, proxy);
+    
+        return res;
+    })
+
+    electron.ipcMain.handle('AmazonATC', async (event, ...args) => {
+        // args:
+        // allCookies, product, proxy
+        const allCookies = args[0];
+        const product = args[1];
+        const proxy = args[2];
+
+       
+        // res is cookies
+        const res = await AddToCart(allCookies, product, proxy);
+    
+        return res;
+    })
+
+    electron.ipcMain.handle('AmazonCheckout', async (event, ...args) => {
+        // args:
+        // allCookies, proxy
+        const allCookies = args[0];
+        const proxy = args[1];
+
+       
+        // res is cookies
+        const res = await Checkout(allCookies, proxy);
     
         return res;
     })

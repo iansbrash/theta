@@ -11,7 +11,7 @@ import { POSTMainLoginPageRetry } from './POSTMainLoginPage';
 import { POSTSubLoginPageRetry } from './POSTSubLoginPage';
 import { Proxy } from '../../../../interfaces/ProxyList';
 
-const SignIn = async (email : string, password : string, proxy : Proxy, statusWatcher : (s : string) => void) : Promise<string[]> => {
+const SignIn = async (email : string, password : string, proxy : Proxy) : Promise<string[]> => {
 
     let allCookies : string[] = []
     let allCookiesObject : CookieObject = {}; 
@@ -29,6 +29,14 @@ const SignIn = async (email : string, password : string, proxy : Proxy, statusWa
     let appAction = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="appAction" value="', '" />');
     let prevRID = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="prevRID" value="', '" />');
     let workflowState = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="workflowState" value="', '" />');
+
+    interface POSTMainLoginPageProps {
+        appActionToken: string,
+        appAction: string,
+        prevRID: string,
+        workflowState: string,
+        email: string
+    }
 
     const POSTMainLoginPageResponse = await POSTMainLoginPageRetry(allCookies, allCookiesObject['session-id'], {
         appActionToken,

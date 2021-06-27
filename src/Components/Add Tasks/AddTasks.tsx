@@ -138,29 +138,44 @@ const AddTasks : FC<AddTasksProps> = ({
     const [profile, setProfile] = useState<string>('');
     const [proxies, setProxies] = useState<string>('');
     const [url, setUrl] = useState<string>('');
+    const [taskIdCounter, setTaskIdCounter] = useState<number>(0);
 
     const handleUrlChange = (e : React.ChangeEvent<HTMLInputElement>) => {
         setUrl(e.target.value);
     } 
 
 
-    const amazonTaskConfig : AmazonTaskConfig = {
-        mode: AmazonModes.Normal,
-        account: testAccount
-    }
+    // const amazonTaskConfig : AmazonTaskConfig = {
+    //     mode: AmazonModes.Normal,
+    //     account: testAccount
+    // }
 
-    const task : AmazonTaskClass  = new AmazonTaskClass(
-        1,
-        Site.Amazon,
-        testProfile,
-        [Size.OS],
-        testProxyList,
-        undefined,
-        amazonTaskConfig,
-    )
+    // const task : AmazonTaskClass  = new AmazonTaskClass(
+    //     1,
+    //     Site.Amazon,
+    //     testProfile,
+    //     [Size.OS],
+    //     testProxyList,
+    //     undefined,
+    //     amazonTaskConfig,
+    // )
     
     const AddTaskHandler = () => {
-        setTasks([...tasks, task])
+        const toAddTaskClass : AmazonTaskClass = new AmazonTaskClass (
+            taskIdCounter,
+            Site.Amazon,
+            testProfile,
+            [Size.OS],
+            testProxyList,
+            url,
+            {
+                mode: AmazonModes.Normal,
+                account: testAccount
+            }
+        )
+
+        setTasks([...tasks, toAddTaskClass])
+        setTaskIdCounter(taskIdCounter + 1);
     }
 
     return (
