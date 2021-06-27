@@ -29,23 +29,23 @@ const Task : FC<TaskFunctionProps> = ({
     // }, [])
 
     const startTask = async () => {
+        
+        setStatusWatcher('Signing in (1)')
+        await (task as AmazonTaskClass).GETMainLoginPage();
 
+        setStatusWatcher('Signing in (2)')
+        await (task as AmazonTaskClass).POSTMainLoginPage();
 
-        // console.log(ipcRenderer)
-        // console.log(ipcRenderer.invoke)
-        // electron.ipcRenderer.invoke('StartAmazon', 'arg1', 'arg2').then(res => {
-        //     console.log('in thin')
-        //     return res;
-        // })
-        setStatusWatcher('Signing in...')
+        setStatusWatcher('Signing in (3)')
+        await (task as AmazonTaskClass).POSTSubLoginPage();
 
-        await (task as AmazonTaskClass).signIn();
         setStatusWatcher('Adding to cart...')
-
         await (task as AmazonTaskClass).addToCart();
-        setStatusWatcher('Checking out...')
 
+        setStatusWatcher('Checking out...') 
         await (task as AmazonTaskClass).checkout();
+
+        setStatusWatcher('Checked out')
 
     }
 

@@ -34,6 +34,8 @@ const AmazonTask = async (task : Task, taskConfig : AmazonTaskConfig, statusWatc
     
     statusWatcher('Adding to cart...')
     allCookies = await AddToCart(allCookies, product, proxy);
+
+    return;
     
     statusWatcher('Checking out...')
     await Checkout(allCookies, proxy);

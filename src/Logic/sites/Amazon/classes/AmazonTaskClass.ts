@@ -5,11 +5,24 @@ import ProxyList from "../../../interfaces/ProxyList";
 import TaskClass, { internalStatus } from "../../classes/TaskClass";
 import AmazonTaskConfig from "../../../interfaces/site_task_config/AmazonTaskConfig";
 import electron from 'electron';
+import { convertCookieArrayToObject } from "../../../requestFunctions";
+
+interface storage {
+    [key: string]: string
+}
+
+interface ipcResponse {
+    allCookies: string[],
+    storage: storage
+}
 
 class AmazonTaskClass extends TaskClass {
 
     config : AmazonTaskConfig;
     allCookies : string[];
+    allCookiesObject : object = {};
+    storage : storage = {};
+
 
     constructor (
         identifier : number, 
@@ -24,6 +37,13 @@ class AmazonTaskClass extends TaskClass {
         super(identifier, site, profile, size, proxyList, input);
         this.config = config;
         this.allCookies = [];
+    }
+
+    async test() : Promise<string> {
+        const res = await electron.ipcRenderer.invoke('IPCTest', 'arg1', 'arg2');
+
+        return res;
+
     }
 
     // deprecated ?
@@ -66,19 +86,37 @@ class AmazonTaskClass extends TaskClass {
 
     async GETMainLoginPage() : Promise<void> {
         // allCookies, proxy
-        const res = await electron.ipcRenderer.invoke('AmazonGETMainLoginPage', this.allCookies, this.proxyList.proxies[0]);
-        this.allCookies = res;
+        const res : ipcResponse = await electron.ipcRenderer.invoke('AmazonGETMainLoginPage', this.allCookies, this.proxyList.proxies[0]);
+        this.allCookies = res.allCookies;
+        this.storage = res.storage;
     }
 
     async POSTMainLoginPage() : Promise<void> {
         // allCookies, allCookiesObject['session-id']
-        const res = await electron.ipcRenderer.invoke('AmazonPOSTMainLoginPage', this.allCookies, 'sessionId', 'props' , this.proxyList.proxies[0]);
-        this.allCookies = res;
+
+        this.storage.sessiondId = convertCookieArrayToObject(this.allCookies)['session-id'];
+
+        const res = await electron.ipcRenderer.invoke('AmazonPOSTMainLoginPage', this.allCookies, this.storage.sessiondId, {
+            appAction: this.storage.appAction,
+            appActionToken: this.storage.appActionToken,
+            prevRID: this.storage.prevRID,
+            workflowState: this.storage.workflowState,
+            email: this.storage.email
+        }, this.proxyList.proxies[0]);
+        this.allCookies = res.allCookies;
     }
 
     async POSTSubLoginPage() : Promise<void> {
         // allCookies, allCookiesObject['session-id']
-        const res = await electron.ipcRenderer.invoke('AmazonPOSTSubLoginPage', this.allCookies, 'sessionId', 'props' , this.proxyList.proxies[0]);
+        const res = await electron.ipcRenderer.invoke('AmazonPOSTSubLoginPage', this.allCookies, this.storage.sessiondId, {
+            appAction: this.storage.appAction,
+            appActionToken: this.storage.appActionToken,
+            prevRID: this.storage.prevRID,
+            workflowState: this.storage.workflowState,
+            email: this.storage.email,
+            password: this.config.account.password
+        } , this.proxyList.proxies[0]);
+
         this.allCookies = res;
     }
 
