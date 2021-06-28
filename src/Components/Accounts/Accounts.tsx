@@ -1,16 +1,53 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import {
     AbstractSelector
 } from '../Add Tasks/AddTasks';
+import electron from 'electron';
+import Account from "../../Logic/interfaces/Account";
+import Site from "../../Logic/interfaces/enums/Site";
+
+const accountToString = (a : Account) : string => {
+    return a.username + ':' + a.password;
+}
 
 const Accounts : FC = () => {
 
 
-    const [accountSiteSelection, setAccountSiteSelection] = useState<string>('Select Site')
+    const [accountSiteSelection, setAccountSiteSelection] = useState<string>('')
     const [accounts, setAccounts] = useState<string>('');
+    const [loadedAccounts, setLoadedAccounts] = useState<Account[]>([])
 
-    const handleSiteSelectionChange = (s : string) => {
+    useEffect(() => {
+        (async () => {
+            const res : Account[] = await electron.ipcRenderer.invoke('readjson', 'accounts.json');
+
+            setLoadedAccounts(res);
+        })();
+    }, []);
+
+    const handleSiteSelectionChange = async (s : string) => {
         setAccountSiteSelection(s)
+
+        if (s === '') return setAccounts('');
+
+        // @ts-ignore
+        setAccounts(loadedAccounts.filter((acc : Account) => acc.site !== Site[Site[accountSiteSelection]]).map((acc : Account) => accountToString(acc)).join('\n') )
+    }
+
+    const saveAccounts = async () => {
+        const newAccounts : Account[] = accounts.split(/\r?\n/).map(acc => {
+            return {
+                // @ts-ignore
+                site: Site[Site[accountSiteSelection]],
+                username: acc.substring(0, acc.indexOf(':')),
+                password: acc.substring(acc.indexOf(':') + 1)
+            }
+        })
+
+        // @ts-ignore
+        setLoadedAccounts([...loadedAccounts.filter((acc : Account) => acc.site !== Site[Site[accountSiteSelection]]), ...newAccounts])
+
+        const res = await electron.ipcRenderer.invoke('writejson', 'accounts.json', newAccounts)
     }
 
     
@@ -35,7 +72,9 @@ const Accounts : FC = () => {
                                 selectionOptions={["Amazon"]}
                             />
                         </div>
-                        <button className="mr-5">
+                        <button className="mr-5"
+                        onClick={() => saveAccounts()}
+                        >
                             <div className="p-1 bg-gradient-to-r from-indigo-600 to-indigo-400 w-64 rounded-lg flex justify-center items-center border">
                                 <div className="text-2xl text-indigo-100">
                                     Save Accounts

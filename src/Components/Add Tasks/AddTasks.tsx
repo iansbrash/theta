@@ -31,19 +31,18 @@ export const AbstractSelector : FC<AbstractSelectorProps> = ({
 
     
     const handleChange = (e : any) => {
-        if (e.target.value === 'Select Site'){
-            // setField('');
+        if (e.target.value === defaultText){
+            setSelection('');
         }
         else {
-            // setField(e.target.value);
+            setSelection(e.target.value)
         }
-        setSelection(e.target.value)
     }
 
 
     return (
         <div className="w-full flex justify-start px-5 py-1">
-            <select value={selection} onChange={(e) => handleChange(e)} className={`${selection === defaultText ? 'text-indigo-400' : 'text-indigo-100'} ${width} text-2xl mt-2 p-1 rounded-md appearance-none bg-indigo-975 focus:outline-none`}>
+            <select value={selection} onChange={(e) => handleChange(e)} className={`${selection === '' ? 'text-indigo-400' : 'text-indigo-100'} ${width} text-2xl mt-2 p-1 rounded-md appearance-none bg-indigo-975 focus:outline-none`}>
                 <option className="text-indigo-400" value={defaultText}>{defaultText}</option>
                 {selectionOptions.map(item => <option className="text-indigo-100" value={item}>{item}</option>)}
             </select>
