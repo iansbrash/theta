@@ -39,8 +39,25 @@ const Task : FC<TaskFunctionProps> = ({
         setStatusWatcher('Signing in (3)')
         await (task as AmazonTaskClass).POSTSubLoginPage();
 
-        setStatusWatcher('Adding to cart...')
-        await (task as AmazonTaskClass).addToCart();
+        // setStatusWatcher('signing')
+        // await (task as AmazonTaskClass).signIn();
+
+
+        setStatusWatcher('gettingapget')
+        await (task as AmazonTaskClass).ATC2();
+
+        setStatusWatcher('atc3')
+        await (task as AmazonTaskClass).ATC3();
+
+        // setStatusWatcher('Getting product')
+        // await (task as AmazonTaskClass).GETProduct();
+
+        // setStatusWatcher('Adding to cart')
+        // await (task as AmazonTaskClass).POSTAddToCart();
+
+        return;
+
+
 
         setStatusWatcher('Checking out...') 
         await (task as AmazonTaskClass).checkout();

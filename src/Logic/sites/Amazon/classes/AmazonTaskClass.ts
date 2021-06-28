@@ -79,6 +79,9 @@ class AmazonTaskClass extends TaskClass {
     async signIn() : Promise<void> {
         // user, pass, proxy
         const res = await electron.ipcRenderer.invoke('AmazonSignIn', this.config.account.username, this.config.account.password, this.proxyList.proxies[0]);
+        
+        console.log('res')
+        console.log(res);
         this.allCookies = res;
     }
 
@@ -101,7 +104,7 @@ class AmazonTaskClass extends TaskClass {
             appActionToken: this.storage.appActionToken,
             prevRID: this.storage.prevRID,
             workflowState: this.storage.workflowState,
-            email: this.storage.email
+            email: this.config.account.username
         }, this.proxyList.proxies[0]);
         this.allCookies = res.allCookies;
     }
@@ -113,23 +116,71 @@ class AmazonTaskClass extends TaskClass {
             appActionToken: this.storage.appActionToken,
             prevRID: this.storage.prevRID,
             workflowState: this.storage.workflowState,
-            email: this.storage.email,
+            email: this.config.account.username,
             password: this.config.account.password
         } , this.proxyList.proxies[0]);
 
-        this.allCookies = res;
+        this.allCookies = res.allCookies;
     }
 
     /** SignIn Flow via IPC */
 
     async addToCart() : Promise<void> {
         // allCookies, product, proxy
-        const product = 'B07W4FMQ5Y';
+        const product = 'https://www.amazon.com/Mkeke-Compatible-iPhone-11-Clear/dp/B07W4FMQ5Y/';
 
 
         const res = await electron.ipcRenderer.invoke('AmazonATC', this.allCookies, product, this.proxyList.proxies[0]);
         this.allCookies = res;
     }
+
+    /** ATC Flow via IPC */
+
+    async GETProduct() : Promise<void> {
+        // allCookies, allCookiesObject['session-id']
+        const res = await electron.ipcRenderer.invoke('AmazonGETProduct', this.allCookies, this.input, this.proxyList.proxies[0]);
+
+        this.allCookies = res.allCookies;
+        this.storage = {
+            ...res.storage,
+            sessionId: this.storage.sessionId,
+        }
+    }
+
+    async ATC2() : Promise<void> {
+        // allCookies, allCookiesObject['session-id']
+        const res = await electron.ipcRenderer.invoke('AmazonGETProductTwo', this.allCookies, this.input, this.proxyList.proxies[0]);
+
+        this.allCookies = res.allCookies;
+        this.storage = {
+            ...res.storage,
+            sessionId: this.storage.sessionId,
+        }
+    }
+
+    async ATC3() : Promise<void> {
+        // allCookies, allCookiesObject['session-id']
+        const res = await electron.ipcRenderer.invoke('AmazonPOSTATC2', this.allCookies, this.storage, this.proxyList.proxies[0]);
+
+        this.allCookies = res.allCookies;
+        this.storage = {
+            ...res.storage,
+            sessionId: this.storage.sessionId,
+        }
+    }
+
+    async POSTAddToCart() : Promise<void> {
+        // allCookies, allCookiesObject['session-id']
+        const res = await electron.ipcRenderer.invoke('AmazonPOSTAddToCart', this.allCookies, this.storage.ASIN, {
+            CSRFToken: this.storage.CSRFToken,
+            offerListingId: this.storage.offerListingID,
+            sessionId: this.storage.sessionId
+        }, this.proxyList.proxies[0]);
+
+        this.allCookies = res.allCookies;
+    }
+
+    /** ATC Flow via IPC */
 
     async checkout() : Promise<void> {
         // allCookies, proxy

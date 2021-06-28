@@ -16,14 +16,19 @@ import {
 import timestampLogger from '../../../../logger';
 import { Proxy } from '../../../../interfaces/ProxyList';
 
-const AddToCart = async (allCookies : string[], product : string = 'B07W4FMQ5Y', proxy : Proxy) : Promise<string[]> => {
+const AddToCart = async (allCookies : string[], product : string = 'https://www.amazon.com/Mkeke-Compatible-iPhone-11-Clear/dp/B07W4FMQ5Y/', proxy : Proxy) : Promise<string[]> => {
     let allCookiesObject : CookieObject = {}; 
 
     const GETAmazonProductRes : AxiosResponse = await GETProductRetry(allCookies, product, proxy)
 
     const FindCSRFData : string= GETAmazonProductRes.data;
     const CSRFDelimiter : string = '<input type="hidden" name="CSRF" value="';
-    const CSRFToken : string =  getValueByDelimiters(FindCSRFData, CSRFDelimiter, '">');
+
+    // wtf
+    const CSRFToken : string =  getValueByDelimiters(FindCSRFData, CSRFDelimiter, '"/>');
+
+    console.log('csrf') 
+    console.log(CSRFToken)
 
     const offerListingIDDelimiter = '<input type="hidden" id="offerListingID" name="offerListingID" value="';
     const offerListingID = getValueByDelimiters(FindCSRFData, offerListingIDDelimiter, '">');
@@ -38,7 +43,7 @@ const AddToCart = async (allCookies : string[], product : string = 'B07W4FMQ5Y',
         CSRFToken,
         offerListingID,
         allCookiesObject['session-id'],
-        product,
+        product, // this needs to be the ASIN
         allCookiesObject['session-id'],
         proxy
     )

@@ -26,7 +26,7 @@ import AmazonTaskClass from '../classes/AmazonTaskClass';
         testProfile,
         [Size.OS],
         testProxyList,
-        as,
+        'https://www.amazon.com/Mkeke-Compatible-iPhone-11-Clear/dp/B07W4FMQ5Y/',
         amazonTaskConfig
     )
 

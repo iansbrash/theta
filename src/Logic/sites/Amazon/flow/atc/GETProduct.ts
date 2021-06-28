@@ -9,11 +9,11 @@ import HttpsProxyAgent from 'https-proxy-agent'
 
 const GETProduct = async (allCookies : string[], product : string, proxy : Proxy) : Promise<AxiosResponse> => {
     
-    timestampLogger(`ProductURL: ${`https://amazon.com/dp/${product}`}`)
+    timestampLogger(`ProductURL: ${product}`)
     
     const GETAmazonProductRes : any = await axios({
         method: 'get',
-        url: `https://amazon.com/dp/${product}`,
+        url: product,
         withCredentials: true,
         headers: {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
