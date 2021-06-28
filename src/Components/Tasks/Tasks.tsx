@@ -2,6 +2,9 @@ import React, { FC, useState, useEffect } from "react";
 import TaskClass from "../../Logic/sites/classes/TaskClass";
 import AmazonTaskClass from '../../Logic/sites/Amazon/classes/AmazonTaskClass';
 import electron from 'electron';
+import { AmazonStatus } from '../../Logic/sites/Amazon/classes/AmazonTaskClass'
+
+const delay = (ms : number) => new Promise(res => setTimeout(res, ms));
 
 interface TaskFunctionProps {
     task: TaskClass,
@@ -74,12 +77,27 @@ const Task : FC<TaskFunctionProps> = ({
         await (task as AmazonTaskClass).POSTAsyncContinueAfterSelection();
 
         setStatusWatcher('Submitting order...')
-        await (task as AmazonTaskClass).POSTSubmitOrder();
-        // setStatusWatcher('Checking out...') 
-        // await (task as AmazonTaskClass).checkout();
+        const submitSuccess : AmazonStatus = await (task as AmazonTaskClass).POSTSubmitOrder();
 
-        setStatusWatcher('Checked out')
+        if (submitSuccess === AmazonStatus.CheckoutSuccess) {
+            setStatusWatcher('Checked out')
+        }
+        else {
+            setStatusWatcher('Error, retrying')
 
+            await delay(3000)
+
+            setStatusWatcher('Submitting order...')
+
+            const submitSuccess : AmazonStatus = await (task as AmazonTaskClass).POSTSubmitOrder();
+            if (submitSuccess === AmazonStatus.CheckoutSuccess) {
+                setStatusWatcher('Checked out')
+            }
+            else {
+                setStatusWatcher('Two errors, stopping')
+            }
+            
+        }
     }
 
     return (

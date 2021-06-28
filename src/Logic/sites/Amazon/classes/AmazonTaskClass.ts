@@ -16,6 +16,11 @@ interface ipcResponse {
     storage: storage
 }
 
+export enum AmazonStatus {
+    CheckoutSuccess,
+    CheckoutError
+}
+
 class AmazonTaskClass extends TaskClass {
 
     config : AmazonTaskConfig;
@@ -264,8 +269,15 @@ class AmazonTaskClass extends TaskClass {
 
     }
 
-    async POSTSubmitOrder() : Promise<void> {
-        const res = await electron.ipcRenderer.invoke('POSTSubmitOrder', this.allCookies, this.storage, this.proxyList.proxies[0]);
+    async POSTSubmitOrder() : Promise<AmazonStatus> {
+        const response = await electron.ipcRenderer.invoke('POSTSubmitOrder', this.allCookies, this.storage, this.proxyList.proxies[0]);
+
+        if (response === "Success") {
+            return AmazonStatus.CheckoutSuccess
+        }
+        else {
+            return AmazonStatus.CheckoutError
+        }
     }
 
     async checkout() : Promise<void> {

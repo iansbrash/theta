@@ -445,14 +445,25 @@ const checkoutIpc = () => {
     
         if (POSTSubmitOrderResponse.headers['x-amz-checkout-page-type'] === 'CheckoutThankYou') {
             timestampLogger("Successfully checked out the product")
+            return "Success"
         }
         else if (POSTSubmitOrderResponse.headers['x-amz-checkout-page-type'] === 'CheckoutError') {
+            console.log('CheckoutError AMZ Page')
             // tsLogger("Error while checking out")
             console.log(POSTSubmitOrderResponse)
+
+            return "Error"
         }
-        else {
+        else if (POSTSubmitOrderResponse.data.indexOf('An error occurred when we tried to process your request.') !== -1 ){
+            console.log('An error occurred when we tried to process your request.')
             // tsLogger("Even worse error")
             console.log(POSTSubmitOrderResponse)
+            return "Error"
+        }
+        else {
+            console.log('some OTHER ERROR')
+            console.log(POSTSubmitOrderResponse)
+            return "Error"
         }
     })
 }
