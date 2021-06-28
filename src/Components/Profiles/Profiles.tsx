@@ -84,12 +84,22 @@ const Profiles : FC = () => {
             const toSetProfiles = await electron.ipcRenderer.invoke("readjson", 'profiles.json');
 
             setLoadedProfiles(toSetProfiles);
+
         })();
         
     }, [])
 
     const handleProfileNameChange = (e : React.ChangeEvent<HTMLInputElement>) => {
         setProfileName(e.target.value);
+    }
+
+    const deleteSelectedProfile = async () => {
+        const newProfiles = loadedProfiles.filter((prof : ProfileObject) => prof.information.name !== profileSelection)
+        setLoadedProfiles(newProfiles)
+        setProfileSelection('');
+
+        const res = await electron.ipcRenderer.invoke('writejson', 'profiles.json', newProfiles);
+
     }
 
     // add info on profile select
@@ -100,36 +110,36 @@ const Profiles : FC = () => {
     const saveProfile = async () => {
         const newProfile : ProfileObject = {
             information: {
-                name: 'Test Profile',
-                email: 'test@theta.io',
-                phone: '+16158922385',
+                name: profileName,
+                email: email,
+                phone: phone,
             },
             shipping: {
-                firstName: 'Ian',
-                lastName: 'HowUBenn',
-                address1: '1105 Holly Tree Farms Rd',
-                address2: '1105',
-                zip: '37027',
-                city: 'Brentwood',
-                state: 'Tennessee', // TN
-                country: 'United States', // USA, US
+                firstName: shipFname,
+                lastName: shipLname,
+                address1: shipAddr1,
+                address2: shipAddr2,
+                zip: shipZip,
+                city: shipCity,
+                state: shipState, // TN
+                country: shipCountry, // USA, US
             },
             billing: {
-                firstName: 'Ian',
-                lastName: 'Test',
-                address1: '1105 Holly Tree Farms Rd',
-                address2: '1105',
-                zip: '37027',
-                city: 'Brentwood',
-                state: 'Tennessee', // TN
-                country: 'United States', // USA, US
+                firstName: billFname,
+                lastName: billLname,
+                address1: billAddr1,
+                address2: billAddr2,
+                zip: billZip,
+                city: billCity,
+                state: billState, // TN
+                country: billCountry, // USA, US
             },
             payment: {
-                name: 'Ian Testeeer',
-                number: '4767718439968928',
-                expiryMonth: '06',
-                expiryYear: '27',
-                cvv: '657'
+                name: paymentName,
+                number: paymentNumber,
+                expiryMonth: paymentExpMonth,
+                expiryYear: paymentExpYear,
+                cvv: paymentCVV
             },
             settings: {
                 
@@ -145,9 +155,12 @@ const Profiles : FC = () => {
     const handleProfileSelectionChange = (s : string) => {
         setProfileSelection(s);
         setProfileName(s);
+        populateProfile(s)
     }
 
     const populateProfile = (profileName : string) => {
+
+        // @ts-ignore
         const newProfile : ProfileObject = loadedProfiles.find(prof => prof.information.name === profileName)
 
         if (newProfile) {
@@ -181,27 +194,39 @@ const Profiles : FC = () => {
                 setShipState(state);
             })();
 
-
+            (() => {
+                const {
+                    firstName,
+                    lastName,
+                    address1,
+                    address2,
+                    country,
+                    city,
+                    zip,
+                    state
+                } = newProfile.billing;
+    
+                setBillFname(firstName);
+                setBillLname(lastName);
+                setBillAddr1(address1);
+                setBillAddr2(address2)
+                setBillCountry(country);
+                setBillCity(city);
+                setBillZip(zip);
+                setBillState(state);
+            })();
 
             const {
-                firstName,
-                lastName,
-                address1,
-                address2,
-                country,
-                city,
-                zip,
-                state
-            } = newProfile.billing;
+                number,
+                cvv,
+                expiryMonth,
+                expiryYear
+            } = newProfile.payment;
 
-            setBillFname(billFname);
-            setBillLname(billLname);
-            setBillAddr1(billAddr1);
-            setBillAddr2(billAddr2)
-            setBillCountry(billCountry);
-            setBillCity(billCity);
-            setBillZip(billZip);
-            setBillState(billState);
+            setPaymentCVV(cvv);
+            setPaymentExpMonth(expiryMonth)
+            setPaymentExpYear(expiryYear)
+            setPaymentNumber(number)
         }
         
 
@@ -305,7 +330,18 @@ const Profiles : FC = () => {
                         />
                     </div>
 
-                    <div className="w-full flex-1 p-5 flex-col space-y-4">
+                    <div className="relative w-full flex-1 p-5 flex-col space-y-4">
+                        <button
+                        onClick={() => deleteSelectedProfile()}
+                        className="absolute focus:outline-none -bottom-5 right-6"
+                        >
+                            <div className="h-12 w-12 bg-gradient-to-r from-red-400 to-red-500 border rounded-md text-indigo-100 flex justify-center items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </div>
+                        </button>
+
                         {profilePartSelected === profilePart.Info ?  <>
                             <ProfileInput 
                                 input={email}
@@ -518,14 +554,17 @@ const Profiles : FC = () => {
                         </> : null}
                     </div>
 
-                    {/* Select Proxies */}
-                    <AbstractSelector 
-                        width={'w-64'}
-                        defaultText={'Select Profile Group'}
-                        selection={profileSelection}
-                        setSelection={handleProfileSelectionChange}
-                        selectionOptions={loadedProfiles.map(profile => profile.information.name)}
-                    />
+                    {/* Select Profile*/}
+                    <div className="-mt-5 w-full">
+                        <AbstractSelector 
+                            width={'w-64'}
+                            defaultText={'Select Profile'}
+                            selection={profileSelection}
+                            setSelection={handleProfileSelectionChange}
+                            selectionOptions={loadedProfiles.map(profile => profile.information.name)}
+                        />
+                    </div>
+                    
                     <div className="h-2"></div>
                 </div>
             </div>
