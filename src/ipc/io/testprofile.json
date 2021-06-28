@@ -1,0 +1,36 @@
+[{"information": {
+    "name": "Test Profile",
+    "email": "test@theta.io",
+    "phone": "+16158922385"
+},
+"shipping": {
+    "firstName": "Ian",
+    "lastName": "HowUBenn",
+    "address1": "1105 Holly Tree Farms Rd",
+    "address2": "1105",
+    "zip": "37027",
+    "city": "Brentwood",
+    "state": "Tennessee",
+    "country": "United States"
+},
+"billing": {
+    "firstName": "Ian",
+    "lastName": "Test",
+    "address1": "1105 Holly Tree Farms Rd",
+    "address2": "1105",
+    "zip": "37027",
+    "city": "Brentwood",
+    "state": "Tennessee",
+    "country": "United States"
+},
+"payment": {
+    "name": "Ian Testeeer",
+    "number": "4767718439968928",
+    "expiryMonth": "06",
+    "expiryYear": "27",
+    "cvv": "657"
+},
+"settings": {
+    
+}
+}]

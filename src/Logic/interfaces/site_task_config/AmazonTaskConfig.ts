@@ -7,9 +7,9 @@ interface AmazonTaskConfig extends TaskConfig {
 }
 
 export enum AmazonModes {
-    "Normal",
-    "Fast",
-    "Preload"
+    "Normal" = "Normal",
+    "Fast" = "Fast",
+    "Preload" = "Preload",
 }
 
 export default AmazonTaskConfig;

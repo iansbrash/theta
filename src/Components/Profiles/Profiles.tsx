@@ -1,7 +1,9 @@
-import React, { FC, useState, useMemo } from "react";
+import React, { FC, useState, useEffect } from "react";
 import {
     AbstractSelector
 } from '../Add Tasks/AddTasks';
+import electron from 'electron'
+import ProfileObject from "../../Logic/interfaces/ProfileObject";
 
 
 interface ProfileInput {
@@ -72,15 +74,137 @@ const Profiles : FC = () => {
     const [profileName, setProfileName] = useState<string>('');
     const [profileSelection, setProfileSelection] = useState<string>('');
 
+    const [loadedProfiles, setLoadedProfiles] = useState<ProfileObject[]>([]);
+
     const [profilePartSelected, setProfilePartSelected] = useState<profilePart>(profilePart.Shipping);
+
+    useEffect(() => {
+
+        (async () => {
+            const toSetProfiles = await electron.ipcRenderer.invoke("readjson", 'profiles.json');
+
+            setLoadedProfiles(toSetProfiles);
+        })();
+        
+    }, [])
 
     const handleProfileNameChange = (e : React.ChangeEvent<HTMLInputElement>) => {
         setProfileName(e.target.value);
     }
 
+    // add info on profile select
+    // useEffect(() => {
+        
+    // }, [profileSelection])
+
+    const saveProfile = async () => {
+        const newProfile : ProfileObject = {
+            information: {
+                name: 'Test Profile',
+                email: 'test@theta.io',
+                phone: '+16158922385',
+            },
+            shipping: {
+                firstName: 'Ian',
+                lastName: 'HowUBenn',
+                address1: '1105 Holly Tree Farms Rd',
+                address2: '1105',
+                zip: '37027',
+                city: 'Brentwood',
+                state: 'Tennessee', // TN
+                country: 'United States', // USA, US
+            },
+            billing: {
+                firstName: 'Ian',
+                lastName: 'Test',
+                address1: '1105 Holly Tree Farms Rd',
+                address2: '1105',
+                zip: '37027',
+                city: 'Brentwood',
+                state: 'Tennessee', // TN
+                country: 'United States', // USA, US
+            },
+            payment: {
+                name: 'Ian Testeeer',
+                number: '4767718439968928',
+                expiryMonth: '06',
+                expiryYear: '27',
+                cvv: '657'
+            },
+            settings: {
+                
+            }
+        }
+
+        setLoadedProfiles([...loadedProfiles, newProfile]);
+        const setRes = await electron.ipcRenderer.invoke('writejson', 'profiles.json', [...loadedProfiles, newProfile]);
+
+        console.log(`setRes: ${setRes}`)
+    }
+
     const handleProfileSelectionChange = (s : string) => {
         setProfileSelection(s);
         setProfileName(s);
+    }
+
+    const populateProfile = (profileName : string) => {
+        const newProfile : ProfileObject = loadedProfiles.find(prof => prof.information.name === profileName)
+
+        if (newProfile) {
+            const {
+                email,
+                phone
+            } = newProfile.information
+
+            setEmail(email);
+            setPhone(phone);
+
+            (() => {
+                const {
+                    firstName,
+                    lastName,
+                    address1,
+                    address2,
+                    country,
+                    city,
+                    zip,
+                    state
+                } = newProfile.shipping;
+    
+                setShipFname(firstName);
+                setShipLname(lastName);
+                setShipAddr1(address1);
+                setShipAddr2(address2)
+                setShipCountry(country);
+                setShipCity(city);
+                setShipZip(zip);
+                setShipState(state);
+            })();
+
+
+
+            const {
+                firstName,
+                lastName,
+                address1,
+                address2,
+                country,
+                city,
+                zip,
+                state
+            } = newProfile.billing;
+
+            setBillFname(billFname);
+            setBillLname(billLname);
+            setBillAddr1(billAddr1);
+            setBillAddr2(billAddr2)
+            setBillCountry(billCountry);
+            setBillCity(billCity);
+            setBillZip(billZip);
+            setBillState(billState);
+        }
+        
+
     }
 
     // info
@@ -140,7 +264,9 @@ const Profiles : FC = () => {
                             onChange={(e) => handleProfileNameChange(e)}
                             className={`focus:outline-none bg-indigo-975 ${profileName === '' ?  'placeholder-indigo-400' : 'text-indigo-100'} caret-indigo-100 rounded-md p-1 w-64 text-2xl`}                          
                         />
-                        <button>
+                        <button
+                        onClick={() => saveProfile()}
+                        >
                             <div className="p-1 bg-gradient-to-r from-indigo-600 to-indigo-400 w-64 rounded-lg flex justify-center items-center border">
                                 <div className="text-2xl text-indigo-100">
                                     Save Profile
@@ -398,7 +524,7 @@ const Profiles : FC = () => {
                         defaultText={'Select Profile Group'}
                         selection={profileSelection}
                         setSelection={handleProfileSelectionChange}
-                        selectionOptions={['List 1', 'List 2', 'ISPs', 'Leaf Resi']}
+                        selectionOptions={loadedProfiles.map(profile => profile.information.name)}
                     />
                     <div className="h-2"></div>
                 </div>

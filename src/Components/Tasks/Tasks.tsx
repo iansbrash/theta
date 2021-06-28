@@ -1,8 +1,7 @@
 import React, { FC, useState, useEffect } from "react";
 import TaskClass from "../../Logic/sites/classes/TaskClass";
-import AmazonTaskConfig, { AmazonModes } from '../../Logic/interfaces/site_task_config/AmazonTaskConfig';
-import testAccount from '../../Logic/sensitive/testInterfaces/testAccount';
 import AmazonTaskClass from '../../Logic/sites/Amazon/classes/AmazonTaskClass';
+import electron from 'electron';
 
 interface TaskFunctionProps {
     task: TaskClass,
@@ -27,6 +26,10 @@ const Task : FC<TaskFunctionProps> = ({
     //     // task.setStatusWatcher(setStatusWatcher);
     //     setStatusWatcher('Idle');
     // }, [])
+
+    const stopTask = () => {
+        electron.ipcRenderer.invoke("writefile", 'asd');
+    }
 
     const startTask = async () => {
         
@@ -123,7 +126,7 @@ const Task : FC<TaskFunctionProps> = ({
                     </div>
                 </button>
                 <button
-                onClick={() => task.stop()}
+                onClick={() => stopTask()}
                 >
                     <div className="text-yellow-200">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">

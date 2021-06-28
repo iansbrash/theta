@@ -114,7 +114,7 @@ const AmazonSiteConfig = () => {
                         defaultText={'Select Mode'}
                         selection={mode}
                         setSelection={setMode}
-                        selectionOptions={['Normal', 'Fast', 'Preload']}
+                        selectionOptions={Object.values(AmazonModes)}
                     />
                 </div>
             </div>
@@ -163,9 +163,12 @@ const AddTasks : FC<AddTasksProps> = ({
     const AddTaskHandler = () => {
         const toAddTaskClass : AmazonTaskClass = new AmazonTaskClass (
             taskIdCounter,
-            Site.Amazon,
+            // @ts-ignore
+            Site[Site[site]],
             testProfile,
-            [Size.OS],
+
+            // @ts-ignore
+            [Size[Size[size]]],
             testProxyList,
             url,
             {
@@ -194,7 +197,7 @@ const AddTasks : FC<AddTasksProps> = ({
                             defaultText={'Select Site'}
                             selection={site}
                             setSelection={setSite}
-                            selectionOptions={['Amazon']}
+                            selectionOptions={Object.values(Site)}
                         />
                     </div>
 
@@ -233,7 +236,7 @@ const AddTasks : FC<AddTasksProps> = ({
                                 defaultText={'Select Size'}
                                 selection={size}
                                 setSelection={setSize}
-                                selectionOptions={['OS', 'Random', 'S', 'M', 'L', 'XL']}
+                                selectionOptions={Object.values(Size)}
                             />
                             {/* Proxies selector */}
                             <AbstractSelector 

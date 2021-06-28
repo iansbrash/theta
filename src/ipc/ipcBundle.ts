@@ -1,5 +1,6 @@
 import electron from 'electron';
 import amazonBundle from './amazon/amazonBundle';
+import ioBundle from './io/io';
 
 const ipcBundle = () => {
 
@@ -8,7 +9,7 @@ const ipcBundle = () => {
         return "Test Success";
     })
 
-
+    ioBundle();
     amazonBundle();
 }
 
