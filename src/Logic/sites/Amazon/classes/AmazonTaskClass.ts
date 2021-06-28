@@ -147,20 +147,22 @@ class AmazonTaskClass extends TaskClass {
         }
     }
 
-    async ATC2() : Promise<void> {
+    async AmazonGETProduct() : Promise<string> {
         // allCookies, allCookiesObject['session-id']
-        const res = await electron.ipcRenderer.invoke('AmazonGETProductTwo', this.allCookies, this.input, this.proxyList.proxies[0]);
+        const res = await electron.ipcRenderer.invoke('AmazonGETProduct', this.allCookies, this.input, this.proxyList.proxies[0]);
 
         this.allCookies = res.allCookies;
         this.storage = {
             ...res.storage,
             sessionId: this.storage.sessionId,
         }
+
+        return res.productTitle;
     }
 
-    async ATC3() : Promise<void> {
+    async AmazonPOSTAddToCart() : Promise<void> {
         // allCookies, allCookiesObject['session-id']
-        const res = await electron.ipcRenderer.invoke('AmazonPOSTATC2', this.allCookies, this.storage, this.proxyList.proxies[0]);
+        const res = await electron.ipcRenderer.invoke('AmazonPOSTAddToCart', this.allCookies, this.storage, this.proxyList.proxies[0]);
 
         this.allCookies = res.allCookies;
         this.storage = {
@@ -182,15 +184,105 @@ class AmazonTaskClass extends TaskClass {
 
     /** ATC Flow via IPC */
 
-    async checkout() : Promise<void> {
+    /** Checkout Flow via IPC */
+
+    async GETCheckoutScreen() : Promise<void> {
         // allCookies, proxy
-        const res = await electron.ipcRenderer.invoke('AmazonCheckout', this.allCookies, this.proxyList.proxies[0]);
-        return res;
+        const res = await electron.ipcRenderer.invoke('GETCheckoutScreen', this.allCookies, this.proxyList.proxies[0]);
+
+        this.storage = res.storage;
+
+        this.allCookies = res.allCookies;
     }
+
+    async POSTAddShippingAddressFormHandler() : Promise<void> {
+        // allCookies, proxy
+        const res = await electron.ipcRenderer.invoke('POSTAddShippingAddressFormHandler', 
+            this.allCookies, 
+            this.profile.information,
+            this.profile.shipping,
+            this.storage,
+            this.proxyList.proxies[0]
+        );
+
+        this.storage = res.storage;
+        this.allCookies = res.allCookies;
+    }
+
+    async POSTSelectShippingAddress() : Promise<void> {
+        // allCookies, proxy
+        const res = await electron.ipcRenderer.invoke('POSTSelectShippingAddress', this.allCookies, this.storage, this.proxyList.proxies[0]);
+
+        this.allCookies = res.allCookies;
+    }
+
+    async GETAddPaymentPage() : Promise<void> {
+        // allCookies, proxy
+        const res = await electron.ipcRenderer.invoke('GETAddPaymentPage', this.allCookies, this.proxyList.proxies[0]);
+
+        this.allCookies = res.allCookies;
+        this.storage = {
+            ...this.storage,
+            ...res.storage
+        }
+    }
+
+    async POSTRegister() : Promise<void> {
+        // allCookies, proxy
+        const res = await electron.ipcRenderer.invoke('POSTRegister', this.allCookies, this.storage, this.proxyList.proxies[0]);
+
+        this.allCookies = res.allCookies;
+        this.storage = res.storage;
+    }
+
+    async POSTAddPaymentMethod() : Promise<void> {
+
+        console.log(this.storage)
+
+        // allCookies, proxy
+        const res = await electron.ipcRenderer.invoke('POSTAddPaymentMethod', this.allCookies, this.storage, this.profile.payment, this.proxyList.proxies[0]);
+
+        this.allCookies = res.allCookies;
+        this.storage = {
+            ...this.storage,
+            ...res.storage
+        }
+    }
+
+    async POSTSelectPaymentMethod() : Promise<void> {
+        // allCookies, proxy
+        const res = await electron.ipcRenderer.invoke('POSTSelectPaymentMethod', this.allCookies, this.storage, this.proxyList.proxies[0]);
+
+        this.allCookies = res.allCookies;
+        this.storage = res.storage;
+    }
+
+    async POSTAsyncContinueAfterSelection() : Promise<void> {
+        // allCookies, proxy
+        const res = await electron.ipcRenderer.invoke('POSTAsyncContinueAfterSelection', this.allCookies, this.storage, this.proxyList.proxies[0]);
+
+
+    }
+
+    async POSTSubmitOrder() : Promise<void> {
+        const res = await electron.ipcRenderer.invoke('POSTSubmitOrder', this.allCookies, this.storage, this.proxyList.proxies[0]);
+    }
+
+    async checkout() : Promise<void> {
+        const res = await electron.ipcRenderer.invoke('AmazonCheckout', this.allCookies, this.proxyList.proxies[0]);
+
+
+
+        // this.allCookies = res.allCookies;
+        // this.storage = res.storage;
+    }
+
 
     stop() : void {
         console.log('stopping !')
     }
+
+    /** Checkout Flow via IPC */
 }
 
 export default AmazonTaskClass;

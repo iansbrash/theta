@@ -27,7 +27,7 @@ const atcIpc = () => {
         return res;
     })
 
-    electron.ipcMain.handle('AmazonGETProductTwo', async (event, ...args) => {
+    electron.ipcMain.handle('AmazonGETProduct', async (event, ...args) => {
         // args:
         // allCookies, product, proxy
         let allCookies = args[0];
@@ -66,54 +66,12 @@ const atcIpc = () => {
                 offerListingID,
                 ASIN,
                 productTitle
-            }
+            },
+            productTitle
         }
-
-    
-
-        const POSTAmazonATC : any = await POSTAddToCart(
-            allCookies,
-            CSRFToken,
-            offerListingID,
-            allCookiesObject['session-id'],
-            product, // this needs to be the ASIN
-            allCookiesObject['session-id'],
-            proxy
-        )
-
-        allCookies = accumulateCookies(
-            allCookies,
-            returnParsedCookies( POSTAmazonATC.headers['set-cookie'] )
-        );
-    
-        (() => {
-            const d : string = POSTAmazonATC.data;
-            if (d.indexOf('Not added') !== -1) {
-                timestampLogger('Add to cart error')
-                throw "'Not added' add to cart error'";
-            }
-            else if (d.indexOf('Added to Cart') !== -1) {
-                timestampLogger('Successfully Added to Cart')
-            }
-            else {
-                timestampLogger('Add to cart error')
-                throw "Unknown add to cart error";
-            }
-    
-            // console.log(`<b>Cart subtotal</b>: ${d.substr(d.indexOf('<b>Cart subtotal</b>') + '<b>Cart subtotal</b>'.length, 10)}`)
-        })();
-
-        return {
-            allCookies: allCookies,
-            // storage: {
-            //     CSRFToken,
-            //     offerListingID,
-            //     ASIN
-            // }
-        };
     })
 
-    electron.ipcMain.handle('AmazonPOSTATC2', async (event, ...args) => {
+    electron.ipcMain.handle('AmazonPOSTAddToCart', async (event, ...args) => {
 
         const {
             CSRFToken,
@@ -155,125 +113,12 @@ const atcIpc = () => {
                 throw "Unknown add to cart error";
             }
     
-            // console.log(`<b>Cart subtotal</b>: ${d.substr(d.indexOf('<b>Cart subtotal</b>') + '<b>Cart subtotal</b>'.length, 10)}`)
         })();
 
         return {
             allCookies: allCookies,
-            // storage: {
-            //     CSRFToken,
-            //     offerListingID,
-            //     ASIN
-            // }
         };
     })
-
-    electron.ipcMain.handle('AmazonGETProduct', async (event, ...args) => {
-        // args:
-        // allCookies, product, proxy
-        let allCookies = args[0];
-        const product = args[1];
-        const proxy = args[2];
-
-    
-        console.log('a')
-        console.log(product)
-        console.log(proxy)
-        console.log(allCookies)
-
-        // res is cookies
-        const GETAmazonProductRes = await GETProduct(allCookies, product, proxy);
-
-        const FindCSRFData : string= GETAmazonProductRes.data;
-
-        const CSRFDelimiter : string = '<input type="hidden" name="CSRF" value="';
-
-        let productTitle : string = getValueByDelimiters(FindCSRFData, '<span id="productTitle" class="a-size-large product-title-word-break">', '</span>')
-        productTitle = productTitle.trim();
-        console.log(`productTitle: ${productTitle}`)
-        const ASIN = getValueByDelimiters(FindCSRFData, '<input type="hidden" id="attach-baseAsin" value="', '" />');
-        console.log(`ASIN: ${ASIN}`)
-
-
-        // wtf
-        const CSRFToken : string =  getValueByDelimiters(FindCSRFData, CSRFDelimiter, '"/>');
-
-        const offerListingIDDelimiter = '<input type="hidden" id="offerListingID" name="offerListingID" value="';
-        const offerListingID = getValueByDelimiters(FindCSRFData, offerListingIDDelimiter, '">');
-
-        // allCookies = accumulateCookies(
-        //     allCookies,
-        //     returnParsedCookies( GETAmazonProductRes.headers['set-cookie'] )
-        // );
-
-        return {
-            allCookies: allCookies,
-            storage: {
-                CSRFToken,
-                offerListingID,
-                ASIN
-            }
-        };
-    })
-
-    electron.ipcMain.handle('AmazonPOSTAddToCart', async (event, ...args) => {
-        // args:
-        // allCookies, product, proxy
-        let allCookies = args[0];
-        const ASIN = args[1];
-        const storage = args[2];
-        const proxy = args[3];
-
-        const {
-            CSRFToken,
-            offerListingID,
-            sessionId
-        } = storage;
-
-        console.log(allCookies)
-        console.log(storage)
-        console.log(ASIN)
-        console.log(proxy)
-
-    
-        // res is cookies
-        const POSTAmazonATC = await POSTAddToCart(
-            allCookies,
-            CSRFToken,
-            offerListingID,
-            sessionId,
-            ASIN,
-            sessionId,
-            proxy
-        );
-
-        allCookies = accumulateCookies(
-            allCookies,
-            returnParsedCookies( POSTAmazonATC.headers['set-cookie'] )
-        );
-
-        (() => {
-            const d : string = POSTAmazonATC.data;
-            if (d.indexOf('Not added') !== -1) {
-                timestampLogger('Add to cart error')
-                throw "'Not added' add to cart error'";
-            }
-            else if (d.indexOf('Added to Cart') !== -1) {
-                timestampLogger('Successfully Added to Cart')
-            }
-            else {
-                timestampLogger('Add to cart error')
-                throw POSTAmazonATC.data;
-            }
-    
-            // console.log(`<b>Cart subtotal</b>: ${d.substr(d.indexOf('<b>Cart subtotal</b>') + '<b>Cart subtotal</b>'.length, 10)}`)
-        })();
-
-        return {
-            allCookies: allCookies
-        };
-    })
-
 
 }
 

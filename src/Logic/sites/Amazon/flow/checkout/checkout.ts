@@ -6,8 +6,6 @@ import {
 } from '../../../../requestFunctions';
 import qs from 'qs';
 import axios, { AxiosResponse } from 'axios';
-import { AmazonUser, AmazonPass } from "../../../../sensitive/logins";
-import requestRetryWrapper from '../../../../requestRetryWrapper';
 import tsLogger from '../../../../logger';
 import genShippingPayload from "../../logic/genShippingPayload";
 import testProfile from "../../../../sensitive/testInterfaces/testProfile";
@@ -29,61 +27,6 @@ import {
 export const replaceAll = (str : string, find : string, replace : string) => {
     return str.replace(new RegExp(find, 'g'), replace);
 }
-
-
-interface POSTContinueWidgetDynamicParams {
-    addCreditCardNumber: string,
-    // short widgetState (not from original GET body)
-    "ppw-widgetState": string,
-    customerId: string
-}
-
-const POSTContinueWidget = async (allCookies : string[], params : POSTContinueWidgetDynamicParams) => {
-
-    const {
-        addCreditCardNumber,
-        customerId
-    } = params;
-
-    const ppwWidgetState = params["ppw-widgetState"];
-
-    const POSTContinueWidgetUrl = `https://apx-security.amazon.com/payments-portal/data/f1/widgets2/v1/customer/${customerId}/continueWidget`;
-    // const POSTContinueWidgetUrl ='https://apx-security.amazon.com/payments-portal/data/f1/widgets2/v1/customer/A25HA1HE1RD42U/continueWidget'
-    // console.log('https://apx-security.amazon.com/payments-portal/data/f1/widgets2/v1/customer/${customerId}/continueWidget')
-    // console.log(POSTContinueWidgetUrl)
-    const POSTContinueWidgetDataConfig = {
-        "ppw-jsEnabled": true,
-        addCreditCardNumber: addCreditCardNumber,
-        "ppw-widgetEvent": "IdentifyCreditCardEvent",
-        "ppw-widgetState": ppwWidgetState
-    }
-
-    const POSTContinueWidgetData = qs.stringify(POSTContinueWidgetDataConfig);
-
-    const POSTContinueWidgetResponse = await axios({
-        method: 'post',
-        url: POSTContinueWidgetUrl,
-        headers: {
-            "accept": "application/json, text/javascript, */*; q=0.01",
-            "accept-language": "en-US,en;q=0.9",
-            // "apx-widget-info": "Checkout/desktop/DJLMTDaququU",
-            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"",
-            "sec-ch-ua-mobile": "?0",
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "same-origin",
-            "widget-ajax-attempt-count": "0",
-            "x-requested-with": "XMLHttpRequest",
-            cookie: joinCookies(allCookies)
-        },
-        data : POSTContinueWidgetData
-    })
-
-    return POSTContinueWidgetResponse;
-}
-
-
 
 const Checkout = async (allCookies : string[], proxy : Proxy) => {
 
@@ -128,7 +71,7 @@ const Checkout = async (allCookies : string[], proxy : Proxy) => {
     );
 
     const addressId = POSTAddShippingAddressFormHandlerResponse.data.createOrEditAddressResponse.addressId;
-    const addressBookId = getValueByDelimiters(GETCheckoutScreenResponseData , '<input type="hidden" name="addressBookId" value="', '">')
+    // const addressBookId = getValueByDelimiters(GETCheckoutScreenResponseData , '<input type="hidden" name="addressBookId" value="', '">')
 
     allCookies = accumulateCookies(
         allCookies,
@@ -278,18 +221,10 @@ const Checkout = async (allCookies : string[], proxy : Proxy) => {
         proxy
     )
 
-    // console.log(POSTAsyncContinueAfterSelectionResponse.data);
 
     const fuckData = POSTAsyncContinueAfterSelectionResponse.data;
 
-    // console.log(typeof fuckData)
-    // console.log(fuckData.subtotals)
-    // console.log(fuckData.panels)
-    // console.log(fuckData.panels[7]);
-
     const POSTAsyncContinueAfterSelectionResponseCollectedData = fuckData.panels.map((panel : object) => JSON.stringify(panel)).join(' ')
-
-    // console.log(POSTAsyncContinueAfterSelectionResponseCollectedData);
 
     const finalData = {
         // 'purchaseLevelMessageIds': 'saveDefaults',

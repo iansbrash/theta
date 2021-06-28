@@ -13,19 +13,8 @@ const Task : FC<TaskFunctionProps> = ({
     deleteFunction
 } : TaskFunctionProps) => {
 
-    // const product = 'https://amazon.com/asdasdasdasdasdasdasd/dp/DPPRODID';
-
     const [statusWatcher, setStatusWatcher] = useState<string>('Idle');
-
-    // const amazonTaskConfig : AmazonTaskConfig = {
-    //     mode: AmazonModes.Normal,
-    //     account: testAccount
-    // }
-
-    // useEffect(() => {
-    //     // task.setStatusWatcher(setStatusWatcher);
-    //     setStatusWatcher('Idle');
-    // }, [])
+    const [productTitle, setProductTitle] = useState<string>(task.input)
 
     const stopTask = () => {
         electron.ipcRenderer.invoke("writefile", 'asd');
@@ -46,11 +35,12 @@ const Task : FC<TaskFunctionProps> = ({
         // await (task as AmazonTaskClass).signIn();
 
 
-        setStatusWatcher('gettingapget')
-        await (task as AmazonTaskClass).ATC2();
+        setStatusWatcher('Getting product')
+        const productTitleRes = await (task as AmazonTaskClass).AmazonGETProduct();
+        setProductTitle(productTitleRes)
 
-        setStatusWatcher('atc3')
-        await (task as AmazonTaskClass).ATC3();
+        setStatusWatcher('Adding to cart')
+        await (task as AmazonTaskClass).AmazonPOSTAddToCart();
 
         // setStatusWatcher('Getting product')
         // await (task as AmazonTaskClass).GETProduct();
@@ -58,12 +48,35 @@ const Task : FC<TaskFunctionProps> = ({
         // setStatusWatcher('Adding to cart')
         // await (task as AmazonTaskClass).POSTAddToCart();
 
-        return;
+        // return;
+        setStatusWatcher('Getting checkout screen')
+        await (task as AmazonTaskClass).GETCheckoutScreen();
 
+        setStatusWatcher('Adding shipping')
+        await (task as AmazonTaskClass).POSTAddShippingAddressFormHandler();
 
+        setStatusWatcher('Selecting shipping')
+        await (task as AmazonTaskClass).POSTSelectShippingAddress();
 
-        setStatusWatcher('Checking out...') 
-        await (task as AmazonTaskClass).checkout();
+        setStatusWatcher('Adding payment (1)')
+        await (task as AmazonTaskClass).GETAddPaymentPage();
+
+        setStatusWatcher('Adding payment (2)')
+        await (task as AmazonTaskClass).POSTRegister();
+
+        setStatusWatcher('Adding payment (2)')
+        await (task as AmazonTaskClass).POSTAddPaymentMethod();
+
+        setStatusWatcher('Selecting payment')
+        await (task as AmazonTaskClass).POSTSelectPaymentMethod();
+
+        setStatusWatcher('Getting submit order screen')
+        await (task as AmazonTaskClass).POSTAsyncContinueAfterSelection();
+
+        setStatusWatcher('Submitting order...')
+        await (task as AmazonTaskClass).POSTSubmitOrder();
+        // setStatusWatcher('Checking out...') 
+        // await (task as AmazonTaskClass).checkout();
 
         setStatusWatcher('Checked out')
 
@@ -82,7 +95,7 @@ const Task : FC<TaskFunctionProps> = ({
                 <div className="flex-1 min-w-0 flex flex-row justify-center items-center space-x-2">
                     {/* Product */}
                     <div className="w-1/2 text-indigo-100 truncate">
-                        {task.input.substring(task.input.indexOf('dp/') + 3)}
+                        {productTitle}
                     </div>
 
                     <div className="w-1/4 text-indigo-100 h-10 flex flex-row justify-left items-center">
