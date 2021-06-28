@@ -1,5 +1,6 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import sendSuccess from '../../Logic/webhooks/discordsuccess';
+import electron from 'electron';
 
 interface SettingsInputProps {
     input: string,
@@ -45,6 +46,27 @@ const Settings : FC = () => {
     const [discordWebhook, setDiscordWebhook] = useState<string>('')
 
 
+    useEffect(() => {
+        (async () => {
+            const res = await electron.ipcRenderer.invoke('readjson', 'settings.json');
+
+            setErrorDelay(res.errorDelay)
+            setMonitorDelay(res.monitorDelay)
+            setDiscordWebhook(res.discordWebhook)
+        })();
+    }, [])
+
+    const saveSettings = async () => {
+        const settingsObject = {
+            monitorDelay: monitorDelay,
+            errorDelay: errorDelay,
+            discordWebhook: discordWebhook
+        }
+
+        const res = await electron.ipcRenderer.invoke('writejson', 'settings.json', settingsObject);
+    }
+
+
     return (
         <div className="flex flex-col flex-1 justify-center items-center text-lg h-full shadow-lg bg-indigo-1000">
             <div className="w-full p-5 h-full">
@@ -79,7 +101,9 @@ const Settings : FC = () => {
                     </div>
 
                     <div className="w-full justify-start px-5 mt-5">
-                        <button>
+                        <button
+                        onClick={() => saveSettings()}
+                        >
                             <div className="p-1 bg-gradient-to-r from-indigo-600 to-indigo-400 w-64 rounded-lg flex justify-center items-center border">
                                 <div className="text-2xl text-indigo-100">
                                     Save Settings

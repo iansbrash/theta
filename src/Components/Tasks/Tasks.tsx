@@ -214,8 +214,8 @@ const Tasks : FC<TaskScreenProps> = ({
                     </div>
 
                     {/* Divding line */}
-                    <div className="w-full flex ustify-start">
-                        <div className="h-0.5 w-full bg-indigo-500 mx-3 my-2"></div>
+                    <div className="w-full flex justify-start">
+                        <div className="h-0.5 w-full bg-indigo-500 mx-3 mt-2"></div>
                     </div>
 
                     <div className="w-full h-full px-4 flex flex-col overflow-y-scroll scrollbar-hide">
@@ -225,6 +225,37 @@ const Tasks : FC<TaskScreenProps> = ({
                                 <div className="h-0.25 w-full bg-indigo-900"></div>
                             </>
                         ))}
+                    </div>
+
+                    {/* Divding line */}
+                    <div className="w-full flex justify-start">
+                        <div className="h-0.5 w-full bg-indigo-500 mx-3 mb-2"></div>
+                    </div>
+                    <div className="w-full px-4 pb-2 flex flex-row justify-center items-center text-indigo-100 text-4xl font-medium space-x-16">
+                        <button className="z-10 absolute left-28 focus:outline-none">
+                            <div className="ml-3 bg-indigo-900 shadow-md p-1 rounded-md border-green-200 border-2  text-xl text-indigo-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                </svg>
+                            </div>
+                        </button>
+                        <button>
+                            <div className="bg-indigo-900 shadow-md px-2 py-1 rounded-md border-green-200 border-2  text-xl text-indigo-100">
+                                Start Tasks
+                            </div>
+                        </button>
+
+                        <button>
+                            <div className="bg-indigo-900 shadow-md px-2 py-1 rounded-md border-yellow-200 border-2 text-xl ">
+                                Stop Tasks
+                            </div>
+                        </button>
+
+                        <button>
+                            <div className="bg-indigo-900 shadow-md px-2 py-1 rounded-md border-red-200 border-2 text-xl ">
+                                Delete Tasks
+                            </div>
+                        </button>
                     </div>
                 </div>
             </div>
