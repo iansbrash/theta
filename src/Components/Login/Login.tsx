@@ -1,16 +1,45 @@
-import React, {FC} from 'react';
+import React, { FC, useState } from 'react';
 import electron from 'electron';
+import axios, { AxiosError } from 'axios';
 
-const Login = () => {
+const Login : FC = () => {
 
-    const attemptAuth = () => {
-        electron.ipcRenderer.invoke('authenticated')
+    const [status, setStatus] = useState<string>('Enter your liscense key')
+    const [liscense, setLiscense] = useState<string>('')
+
+    const attemptAuth = async () => {
+        try {
+            setStatus('Authenticating...')
+
+            const res = await axios({
+                method: 'post',
+                url: `https://m47tospeyf.execute-api.us-east-1.amazonaws.com/test/auth`,
+                headers: {
+                    liscense: liscense
+                }
+            })
+
+            console.log(res);
+            electron.ipcRenderer.invoke('authenticated')
+        }
+        catch (err) {
+            if (err.response.status === 401) {
+                setStatus('Key is already active')
+            }
+            else if (err.response.status === 404) {
+                setStatus('Invalid liscense key')
+            }
+            else {
+                setStatus('Unknown authentication error')
+            }
+        }
     }
+
 
     return (
         <div className="flex flex-col h-screen w-screen justify-center items-center bg-indigo-1000 p-5 ">
             <div className="font-medium text-lg text-indigo-400 m-1">
-                Enter your liscense key
+                {status}
             </div>
             <div className="w-full justify-center items-center flex flex-row mb-10">
                 <div className="flex justify-center items-center rounded-lg shadow-lg w-auto border border-indigo-600 h-10 bg-indigo-950 flex-row">
@@ -20,12 +49,14 @@ const Login = () => {
                         </svg>
                     </div>
                     <input 
+                    value={liscense}
+                    onChange={(e) => setLiscense(e.target.value)}
                     className="placeholder-indigo-300 focus:outline-none bg-indigo-950 w-72 text-xl text-indigo-300"
                     placeholder="XXXX-XXXX-XXXX-XXXX-XXXX"
                     />
                 </div>
                 <button
-                className="h-10 w-10 justify-center items-center flex border border-indigo-600 text-color-400 rounded-md ml-2 text-indigo-400 bg-indigo-900"
+                className="focus:outline-none h-10 w-10 justify-center items-center flex border border-indigo-600 text-color-400 rounded-md ml-2 text-indigo-400 bg-indigo-900"
                 onClick={() => attemptAuth()}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
