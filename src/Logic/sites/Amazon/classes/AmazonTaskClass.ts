@@ -27,6 +27,7 @@ class AmazonTaskClass extends TaskClass {
     allCookies : string[];
     allCookiesObject : object = {};
     storage : storage = {};
+    status : string = "Idle";
 
 
     constructor (
@@ -93,6 +94,9 @@ class AmazonTaskClass extends TaskClass {
     /** SignIn Flow via IPC */
 
     async GETMainLoginPage() : Promise<void> {
+
+        this.status = "Active";
+
         // allCookies, proxy
         const res : ipcResponse = await electron.ipcRenderer.invoke('AmazonGETMainLoginPage', this.allCookies, this.proxyList.proxies[0]);
         this.allCookies = res.allCookies;
@@ -165,26 +169,22 @@ class AmazonTaskClass extends TaskClass {
         return res.productTitle;
     }
 
-    async AmazonPOSTAddToCart() : Promise<void> {
+    async AmazonPOSTAddToCart() : Promise<string> {
         // allCookies, allCookiesObject['session-id']
         const res = await electron.ipcRenderer.invoke('AmazonPOSTAddToCart', this.allCookies, this.storage, this.proxyList.proxies[0]);
+        console.log('here 2')
 
         this.allCookies = res.allCookies;
+
+        // dont think this actually returns anything...
         this.storage = {
             ...res.storage,
             sessionId: this.storage.sessionId,
         }
-    }
 
-    async POSTAddToCart() : Promise<void> {
-        // allCookies, allCookiesObject['session-id']
-        const res = await electron.ipcRenderer.invoke('AmazonPOSTAddToCart', this.allCookies, this.storage.ASIN, {
-            CSRFToken: this.storage.CSRFToken,
-            offerListingId: this.storage.offerListingID,
-            sessionId: this.storage.sessionId
-        }, this.proxyList.proxies[0]);
+        console.log('here 3')
 
-        this.allCookies = res.allCookies;
+        return res.status;
     }
 
     /** ATC Flow via IPC */

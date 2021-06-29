@@ -3,6 +3,7 @@ import TaskClass from "../../Logic/sites/classes/TaskClass";
 import AmazonTaskClass from '../../Logic/sites/Amazon/classes/AmazonTaskClass';
 import electron from 'electron';
 import { AmazonStatus } from '../../Logic/sites/Amazon/classes/AmazonTaskClass'
+import sendSuccess from "../../Logic/webhooks/discordsuccess";
 
 const delay = (ms : number) => new Promise(res => setTimeout(res, ms));
 
@@ -19,11 +20,16 @@ const Task : FC<TaskFunctionProps> = ({
     const [statusWatcher, setStatusWatcher] = useState<string>('Idle');
     const [productTitle, setProductTitle] = useState<string>(task.input)
 
+    const [taskState, setTaskState] = useState<boolean>(false);
+
     const stopTask = () => {
-        electron.ipcRenderer.invoke("writefile", 'asd');
+        // electron.ipcRenderer.invoke("writefile", 'asd');
+        setStatusWatcher("Stopped")
+        task.status = "Stopped";
     }
 
     const startTask = async () => {
+
         
         setStatusWatcher('Signing in (1)')
         await (task as AmazonTaskClass).GETMainLoginPage();
@@ -43,7 +49,21 @@ const Task : FC<TaskFunctionProps> = ({
         setProductTitle(productTitleRes)
 
         setStatusWatcher('Adding to cart')
-        await (task as AmazonTaskClass).AmazonPOSTAddToCart();
+        let ATCStatus = await (task as AmazonTaskClass).AmazonPOSTAddToCart();
+
+        console.log(`ATCStatus: ${ATCStatus}`)
+        console.log(`taskState: ${taskState}`)
+
+        if (ATCStatus !== 'Success') {
+            while (task.status === "Active" && ATCStatus !== "Success") {
+                setStatusWatcher(ATCStatus)
+                await delay(3500);
+                console.log('retrying')
+                ATCStatus = await (task as AmazonTaskClass).AmazonPOSTAddToCart();
+            }
+        }
+
+        if (!taskState) return;
 
         // setStatusWatcher('Getting product')
         // await (task as AmazonTaskClass).GETProduct();
@@ -92,6 +112,7 @@ const Task : FC<TaskFunctionProps> = ({
             const submitSuccess : AmazonStatus = await (task as AmazonTaskClass).POSTSubmitOrder();
             if (submitSuccess === AmazonStatus.CheckoutSuccess) {
                 setStatusWatcher('Checked out')
+                // sendSuccess()
             }
             else {
                 setStatusWatcher('Two errors, stopping')
@@ -147,7 +168,7 @@ const Task : FC<TaskFunctionProps> = ({
             {/* Start, Stop, Edit */}
             <div className="flex flex-row justify-center items-center space-x-1">
                 <button
-                onClick={() => startTask()}
+                onClick={() => {setTaskState(true); startTask();}}
                 >
                     <div className="text-green-200">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">

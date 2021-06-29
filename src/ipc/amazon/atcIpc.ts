@@ -49,12 +49,18 @@ const atcIpc = () => {
         console.log(CSRFToken)
 
         const offerListingIDDelimiter = '<input type="hidden" id="offerListingID" name="offerListingID" value="';
-        const offerListingID = getValueByDelimiters(FindCSRFData, offerListingIDDelimiter, '">');
+        let offerListingID = '';
+        if (FindCSRFData.indexOf('<input type="hidden" id="session-id" name="session-id" value="140-8342675-4089119">') === -1) {
+            offerListingID = getValueByDelimiters(FindCSRFData, offerListingIDDelimiter, '">');
+        }
 
         let productTitle : string = getValueByDelimiters(FindCSRFData, '<span id="productTitle" class="a-size-large product-title-word-break">', '</span>')
         productTitle = productTitle.trim();
         console.log(`productTitle: ${productTitle}`)
-        const ASIN = getValueByDelimiters(FindCSRFData, '<input type="hidden" id="attach-baseAsin" value="', '" />');
+        let ASIN = getValueByDelimiters(FindCSRFData, '<input type="hidden" id="attach-baseAsin" value="', '" />');
+        if (ASIN.length !== 10) {
+            ASIN = getValueByDelimiters(FindCSRFData, '<input type="hidden" id="ASIN" name="ASIN" value="', '">');
+        }
         console.log(`ASIN: ${ASIN}`)
 
         allCookiesObject = convertCookieArrayToObject(allCookies);
@@ -73,7 +79,7 @@ const atcIpc = () => {
 
     electron.ipcMain.handle('AmazonPOSTAddToCart', async (event, ...args) => {
 
-        const {
+        let {
             CSRFToken,
             ASIN,
             sessionId,
@@ -83,6 +89,15 @@ const atcIpc = () => {
 
         let allCookies = args[0]
         let proxy = args[2];
+
+        // if (ASIN === 'B08FC6MR62') {
+        //     offerListingID = 'EhI%2Bg%2BUmGWsHOvVkLPNic%2FU6IllHdZdr89rnc0IuLIGgbJQXO9tp5PAqaRhsvhgkijQ3YSTM0dC1sCPsOuMpcWW%2FWNsnsltIp3h31C8JrsfM5%2Fy8WTDQGbxSgkzzgrbYAOoTj94boWL9KOW7i4rPWSslkdpSwE6Q6iNfgsRN9Hq%2B1kE%2BI26gRANsoVd8B9d0'
+        // }
+
+        if (offerListingID === '') {
+            console.log("Offerlisting ID is null, product is OOS")
+            return {allCookies: allCookies, status: "OOS"}
+        }
 
         const POSTAmazonATC : any = await POSTAddToCart(
             allCookies,
@@ -98,24 +113,37 @@ const atcIpc = () => {
             allCookies,
             returnParsedCookies( POSTAmazonATC.headers['set-cookie'] )
         );
+
+        let status;
     
         (() => {
             const d : string = POSTAmazonATC.data;
-            if (d.indexOf('Not added') !== -1) {
+            if (d.indexOf('These items are currently unavailable') !== -1) {
+                timestampLogger('OOS')
+                status = 'OOS';
+            }
+            else if (d.indexOf('Not added') !== -1) {
                 timestampLogger('Add to cart error')
-                throw "'Not added' add to cart error'";
+                status = "Error"
+                // throw "'Not added' add to cart error'";
             }
             else if (d.indexOf('Added to Cart') !== -1) {
                 timestampLogger('Successfully Added to Cart')
+                status = "Success"
             }
             else {
                 timestampLogger('Add to cart error')
-                throw "Unknown add to cart error";
+                status = "Error"
+                // console.log(POSTAmazonATC.data)
+                // throw "Error";
             }
     
         })();
 
+        console.log('here')
+
         return {
+            status: status,
             allCookies: allCookies,
         };
     })

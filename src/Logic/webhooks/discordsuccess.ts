@@ -1,44 +1,44 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'qs';
 
-const sendSuccess = async (webhook : string) => {
+const sendSuccess = async (webhook : string, productTitle : string, store : string, profileName : string, size : string, proxyListName : string, accountName : string, mode : string) => {
 
     const payload = {
         "content": null,
         "embeds": [
             {
-                "title": "PS5 Digital Edition",
+                "title": productTitle,
                 "url": "https://amazon.com/",
                 "color": 5814783,
                 "fields": [
                 {
-                "name": "Store",
+                "name": store,
                     "value": "Amazon",
                     "inline": true
                 },
                 {
                 "name": "Profile",
-                    "value": "Real Card",
+                    "value": profileName,
                     "inline": true
                 },
                 {
                 "name": "Size",
-                    "value": "OS",
+                    "value": size,
                     "inline": true
                 },
                 {
                 "name": "Proxys",
-                    "value": "Comcast ISP",
+                    "value": proxyListName,
                     "inline": true
                 },
                 {
                 "name": "Account",
-                    "value": "brash@usc.edu",
+                    "value": accountName,
                     "inline": true
                 },
                 {
                 "name": "Mode",
-                    "value": "Normal",
+                    "value": mode,
                     "inline": true
                 }
                 ],

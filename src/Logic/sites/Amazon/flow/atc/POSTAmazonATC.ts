@@ -17,6 +17,8 @@ const POSTAddToCart = async (
     proxy : Proxy
 ) : Promise<AxiosResponse>=> {
 
+    // console.log('CSRF: ' + CSRFToken)
+
     var data = qs.stringify({
         'CSRF': CSRFToken,
         'offerListingID': offerListingID,

@@ -116,7 +116,7 @@ const Settings : FC = () => {
                             </div>
                         </button>
                         <button
-                        onClick={() => sendSuccess(discordWebhook)}
+                        onClick={() => sendSuccess(discordWebhook, 'Test Webhook Product', 'Amazon', 'Test Profile', 'Random', 'Test Proxies', 'test@gmail.com', 'Test')}
                         >
                             <div className="p-1 bg-gradient-to-r from-indigo-600 to-indigo-400 w-64 rounded-lg flex justify-center items-center border">
                                 <div className="text-2xl text-indigo-100">
