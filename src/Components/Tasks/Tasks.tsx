@@ -57,7 +57,7 @@ const Task : FC<TaskFunctionProps> = ({
         if (ATCStatus !== 'Success') {
             while (task.status === "Active" && ATCStatus !== "Success") {
                 setStatusWatcher(ATCStatus)
-                await delay(3500);
+                await delay(4000);
                 console.log('retrying')
                 ATCStatus = await (task as AmazonTaskClass).AmazonPOSTAddToCart();
             }

@@ -15,8 +15,9 @@ import { app, BrowserWindow, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-
+import authBundle from './ipc/auth/auth';
 import ipcBundle from './ipc/ipcBundle';
+import electron from 'electron';
 
 
 export default class AppUpdater {
@@ -28,6 +29,8 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+let loginWindow: BrowserWindow | null = null;
+
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -72,15 +75,36 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
+    width: 500,
+    height: 250,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       nodeIntegration: true,
     },
   });
 
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+//   loginWindow.loadURL(`file://${__dirname}/index.html?login`);
+
+  
+
+
+  mainWindow.loadURL(`file://${__dirname}/index.html#/login`);
+
+    electron.ipcMain.handle("authenticated", async event => {
+
+        //@ts-ignore
+        mainWindow.setSize(1200, 900)
+        //@ts-ignore
+        mainWindow.center();
+
+        // @ts-ignore
+        // @ts-ignore
+        mainWindow.loadURL(`file://${__dirname}/index.html#/main/`)
+
+        // if (env.NODE_ENV === 'development') {
+        //   return // Skip updates on development env
+        // }
+    });
 
   // open dev tools
   mainWindow.webContents.openDevTools({ mode: 'detach' });
@@ -99,6 +123,8 @@ const createWindow = async () => {
     }
   });
 
+
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -111,6 +137,9 @@ const createWindow = async () => {
     event.preventDefault();
     shell.openExternal(url);
   });
+
+//   authBundle(mainWindow);
+
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line

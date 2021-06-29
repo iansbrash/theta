@@ -15,6 +15,7 @@ import Accounts from "./Components/Accounts/Accounts";
 import Proxies from "./Components/Proxies/Proxies";
 import TaskClass from "./Logic/sites/classes/TaskClass";
 import "./App.global.css";
+import Login from './Components/Login/Login';
 
 
 const HomeIcon = () => (
@@ -86,8 +87,14 @@ const App = () => {
     const [tasks, setTasks] = useState<TaskClass[]>([]);
 
 
+
     return (
         <HashRouter>
+            <Route path="/login">
+                <Login />
+            </Route>
+            <Route path="/main">
+
             <div className="relative flex flex-row h-screen w-screen justify-start items-center bg-pink-100">
                 {/* Bar */}
                 <div className="relative text-indigo-300 z-10 flex h-screen w-20 bg-gradient-to-b from-indigo-950 to-indigo-975 shadow-2xl flex-col justify-between items-center">
@@ -99,7 +106,7 @@ const App = () => {
                     {/* Icons */}
                     <div className="flex flex-col space-y-6">
                         {iconsArray.map((icon, index : number) => (
-                            <Link to={toArray[index]}>
+                            <Link to={"/main" + toArray[index]}>
                                 <div className="shadow-xl p-1 bg-indigo-900 rounded-lg">
                                     {icon}
                                 </div>
@@ -113,12 +120,12 @@ const App = () => {
                     </div>
                 </div>
                 {/* Home */}
-                <Route path="/" exact>
+                <Route path="/main/" exact>
                     <Home />
                 </Route>
 
                 {/* AddTasks */}
-                <Route path="/addtasks">
+                <Route path="/main/addtasks">
                     <AddTasks 
                         tasks={tasks}
                         setTasks={setTasks}
@@ -126,7 +133,7 @@ const App = () => {
                 </Route>
                 
                 {/* Tasks */}
-                <Route path="/tasks">
+                <Route path="/main/tasks">
                     <Tasks 
                         tasks={tasks}
                         setTasks={setTasks}
@@ -134,25 +141,27 @@ const App = () => {
                 </Route>
 
                 {/* Home */}
-                <Route path="/profiles">
+                <Route path="/main/profiles">
                     <Profiles />
                 </Route>
 
                 {/* Home */}
-                <Route path="/proxies">
+                <Route path="/main/proxies">
                     <Proxies />
                 </Route>
 
                 {/* Home */}
-                <Route path="/accounts">
+                <Route path="/main/accounts">
                     <Accounts />
                 </Route>
 
                 {/* Home */}
-                <Route path="/settings">
+                <Route path="/main/settings">
                     <Settings />
                 </Route>
             </div>
+            </Route>
+
         </HashRouter> 
     );
 }
