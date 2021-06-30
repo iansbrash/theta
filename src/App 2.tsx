@@ -11,7 +11,7 @@ import Home from './Components 2/Home/Home';
 import AddTasks from "./Components/Add Tasks/AddTasks";
 import Profiles from "./Components/Profiles/Profiles";
 import Settings from "./Components/Settings/Settings";
-import Tasks from "./Components/Tasks/Tasks";
+import Tasks from "./Components 2/Tasks/Tasks";
 import Accounts from "./Components/Accounts/Accounts";
 import Proxies from "./Components/Proxies/Proxies";
 import TaskClass from "./Logic/sites/classes/TaskClass";
@@ -136,10 +136,7 @@ const AppTwo = () => {
                 
                 {/* Tasks */}
                 <Route path="/main/tasks">
-                    {/* <Tasks 
-                        tasks={tasks}
-                        setTasks={setTasks}
-                    /> */}
+                    <Tasks />
                 </Route>
 
                 {/* Home */}

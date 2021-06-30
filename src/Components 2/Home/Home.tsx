@@ -28,6 +28,12 @@ const CheckoutFeedIcon = () => (
     </svg>
 )
 
+const AnalyticsIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" viewBox="0 0 20 20" fill="currentColor">
+        <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+    </svg>
+)
+
 interface CheckoutFeedPurchaseProps {
     productTitle: string,
     store: string,
@@ -87,6 +93,62 @@ const Home = () => {
         "Version 1.0.0\nAdd Amazon US fast mode\nFix UI bugs in add tasks\nMore bug fixes"
     ]
     const checkoutsArray = () => [
+        {
+            productTitle: 'PS6 Quantum Edition',
+            store: "Amazon",
+            profile: "Real Card",
+            size: "Random",
+            proxyList: "Resi Main",
+            price: 699
+        },
+        {
+            productTitle: 'PS6 Quantum Edition',
+            store: "Amazon",
+            profile: "Real Card",
+            size: "Random",
+            proxyList: "Resi Main",
+            price: 699
+        },
+        {
+            productTitle: 'PS6 Quantum Edition',
+            store: "Amazon",
+            profile: "Real Card",
+            size: "Random",
+            proxyList: "Resi Main",
+            price: 699
+        },
+        {
+            productTitle: 'PS6 Quantum Edition',
+            store: "Amazon",
+            profile: "Real Card",
+            size: "Random",
+            proxyList: "Resi Main",
+            price: 699
+        },
+        {
+            productTitle: 'PS6 Quantum Edition',
+            store: "Amazon",
+            profile: "Real Card",
+            size: "Random",
+            proxyList: "Resi Main",
+            price: 699
+        },
+        {
+            productTitle: 'PS6 Quantum Edition',
+            store: "Amazon",
+            profile: "Real Card",
+            size: "Random",
+            proxyList: "Resi Main",
+            price: 699
+        },
+        {
+            productTitle: 'PS6 Quantum Edition',
+            store: "Amazon",
+            profile: "Real Card",
+            size: "Random",
+            proxyList: "Resi Main",
+            price: 699
+        },
         {
             productTitle: 'PS6 Quantum Edition',
             store: "Amazon",
@@ -197,9 +259,24 @@ const Home = () => {
             </div>
             <div className="h-2/3 w-full flex flex-row justify-start items-center">
                 <div className={`h-full w-1/2 ${impliedPadding}`}>
-                    <div className="w-full h-full rounded-md shadow-md bg-theta-home-checkout-feed">
+                    <div className="w-full h-full rounded-md shadow-md bg-theta-home-checkout-feed p-4 flex flex-col justify-start items-start">
+                        
+                        {/* Header */}
+                        <div className="mb-4 text-theta-gray-2 space-x-4 flex flex-row justify-start items-center">
+                            <div className="text-4xl font-medium">
+                                Analytics
+                            </div>
+                            <AnalyticsIcon />
+                        </div>
 
+                        {/* Graph */}
+                        <div className="w-full h-full rounded-md shadow-md bg-theta-home-checkout-feed-purchase flex justify-center items-center">
+                            <div className="text-theta-white text-4xl font-bold">
+                                Coming soon 😉
+                            </div>
+                        </div>
                     </div>
+                    
                 </div>
 
                 {/* Checkout feed */}
@@ -212,16 +289,25 @@ const Home = () => {
                             <CheckoutFeedIcon />
                         </div>
 
+                        {/* Top gradient fade */}
+                        <div className="relative w-full">
+                            <div className="z-10 absolute top-0 left-0 right-0 h-3 bg-gradient-to-b from-theta-home-checkout-feed to-transparent"></div>
+                        </div>
+
                         {/* Checkouts List */}
                         <div className="space-y-2 flex flex-col justify-start items-center w-full overflow-scroll scrollbar-hide">
+                            <div className="h-2"></div>
                             {checkouts.map((co) => (
                                 <CheckoutFeedPurchase 
                                     {...co}
                                 />
                             ))}
                         </div>
-                        
 
+                        {/* Bottom gradient fade */}
+                        <div className="relative w-full">
+                            <div className="z-10 absolute bottom-0 left-0 right-0 h-3 bg-gradient-to-t from-theta-home-checkout-feed to-transparent"></div>
+                        </div>
                     </div>
                 </div>
             </div>
