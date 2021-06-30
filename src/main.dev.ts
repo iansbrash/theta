@@ -87,8 +87,10 @@ const createWindow = async () => {
 
   
 
-
+// while designing new UI
+//   mainWindow.loadURL(`file://${__dirname}/index.html#/login`);
   mainWindow.loadURL(`file://${__dirname}/index.html#/login`);
+
 
     electron.ipcMain.handle("authenticated", async event => {
 
@@ -99,7 +101,7 @@ const createWindow = async () => {
 
         // @ts-ignore
         // @ts-ignore
-        mainWindow.loadURL(`file://${__dirname}/index.html#/main/`)
+        mainWindow.loadURL(`file://${__dirname}/index.html#/main/home`)
 
         // if (env.NODE_ENV === 'development') {
         //   return // Skip updates on development env

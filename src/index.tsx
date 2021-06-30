@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import App from './App';
-import ViewManager from './ViewManager';
+import AppTwo from './App 2'
 
-render(<App />, document.getElementById('root'));
+render(<AppTwo />, document.getElementById('root'));
 

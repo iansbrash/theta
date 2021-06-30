@@ -8,6 +8,9 @@ const Login : FC = () => {
     const [liscense, setLiscense] = useState<string>('')
 
     const attemptAuth = async () => {
+            
+        return await electron.ipcRenderer.invoke('authenticated');
+
         try {
             setStatus('Authenticating...')
 
