@@ -6,7 +6,8 @@ import {
     Route,
     Link
 } from "react-router-dom";
-import Home from './Components/Home/Home';
+
+import Home from './Components 2/Home/Home';
 import AddTasks from "./Components/Add Tasks/AddTasks";
 import Profiles from "./Components/Profiles/Profiles";
 import Settings from "./Components/Settings/Settings";
@@ -122,7 +123,7 @@ const AppTwo = () => {
                 </div>
                 {/* Home */}
                 <Route path="/main/home" exact>
-                    {/* <Home /> */}
+                    <Home />
                 </Route>
 
                 {/* AddTasks */}
