@@ -90,7 +90,7 @@ const AppTwo = () => {
     ]
 
     const [tasks, setTasks] = useState<TaskClass[]>([]);
-    const [selectedRoute, setSelectedRoute] = useState<string>('home')
+    const [selectedRoute, setSelectedRoute] = useState<string>('/home')
 
 
 

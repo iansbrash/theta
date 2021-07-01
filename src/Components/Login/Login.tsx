@@ -5,7 +5,7 @@ import axios, { AxiosError } from 'axios';
 const Login : FC = () => {
 
     const [status, setStatus] = useState<string>('Enter your liscense key')
-    const [liscense, setLiscense] = useState<string>('')
+    const [license, setLicense] = useState<string>('')
 
     const attemptAuth = async () => {
             
@@ -16,9 +16,9 @@ const Login : FC = () => {
 
             const res = await axios({
                 method: 'post',
-                url: `https://m47tospeyf.execute-api.us-east-1.amazonaws.com/test/auth`,
+                url: `https://uwaecaqreh.execute-api.us-east-1.amazonaws.com/Beta/auth/desktop`,
                 headers: {
-                    liscense: liscense
+                    license: license
                 }
             })
 
@@ -52,8 +52,8 @@ const Login : FC = () => {
                         </svg>
                     </div>
                     <input 
-                    value={liscense}
-                    onChange={(e) => setLiscense(e.target.value)}
+                    value={license}
+                    onChange={(e) => setLicense(e.target.value)}
                     className="placeholder-indigo-300 focus:outline-none bg-indigo-950 w-72 text-xl text-indigo-300"
                     placeholder="XXXX-XXXX-XXXX-XXXX-XXXX"
                     />

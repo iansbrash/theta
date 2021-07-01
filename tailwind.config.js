@@ -30,21 +30,21 @@ module.exports = {
                 'theta-gray-7': '#968995',
                 'theta-home-checkout-feed-purchase': '#4a4248',
                 'theta-tasks-taskgroup': '#342E32',
+                'theta-tasks-taskgroup-individual': '#3d363b',
                 'theta-tasks-taskgroup-border': '#4a4147', //this color was good #52484e
                 'theta-tasks-taskgroup-text': '#695c64',
                 'theta-tasks-taskgroup-text-2': '#786872',
                 'theta-tasks-taskgroup-text-3': '#917d8a',
                 'theta-tasks-taskgroup-text-4': '#786872',
-                'theta-tasks-taskgroup-tags-idle': '#949340',
-                'theta-tasks-taskgroup-tags-idle-border': '#5c6124',
+                'theta-tasks-taskgroup-tags-idle': '#8f7180',
+                'theta-tasks-taskgroup-tags-idle-border': '#705160',
                 'theta-tasks-taskgroup-tags-checkout': '#3d825f', //#3d825f and #3b4741 (way dark)
                 'theta-tasks-taskgroup-tags-checkout-border': '#246142',
                 'theta-tasks-taskgroup-tags-decline': '#823d3d',
-                'theta-tasks-taskgroup-tags-decline-border': '#612424'
-
-
-
-                
+                'theta-tasks-taskgroup-tags-decline-border': '#612424',
+                'theta-tasks-taskgroup-tags-atc': '#bd8d26',
+                'theta-tasks-taskgroup-tags-atc-border': '#7a5405',
+                'theta-tasks-tasks': '#302b2f'
             },
             height: {
                 '0.25': '0.0625rem'
