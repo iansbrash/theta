@@ -4,6 +4,29 @@ import React, {
 import ScreenWrapper from '../Component Library/ScreenWrapper';
 
 
+interface SiteOptionProps {
+    name: string,
+    handleSiteChange: (s : string) => void
+}
+
+const SiteOption : FC<SiteOptionProps> = ({
+    name,
+    handleSiteChange
+} : SiteOptionProps) => {
+    return (
+        <button className="relative text-theta-gray-7 hover:text-theta-gray-2 focus:outline-none transition flex flex-row justify-start items-center w-full h-10"
+            onClick={() => handleSiteChange(name)}
+        >   
+            {/* This is w-8 because we have a space in front of the placeholder in the input */}
+            <div className="w-7"></div>
+            <div className="text-2xl">
+                {name}
+            </div>
+        </button>
+    )
+}
+
+
 const ChevronRight = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
         <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
@@ -25,12 +48,60 @@ const TaskGroupInterface = () => {
     const impliedPadding = 'p-2'
 
     const [currentSite, setCurrentSite] = useState<string>('');
+
+    const sites = ['Amazon', 'Target'];
+
+    const [siteSelectionArray, setSiteSelectionArray] = useState<string[]>(sites);
+
+    const [mousePosition, setMousePosition] = useState({ x: -1, y: -1 });
+    const [mouseDown, setMouseDown] = useState(false);
+
+    const [divW, setdivW] = useState(10);
+
     
     const handleSiteChange = (s : string) => {
         setCurrentSite(s);
         setSelectSiteInput(s);
         onInputBlur();
     }
+
+    const tableHeaders = [
+        "Items",
+        "Order #",
+        "Amount",
+        "Status",
+        "Delivery Driver"
+    ];
+
+    const tryMove = (ev : any) => {
+
+        console.log('trying to move')
+        
+        // moveing left
+        if (mousePosition.x === -1) {
+            // first init
+        }
+        else if (mousePosition.x > ev.clientX) {
+            setdivW(divW - (mousePosition.x - ev.clientX))
+        }
+        else {
+            setdivW(divW - (mousePosition.x - ev.clientX))
+        }
+        setMousePosition({x: ev.clientX, y: ev.clientY})
+    }
+
+    const oMU = () => {
+        setMouseDown(false);
+        setMousePosition({x: -1, y: -1})
+    }
+
+    const siteMinW = 'min-w-1/10'
+    const productMinW = 'min-w-3/10'
+    const profileMinW = 'min-w-1/10'
+    const buttonsMinW = 'min-w-1/10'
+    const siteMaxW = 'max-w-4/10'
+
+
 
     return (
         <ScreenWrapper>
@@ -74,24 +145,20 @@ const TaskGroupInterface = () => {
                                 <div className={`${dropdownDown ? '' : 'hidden'} border-b border-l border-r border-theta-gray-7 rounded-bl-lg rounded-br-lg bg-theta-bg absolute top-0 left-0 right-0 flex flex-col justify-start items-center`}
                                 onBlur={() => onInputBlur()}
                                 >
-                                    <button className="relative text-theta-gray-7 hover:text-theta-gray-2 focus:outline-none transition flex flex-row justify-start items-center w-full h-10"
-                                    onClick={() => handleSiteChange('Amazon')}
-                                    >
-                                        {/* This is w-8 because we have a space in front of the placeholder in the input */}
-                                        <div className="w-7"></div>
-                                        <div className="text-2xl">
-                                            Amazon
-                                        </div>
-                                    </button>
-                                    <button className="relative text-theta-gray-7 hover:text-theta-gray-2 focus:outline-none transition flex flex-row justify-start items-center w-full h-10"
-                                    onClick={() => handleSiteChange('Target')}
-                                    >
-                                        {/* This is w-8 because we have a space in front of the placeholder in the input */}
-                                        <div className="w-8"></div>
-                                        <div className="text-2xl">
-                                            Target
-                                        </div>
-                                    </button>
+                                    
+                                    {siteSelectionArray.filter(s => s.toLowerCase().includes(selectSiteInput.toLowerCase())).map(site => (
+                                        <SiteOption 
+                                            name={site}
+                                            handleSiteChange={handleSiteChange}
+                                        />
+                                    ))}
+                                    {/* Adding this adds the ones that don't match the criteria below */}
+                                    {siteSelectionArray.filter(s => !s.toLowerCase().includes(selectSiteInput.toLowerCase())).map(site => (
+                                        <SiteOption 
+                                            name={site}
+                                            handleSiteChange={handleSiteChange}
+                                        />
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -99,6 +166,67 @@ const TaskGroupInterface = () => {
                 </div>
             </div>
             <div className="h-4">
+
+            </div>
+            <div className="w-full flex flex-row justify-start items-center overflow-hidden"
+            onMouseMove={(ev) => mouseDown ? tryMove(ev) : null}
+            onMouseLeave={() => setMouseDown(false)}
+            >
+                <div className="h-8 w-full flex flex-row justify-start items-center bg-theta-sidebar"
+                >
+                    <div className={`${siteMinW} ${siteMaxW} select-none min-w-1/10 text-theta-gray-2 text-xl font-medium `}
+                style={{width: `${divW}px`}}
+                >
+                        Site
+                    </div>
+                    <div className="h-5 w-2 bg-theta-gray-2"
+                    onMouseDown={() => setMouseDown(true)}
+                    onMouseUp={() => oMU()}
+                    ></div>
+                    <div className="flex flex-row justify-start items-center"
+                    >
+                        <div className="select-none min-w-1/10 text-theta-gray-2 text-xl font-medium ">
+                            Product
+                        </div>
+                        <div className={`flex flex-row justify-start items-center`}
+                        >
+                            <div className="select-none min-w-1/10 text-theta-gray-2 text-xl font-medium ">
+                                Profile
+                            </div>
+                            <div className={`flex flex-row justify-start items-center`}
+                            >
+                                <div className={`${buttonsMinW} select-none min-w-1/10 text-theta-gray-2 text-xl font-medium`}>
+                                    Buttons
+                                </div>
+                        </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                {/* <div className="min-w-1/10 resize-x overflow-auto w-auto text-theta-gray-2 text-xl font-medium bg-theta-sidebar">
+                    Site
+                </div>
+                <div className="min-w-1/10 resize-x overflow-auto w-auto text-theta-gray-2 text-xl font-medium bg-theta-sidebar">
+                    Site
+                </div> */}
+                {/* <div className="min-w-1/10 resize-x overflow-auto w-auto text-theta-gray-2 text-xl font-medium bg-theta-sidebar">
+                    Site
+                </div>
+                <div className="scrollbar-hide min-w-1/10 resize-x overflow-auto w-auto text-theta-gray-2 text-xl font-medium bg-theta-sidebar-dark">
+                    Input
+                </div>
+                <div className="min-w-1/10 resize-x overflow-auto w-auto text-theta-gray-2 text-xl font-medium bg-theta-sidebar">
+                    Profile
+                </div>
+                <div className="min-w-1/10 resize-x overflow-auto w-auto text-theta-gray-2 text-xl font-medium bg-theta-sidebar-dark">
+                    Proxy
+                </div>
+                <div className="min-w-1/10 overflow-auto resize-x w-auto text-theta-gray-2 text-xl font-medium bg-theta-sidebar">
+                    Status
+                </div>
+                <div className="text-theta-gray-2 text-xl font-medium bg-theta-sidebar">
+                    Buttons 2
+                </div> */}
 
             </div>
             {/* <div className={`${impliedPadding} bg-theta-tasks-taskgroup w-full h-full rounded-lg shadow-lg`}>

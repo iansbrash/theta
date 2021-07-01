@@ -9,7 +9,7 @@ import {
 
 import Home from './Components 2/Home/Home';
 import AddTasks from "./Components/Add Tasks/AddTasks";
-import Profiles from "./Components/Profiles/Profiles";
+import Profiles from "./Components 2/Profiles/Profiles";
 import Settings from "./Components/Settings/Settings";
 import Tasks from "./Components 2/Tasks/Tasks";
 import Accounts from "./Components/Accounts/Accounts";
@@ -141,7 +141,7 @@ const AppTwo = () => {
 
                 {/* Home */}
                 <Route path="/main/profiles">
-                    {/* <Profiles /> */}
+                    <Profiles />
                 </Route>
 
                 {/* Home */}
