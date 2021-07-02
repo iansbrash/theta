@@ -95,7 +95,7 @@ const createWindow = async () => {
     electron.ipcMain.handle("authenticated", async event => {
 
         //@ts-ignore
-        mainWindow.setSize(1200, 900)
+        mainWindow.setSize(1500, 900)
         //@ts-ignore
         mainWindow.center();
 

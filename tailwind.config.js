@@ -31,6 +31,7 @@ module.exports = {
                 'theta-home-checkout-feed-purchase': '#4a4248',
                 'theta-tasks-taskgroup': '#342E32',
                 'theta-tasks-taskgroup-individual': '#3d363b',
+                'theta-tasks-taskgroup-individual-selected': '#474045',
                 'theta-tasks-taskgroup-border': '#4a4147', //this color was good #52484e
                 'theta-tasks-taskgroup-text': '#695c64',
                 'theta-tasks-taskgroup-text-2': '#786872',
@@ -44,7 +45,7 @@ module.exports = {
                 'theta-tasks-taskgroup-tags-decline-border': '#612424',
                 'theta-tasks-taskgroup-tags-atc': '#bd8d26',
                 'theta-tasks-taskgroup-tags-atc-border': '#7a5405',
-                'theta-tasks-tasks': '#302b2f'
+                'theta-tasks-taskcomponent': '#2e282c'
             },
             height: {
                 '0.25': '0.0625rem'

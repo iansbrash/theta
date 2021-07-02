@@ -4,6 +4,7 @@ import React, {
     useEffect
 } from 'react';
 import ScreenWrapper from '../Component Library/ScreenWrapper';
+import TaskComponent from './TaskComponent'
 
 interface SliderContainerProps {
     siteMinW: string,
@@ -173,7 +174,7 @@ const TaskGroupInterface = () => {
 
     return (
         <ScreenWrapper>
-            <div className={`h-auto w-full`}>
+            <div className={`h-auto w-full z-20`}>
                 <div className="p-4 flex flex-col justify-start items-center rounded-lg shadow-lg bg-theta-sidebar w-full h-full">
                     <div className="flex flex-row w-full justify-between items-center h-full">
                         <div className="flex flex-row justify-start items-center space-x-2">
@@ -236,164 +237,62 @@ const TaskGroupInterface = () => {
             <div className="h-4">
 
             </div>
-            <div className="w-full flex flex-row justify-start items-center overflow-hidden px-4" id="sliderDiv"
-            // onMouseLeave={() => setMouseDown(false)}
-            >
-                <div className="select-none text-theta-gray-7 text-xl w-2/10">
-                    Site
-                </div>
+            <div className="w-full flex flex-row justify-start items-center overflow-hidden px-4 h-12" id="sliderDiv">
                 <div className="select-none text-theta-gray-7 text-xl w-full">
                     Product
                 </div>
-                <div className="select-none text-theta-gray-7 text-xl w-2/10">
+                <div className="select-none text-theta-gray-7 text-xl w-3/10">
                     Profile
-                </div>
-                <div className="select-none text-theta-gray-7 text-xl w-2/10">
-                    Proxies
                 </div>
                 <div className="select-none text-theta-gray-7 text-xl w-3/10">
+                    Proxies
+                </div>
+                <div className="select-none text-theta-gray-7 text-xl w-4/10">
                     Status
                 </div>
-                <div className="select-none text-theta-gray-7 text-xl w-64">
+                <div className="select-none text-theta-gray-7 text-xl w-72">
                     Controls
                 </div>
-                {/* <SliderContainer 
-                    siteMaxW={siteMaxW}
-                    siteMinW={siteMinW}
-                    // @ts-ignore
-                    origDivW={cW / 10 * 1}
-                    pxMax={cW / 10 * 1}
-                    pxMin={cW / 10 * 1}
-                >
-                    <div className="select-none text-theta-gray-2 text-xl font-medium">
-                        Site
-                    </div>
-                </SliderContainer>
-                <SliderContainer 
-                    siteMaxW={'max-w-4/10'}
-                    siteMinW={siteMinW}
-                    pxMax={cW / 10 * 4}
-                    pxMin={cW / 10 * 4}
-                    // @ts-ignore
-                    origDivW={cW / 10 * 4}
-                    
-                >
-                    <div className="select-none text-theta-gray-2 text-xl">
-                        Product
-                    </div>
-                </SliderContainer>
-                <SliderContainer 
-                    siteMaxW={'max-w-4/10'}
-                    siteMinW={siteMinW}
-                    pxMax={cW / 10 * 1}
-                    pxMin={cW / 10 * 1}
-                    // @ts-ignore
-                    origDivW={cW / 10 * 1}
-                    
-                >
-                    <div className="select-none text-theta-gray-2 text-xl font-medium">
-                        Profile
-                    </div>
-                </SliderContainer>
-                <SliderContainer 
-                    siteMaxW={'max-w-4/10'}
-                    siteMinW={siteMinW}
-                    pxMax={cW / 10 * 1}
-                    pxMin={cW / 10 * 1}
-                    // @ts-ignore
-                    origDivW={cW / 10 * 1}
-                    
-                >
-                    <div className="select-none text-theta-gray-2 text-xl font-medium">
-                        Proxies
-                    </div>
-                </SliderContainer>
-                <SliderContainer 
-                    siteMaxW={'max-w-4/10'}
-                    siteMinW={siteMinW}
-                    pxMax={cW / 10 * 2}
-                    pxMin={cW / 10 * 2}
-                    // @ts-ignore
-                    origDivW={cW / 10 * 2}
-                    
-                >
-                    <div className="select-none text-theta-gray-2 text-xl font-medium">
-                        Status
-                    </div>
-                </SliderContainer>
-                <SliderContainer 
-                    siteMaxW={'max-w-4/10'}
-                    siteMinW={siteMinW}
-                    pxMax={50}
-                    pxMin={50}
-                    // @ts-ignore
-                    origDivW={50}
-                    
-                >
-                    <div className="select-none text-theta-gray-2 text-xl font-medium">
-                        Controls
-                    </div>
-                </SliderContainer> */}
-                {/* <div className="h-8 w-full flex flex-row justify-start items-center bg-theta-sidebar"
-                >
-                    <div className={`${siteMinW} ${siteMaxW} select-none min-w-1/10 text-theta-gray-2 text-xl font-medium `}
-                style={{width: `${divW}px`}}
-                >
-                        Site
-                    </div>
-                    <div className="h-5 w-2 bg-theta-gray-2"
-                    onMouseDown={() => setMouseDown(true)}
-                    onMouseUp={() => oMU()}
-                    ></div>
-                    <div className="flex flex-row justify-start items-center"
-                    >
-                        <div className="select-none min-w-1/10 text-theta-gray-2 text-xl font-medium ">
-                            Product
-                        </div>
-                        <div className={`flex flex-row justify-start items-center`}
-                        >
-                            <div className="select-none min-w-1/10 text-theta-gray-2 text-xl font-medium ">
-                                Profile
-                            </div>
-                            <div className={`flex flex-row justify-start items-center`}
-                            >
-                                <div className={`${buttonsMinW} select-none min-w-1/10 text-theta-gray-2 text-xl font-medium`}>
-                                    Buttons
-                                </div>
-                        </div>
-                        </div>
-                    </div> */}
-                    
-                </div>
-                {/* <div className="min-w-1/10 resize-x overflow-auto w-auto text-theta-gray-2 text-xl font-medium bg-theta-sidebar">
-                    Site
-                </div>
-                <div className="min-w-1/10 resize-x overflow-auto w-auto text-theta-gray-2 text-xl font-medium bg-theta-sidebar">
-                    Site
-                </div> */}
-                {/* <div className="min-w-1/10 resize-x overflow-auto w-auto text-theta-gray-2 text-xl font-medium bg-theta-sidebar">
-                    Site
-                </div>
-                <div className="scrollbar-hide min-w-1/10 resize-x overflow-auto w-auto text-theta-gray-2 text-xl font-medium bg-theta-sidebar-dark">
-                    Input
-                </div>
-                <div className="min-w-1/10 resize-x overflow-auto w-auto text-theta-gray-2 text-xl font-medium bg-theta-sidebar">
-                    Profile
-                </div>
-                <div className="min-w-1/10 resize-x overflow-auto w-auto text-theta-gray-2 text-xl font-medium bg-theta-sidebar-dark">
-                    Proxy
-                </div>
-                <div className="min-w-1/10 overflow-auto resize-x w-auto text-theta-gray-2 text-xl font-medium bg-theta-sidebar">
-                    Status
-                </div>
-                <div className="text-theta-gray-2 text-xl font-medium bg-theta-sidebar">
-                    Buttons 2
-                </div> */}
+            </div>
+            <div className="w-full h-full relative flex flex-col justify-start items-center  overflow-scroll scrollbar-hide">
 
-            {/* </div> */}
-            {/* <div className={`${impliedPadding} bg-theta-tasks-taskgroup w-full h-full rounded-lg shadow-lg`}>
-                
-            </div> */}
+                {/* Top Gradient */}
+                <div className="z-10 absolute top-0 left-0 right-0 w-full h-4 bg-gradient-to-b from-theta-bg to-transparent"></div>
+
+                <div className="z-0 w-full space-y-2 flex flex-col justify-start items-center px-2 overflow-scroll scrollbar-hide" id="sliderDiv">
+                    <div className="h-4"></div>
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                    <TaskComponent />
+                </div>
+
+                {/* Bottom Grad */}
+                <div className="z-10 absolute bottom-0 left-0 right-0 w-full h-4 bg-gradient-to-t from-theta-bg to-transparent"></div>
+
+            </div>
         </ScreenWrapper>
     )
 }

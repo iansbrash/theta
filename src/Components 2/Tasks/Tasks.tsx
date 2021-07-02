@@ -86,9 +86,9 @@ const TaskGroup : FC<TaskGroupProps> = ({
             <button className="w-full focus:outline-none"
             onClick={() => handleClick()}
             >
-                <div className={`transition transform duration-250 ease-in-out hover:scale-105 p-1 bg-theta-tasks-taskgroup-individual flex flex-row justify-between items-start border ${selectedTaskGroup === name ? 'border-theta-gray-2' : 'border-theta-tasks-taskgroup-border'} shadow-md rounded-md w-full h-full`}>
+                <div className={`transition transform duration-250 ease-in-out hover:scale-105 p-1 ${selectedTaskGroup === name ? 'bg-theta-tasks-taskgroup-individual-selected' : 'bg-theta-tasks-taskgroup-individual'} flex flex-row justify-between items-start border ${selectedTaskGroup === name ? 'border-theta-gray-2' : 'border-theta-tasks-taskgroup-border'} shadow-md rounded-md w-full h-full`}>
                     <div className="w-full flex flex-col justify-between items-start space-y-2">
-                        <div className="px-1 font-medium text-theta-tasks-taskgroup-text-3">
+                        <div className={`transition duration-250 ease-in-out ${selectedTaskGroup === name ? 'text-theta-gray-2' : 'text-theta-tasks-taskgroup-text-3'} px-1 font-medium `}>
                             {name}
                         </div>
 
