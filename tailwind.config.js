@@ -45,7 +45,10 @@ module.exports = {
                 'theta-tasks-taskgroup-tags-decline-border': '#612424',
                 'theta-tasks-taskgroup-tags-atc': '#bd8d26',
                 'theta-tasks-taskgroup-tags-atc-border': '#7a5405',
-                'theta-tasks-taskcomponent': '#2e282c'
+                'theta-tasks-taskcomponent': '#2e282c',
+                'theta-tasks-taskcomponent-start': '#4cc26b',
+                'theta-tasks-taskcomponent-stop': '#ba9e4c',
+                'theta-tasks-taskcomponent-delete': '#9c4155'
             },
             height: {
                 '0.25': '0.0625rem'

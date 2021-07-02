@@ -1,7 +1,6 @@
 import React, {
     FC, useState
 } from 'react';
-import ScreenWrapper from '../Component Library/ScreenWrapper';
 import TaskGroupInterfaceRenderer from './TaskGroupInterfaceRenderer'
 
 const TaskGroupIcon = () => (

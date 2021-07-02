@@ -82,6 +82,14 @@ class AmazonTaskClass extends TaskClass {
         }
     }
 
+
+    /// thoughts:
+    // each class has a "cycle" abstract method
+    // this method pretty much combines start and the rest of the needed methods into one
+    // when you call cycle on an idle task, it does the first step of the flow.
+    //      if it succeeds, it returns the next status code, and sets nextFunctions to the next step of the flow
+    //      if it fails, it returns "failed", and sets nextFunction to itself, after setting a delay of say 3000
+
     async signIn() : Promise<void> {
         // user, pass, proxy
         const res = await electron.ipcRenderer.invoke('AmazonSignIn', this.config.account.username, this.config.account.password, this.proxyList.proxies[0]);
