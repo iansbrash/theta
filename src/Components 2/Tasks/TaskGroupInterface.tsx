@@ -5,6 +5,8 @@ import React, {
 } from 'react';
 import ScreenWrapper from '../Component Library/ScreenWrapper';
 import TaskComponent from './TaskComponent'
+import { AutoSizer, List } from 'react-virtualized'
+import 'react-virtualized/styles.css';
 
 interface SliderContainerProps {
     siteMinW: string,
@@ -113,10 +115,20 @@ const ChevronRight = () => (
     </svg>
 )
 
-const TaskGroupInterface = () => {
+interface TaskGroupInterfaceProps {
+    hidden: boolean,
+    taskGroupName: string
+}
+
+const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
+    hidden,
+    taskGroupName
+} : TaskGroupInterfaceProps) => {
 
     const [dropdownDown, setDowndownDown] = useState<boolean>(false);
     const [selectSiteInput, setSelectSiteInput] = useState<string>('');
+
+    const [tasks, setTasks] = useState<string[]>([]);
 
     const onInputFocus = () => {
         setDowndownDown(true)
@@ -139,6 +151,14 @@ const TaskGroupInterface = () => {
     useEffect(() => {
         // @ts-ignore
         setCW(document.getElementById('sliderDiv')?.clientWidth)
+
+        let t = []
+
+        for (let i = 0; i < 1000; i++){
+            t.push(Math.random() * 1000 + '')
+        }
+
+        setTasks(t)
     }, [])
 
 
@@ -170,7 +190,14 @@ const TaskGroupInterface = () => {
     const buttonsMinW = 'min-w-1/10'
     const siteMaxW = 'max-w-4/10'
 
-
+    // @ts-ignore
+    function rowRenderer({key, index, style}) {
+        return (
+          <div key={key} style={style}>
+              {tasks[index]}
+          </div>
+        );
+      }
 
     return (
         <ScreenWrapper>
@@ -179,10 +206,10 @@ const TaskGroupInterface = () => {
                     <div className="flex flex-row w-full justify-between items-center h-full">
                         <div className="flex flex-row justify-start items-center space-x-2">
                             <div className="text-theta-gray-2 text-4xl font-medium">
-                                Task Group 1
+                                {taskGroupName}
                             </div>
                             <div className="text-theta-gray-7 text-2xl">
-                                (0 tasks)
+                                ({tasks.length} tasks)
                             </div>
                         </div>
                         
@@ -254,45 +281,39 @@ const TaskGroupInterface = () => {
                     Controls
                 </div>
             </div>
-            <div className="w-full h-full relative flex flex-col justify-start items-center  overflow-scroll scrollbar-hide">
+            <div className="w-full h-full relative flex flex-col justify-start items-center  overflow-scroll scrollbar-hide"> 
 
                 {/* Top Gradient */}
                 <div className="z-10 absolute top-0 left-0 right-0 w-full h-4 bg-gradient-to-b from-theta-bg to-transparent"></div>
 
-                <div className="z-0 w-full space-y-2 flex flex-col justify-start items-center px-2 overflow-scroll scrollbar-hide" id="sliderDiv">
-                    <div className="h-4"></div>
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                    <TaskComponent />
-                </div>
+                {/* <div className="z-0 w-full space-y-2 flex flex-col justify-start items-center px-2 overflow-scroll scrollbar-hide" id="sliderDiv">
+                    <div className="h-4"></div> */}
+                    {/* {
+                        tasks.map(t => (
+                            <TaskComponent />
+                        ))
+                    } */}
+                   
+                    
+                {/* </div> */}
 
                 {/* Bottom Grad */}
                 <div className="z-10 absolute bottom-0 left-0 right-0 w-full h-4 bg-gradient-to-t from-theta-bg to-transparent"></div>
-
+                <AutoSizer>
+                {({height, width}) => (
+                    <List 
+                        rowCount={tasks.length}
+                        rowHeight={() => 14}
+                        width={width}
+                        height={height}
+                        rowRenderer={TaskComponent}
+                    >
+                        
+                    </List>
+                )}
+                </AutoSizer>
             </div>
+            
         </ScreenWrapper>
     )
 }

@@ -254,6 +254,8 @@
   "dependencies": {
     "@types/qs": "^6.9.6",
     "@types/react-resizable": "^1.7.2",
+    "@types/react-virtualized": "^9.21.11",
+    "@types/react-window": "^1.8.3",
     "axios": "^0.21.1",
     "chokidar": "^3.5.2",
     "electron-debug": "^3.1.0",
@@ -269,6 +271,9 @@
     "react-dom": "^17.0.1",
     "react-resizable": "^3.0.4",
     "react-router-dom": "^5.2.0",
+    "react-virtualized": "^9.22.3",
+    "react-virtualized-auto-sizer": "^1.0.5",
+    "react-window": "^1.8.6",
     "regenerator-runtime": "^0.13.5",
     "source-map-support": "^0.5.19",
     "tailwind-caret-color": "^1.1.0",

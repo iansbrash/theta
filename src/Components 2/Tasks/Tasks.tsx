@@ -2,7 +2,7 @@ import React, {
     FC, useState
 } from 'react';
 import ScreenWrapper from '../Component Library/ScreenWrapper';
-import TaskGroupInterface from './TaskGroupInterface'
+import TaskGroupInterfaceRenderer from './TaskGroupInterfaceRenderer'
 
 const TaskGroupIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
@@ -141,6 +141,16 @@ const Tasks = () => {
 
     const [selectedTaskGroup, setSelectedTaskGroup] = useState<string>('');
 
+    const [tgCount, setTgCount] = useState<number>(0);
+    const [taskGroups, setTaskGroups] = useState<string[]>([]);
+
+
+
+    const addTaskGroup = () => {
+        setTaskGroups([...taskGroups, `Task Group #${tgCount}`])
+        setSelectedTaskGroup(`Task Group #${tgCount}`)
+        setTgCount(tgCount + 1)
+    }
 
     
 
@@ -158,17 +168,19 @@ const Tasks = () => {
 
                 {/* Task Groups mapping */}
                 <div className="w-full flex flex-col justify-start items-center space-y-2">
-                    {[1, 2, 3, 4, 5].map(tg => (
+                    {taskGroups.map(tg => (
                         <TaskGroup 
                             setSelectedTaskGroup={setSelectedTaskGroup}
                             selectedTaskGroup={selectedTaskGroup}
-                            name={`Task group ${tg}`}
+                            name={tg}
                         />
                     ))}
 
                     {/* Add TaskGroup */}
                     <div className="w-full h-auto px-2">
-                        <button className="w-full h-16 focus:outline-none">
+                        <button className="w-full h-16 focus:outline-none"
+                        onClick={() => addTaskGroup()}
+                        >
                             <div className="text-theta-tasks-taskgroup-text-3 transition transform duration-250 ease-in-out hover:scale-105 p-1 bg-theta-tasks-taskgroup-individual flex flex-row justify-center items-center border border-theta-tasks-taskgroup-border shadow-md rounded-md w-full h-full">
                                 <AddTaskGroupIcon />
                             </div>
@@ -178,7 +190,10 @@ const Tasks = () => {
             </div>
 
             {/* Rest of screen aka tasks*/}
-            <TaskGroupInterface />
+            <TaskGroupInterfaceRenderer 
+                taskGroups={taskGroups}
+                selectedTaskGroup={selectedTaskGroup}
+            />
         </div>
     )
 }
