@@ -1,7 +1,86 @@
 import React, {
-    FC, useState
+    FC, useState,
+    useRef,
+    useEffect
 } from 'react';
 import ScreenWrapper from '../Component Library/ScreenWrapper';
+
+interface SliderContainerProps {
+    siteMinW: string,
+    siteMaxW: string,
+    origDivW: number,
+    children: React.ReactNode,
+    pxMin: number,
+    pxMax: number
+}
+
+const SliderContainer : FC<SliderContainerProps> = ({
+    siteMaxW,
+    siteMinW,
+    origDivW,
+    pxMin,
+    pxMax,
+    children
+} : SliderContainerProps) => {
+
+    const [divW, setDivW] = useState<number>(origDivW);
+    const [mousePosition, setMousePosition] = useState({ x: -1, y: -1 });
+    const [mouseDown, setMouseDown] = useState(false);
+
+    useEffect(() => {
+        setDivW(origDivW)
+    }, [origDivW])
+
+    const tryMove = (ev : any) => {
+
+        console.log('trying to move')
+        
+        // moveing left
+        if (mousePosition.x === -1) {
+            // first init
+        }
+        else if (mousePosition.x > ev.clientX) {
+            console.log('first')
+            let newW = divW - (mousePosition.x - ev.clientX)
+            if (newW < pxMin) {
+                setDivW(pxMin);
+            }
+            else {
+                setDivW(newW)
+            }
+        }
+        else {
+            console.log('sec')
+
+            let newW = divW - (mousePosition.x - ev.clientX)
+            if (newW > pxMax) {
+                setDivW(pxMax);
+            }
+            else {
+                setDivW(newW)
+            }
+        }
+        setMousePosition({x: ev.clientX, y: ev.clientY})
+    }
+
+    const oMU = () => {
+        setMouseDown(false);
+        setMousePosition({x: -1, y: -1})
+    }
+
+
+    return (
+        <div className={`${siteMinW} ${siteMaxW} bg-theta-sidebar cursor-move`}
+        onMouseDown={() => setMouseDown(true)}
+        onMouseUp={() => oMU()}
+        onMouseMove={(ev) => mouseDown ? tryMove(ev) : null}
+        onMouseLeave={() => oMU()}
+        style={{width: `${divW}px`}}
+        >
+            {children}
+        </div>
+    )
+}
 
 
 interface SiteOptionProps {
@@ -53,8 +132,17 @@ const TaskGroupInterface = () => {
 
     const [siteSelectionArray, setSiteSelectionArray] = useState<string[]>(sites);
 
-    const [mousePosition, setMousePosition] = useState({ x: -1, y: -1 });
-    const [mouseDown, setMouseDown] = useState(false);
+
+    const [cW, setCW ] = useState<number>(0);
+
+    useEffect(() => {
+        // @ts-ignore
+        setCW(document.getElementById('sliderDiv')?.clientWidth)
+    }, [])
+
+
+
+
 
     const [divW, setdivW] = useState(10);
 
@@ -73,27 +161,7 @@ const TaskGroupInterface = () => {
         "Delivery Driver"
     ];
 
-    const tryMove = (ev : any) => {
-
-        console.log('trying to move')
-        
-        // moveing left
-        if (mousePosition.x === -1) {
-            // first init
-        }
-        else if (mousePosition.x > ev.clientX) {
-            setdivW(divW - (mousePosition.x - ev.clientX))
-        }
-        else {
-            setdivW(divW - (mousePosition.x - ev.clientX))
-        }
-        setMousePosition({x: ev.clientX, y: ev.clientY})
-    }
-
-    const oMU = () => {
-        setMouseDown(false);
-        setMousePosition({x: -1, y: -1})
-    }
+   
 
     const siteMinW = 'min-w-1/10'
     const productMinW = 'min-w-3/10'
@@ -168,11 +236,105 @@ const TaskGroupInterface = () => {
             <div className="h-4">
 
             </div>
-            <div className="w-full flex flex-row justify-start items-center overflow-hidden"
-            onMouseMove={(ev) => mouseDown ? tryMove(ev) : null}
-            onMouseLeave={() => setMouseDown(false)}
+            <div className="w-full flex flex-row justify-start items-center overflow-hidden px-4" id="sliderDiv"
+            // onMouseLeave={() => setMouseDown(false)}
             >
-                <div className="h-8 w-full flex flex-row justify-start items-center bg-theta-sidebar"
+                <div className="select-none text-theta-gray-7 text-xl w-2/10">
+                    Site
+                </div>
+                <div className="select-none text-theta-gray-7 text-xl w-full">
+                    Product
+                </div>
+                <div className="select-none text-theta-gray-7 text-xl w-2/10">
+                    Profile
+                </div>
+                <div className="select-none text-theta-gray-7 text-xl w-2/10">
+                    Proxies
+                </div>
+                <div className="select-none text-theta-gray-7 text-xl w-3/10">
+                    Status
+                </div>
+                <div className="select-none text-theta-gray-7 text-xl w-64">
+                    Controls
+                </div>
+                {/* <SliderContainer 
+                    siteMaxW={siteMaxW}
+                    siteMinW={siteMinW}
+                    // @ts-ignore
+                    origDivW={cW / 10 * 1}
+                    pxMax={cW / 10 * 1}
+                    pxMin={cW / 10 * 1}
+                >
+                    <div className="select-none text-theta-gray-2 text-xl font-medium">
+                        Site
+                    </div>
+                </SliderContainer>
+                <SliderContainer 
+                    siteMaxW={'max-w-4/10'}
+                    siteMinW={siteMinW}
+                    pxMax={cW / 10 * 4}
+                    pxMin={cW / 10 * 4}
+                    // @ts-ignore
+                    origDivW={cW / 10 * 4}
+                    
+                >
+                    <div className="select-none text-theta-gray-2 text-xl">
+                        Product
+                    </div>
+                </SliderContainer>
+                <SliderContainer 
+                    siteMaxW={'max-w-4/10'}
+                    siteMinW={siteMinW}
+                    pxMax={cW / 10 * 1}
+                    pxMin={cW / 10 * 1}
+                    // @ts-ignore
+                    origDivW={cW / 10 * 1}
+                    
+                >
+                    <div className="select-none text-theta-gray-2 text-xl font-medium">
+                        Profile
+                    </div>
+                </SliderContainer>
+                <SliderContainer 
+                    siteMaxW={'max-w-4/10'}
+                    siteMinW={siteMinW}
+                    pxMax={cW / 10 * 1}
+                    pxMin={cW / 10 * 1}
+                    // @ts-ignore
+                    origDivW={cW / 10 * 1}
+                    
+                >
+                    <div className="select-none text-theta-gray-2 text-xl font-medium">
+                        Proxies
+                    </div>
+                </SliderContainer>
+                <SliderContainer 
+                    siteMaxW={'max-w-4/10'}
+                    siteMinW={siteMinW}
+                    pxMax={cW / 10 * 2}
+                    pxMin={cW / 10 * 2}
+                    // @ts-ignore
+                    origDivW={cW / 10 * 2}
+                    
+                >
+                    <div className="select-none text-theta-gray-2 text-xl font-medium">
+                        Status
+                    </div>
+                </SliderContainer>
+                <SliderContainer 
+                    siteMaxW={'max-w-4/10'}
+                    siteMinW={siteMinW}
+                    pxMax={50}
+                    pxMin={50}
+                    // @ts-ignore
+                    origDivW={50}
+                    
+                >
+                    <div className="select-none text-theta-gray-2 text-xl font-medium">
+                        Controls
+                    </div>
+                </SliderContainer> */}
+                {/* <div className="h-8 w-full flex flex-row justify-start items-center bg-theta-sidebar"
                 >
                     <div className={`${siteMinW} ${siteMaxW} select-none min-w-1/10 text-theta-gray-2 text-xl font-medium `}
                 style={{width: `${divW}px`}}
@@ -200,7 +362,7 @@ const TaskGroupInterface = () => {
                                 </div>
                         </div>
                         </div>
-                    </div>
+                    </div> */}
                     
                 </div>
                 {/* <div className="min-w-1/10 resize-x overflow-auto w-auto text-theta-gray-2 text-xl font-medium bg-theta-sidebar">
@@ -228,7 +390,7 @@ const TaskGroupInterface = () => {
                     Buttons 2
                 </div> */}
 
-            </div>
+            {/* </div> */}
             {/* <div className={`${impliedPadding} bg-theta-tasks-taskgroup w-full h-full rounded-lg shadow-lg`}>
                 
             </div> */}
