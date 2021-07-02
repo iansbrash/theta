@@ -155,14 +155,23 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
         let t = []
 
         for (let i = 0; i < 1000; i++){
-            t.push(Math.random() * 1000 + '')
+            t.push(i + '')
         }
 
         setTasks(t)
     }, [])
 
-
-
+    // @ts-ignore
+    const temp = ({key, index, style}) => {
+        return (
+            <div className="block" style={style}>
+                <TaskComponent />
+                <div className="h-4"></div>
+            
+            </div>
+            
+        )
+    }
 
 
     const [divW, setdivW] = useState(10);
@@ -193,14 +202,14 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     // @ts-ignore
     function rowRenderer({key, index, style}) {
         return (
-          <div key={key} style={style}>
+          <div key={key} style={style} className="h-10 bg-white">
               {tasks[index]}
           </div>
         );
       }
 
     return (
-        <ScreenWrapper>
+        <ScreenWrapper hidden={hidden}>
             <div className={`h-auto w-full z-20`}>
                 <div className="p-4 flex flex-col justify-start items-center rounded-lg shadow-lg bg-theta-sidebar w-full h-full">
                     <div className="flex flex-row w-full justify-between items-center h-full">
@@ -281,7 +290,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                     Controls
                 </div>
             </div>
-            <div className="w-full h-full relative flex flex-col justify-start items-center  overflow-scroll scrollbar-hide"> 
+            <div className="w-full h-full relative flex flex-col justify-start items-start"> 
 
                 {/* Top Gradient */}
                 <div className="z-10 absolute top-0 left-0 right-0 w-full h-4 bg-gradient-to-b from-theta-bg to-transparent"></div>
@@ -303,10 +312,11 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                 {({height, width}) => (
                     <List 
                         rowCount={tasks.length}
-                        rowHeight={() => 14}
+                        rowHeight={52}
                         width={width}
                         height={height}
-                        rowRenderer={TaskComponent}
+                        rowRenderer={temp}
+                        className="scrollbar-hide"
                     >
                         
                     </List>
