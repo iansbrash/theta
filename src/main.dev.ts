@@ -17,7 +17,33 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import authBundle from './ipc/auth/auth';
 import ipcBundle from './ipc/ipcBundle';
-import electron from 'electron';
+import electron, {
+    Menu
+} from 'electron';
+// import contextMenu from 'electron-context-menu';
+
+
+// contextMenu({
+//     prepend: (defaultActions, parameters, browserWindow) => [
+// 		{
+// 			label: 'Rainbow',
+// 			// Only show it when right-clicking images
+// 			visible: parameters.mediaType === 'image'
+// 		},
+// 		{
+// 			label: 'Search Google for “{selection}”',
+// 			// Only show it when right-clicking text
+// 			visible: parameters.selectionText.trim().length > 0,
+// 			click: () => {
+// 				shell.openExternal(`https://google.com/search?q=${encodeURIComponent(parameters.selectionText)}`);
+// 			}
+// 		}
+// 	]
+// })
+
+let template = [{label: 'item1'}, {label: 'item2'}]
+let contextMenu = Menu.buildFromTemplate(template)
+
 
 
 export default class AppUpdater {
@@ -78,10 +104,16 @@ const createWindow = async () => {
     width: 500,
     height: 250,
     icon: getAssetPath('icon.png'),
+    frame: false, // removes menu,
+    transparent: true, // lets us have rounded window 
     webPreferences: {
-      nodeIntegration: true,
+        nodeIntegration: true,
     },
   });
+
+//   mainWindow.webContents.on('context-menu', () => {
+//       contextMenu.popup();
+//   })
 
 //   loginWindow.loadURL(`file://${__dirname}/index.html?login`);
 
@@ -108,6 +140,14 @@ const createWindow = async () => {
         // }
     });
 
+    electron.ipcMain.handle('closeApp', async (event, ...args) => {
+        mainWindow?.close();
+    })
+
+    electron.ipcMain.handle('minimizeApp', async (event, ...args) => {
+        mainWindow?.minimize();
+    })
+
   // open dev tools
   mainWindow.webContents.openDevTools({ mode: 'detach' });
 
@@ -131,8 +171,9 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  // i disabled this so i could make context window
+//   const menuBuilder = new MenuBuilder(mainWindow);
+//   menuBuilder.buildMenu();
 
   // Open urls in the user's browser
   mainWindow.webContents.on('new-window', (event, url) => {

@@ -17,7 +17,25 @@ import Proxies from "./Components/Proxies/Proxies";
 import TaskClass from "./Logic/sites/classes/TaskClass";
 import "./App.global.css";
 import Login from './Components/Login/Login';
+import electron from 'electron'
 
+const ExitIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+    </svg>
+)
+
+const MoveIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+    </svg>
+)
+
+const MinimizeIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+    </svg>
+)
 
 const HomeIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
@@ -92,6 +110,9 @@ const AppTwo = () => {
     const [tasks, setTasks] = useState<TaskClass[]>([]);
     const [selectedRoute, setSelectedRoute] = useState<string>('/home')
 
+    const exitApp = () => {
+        electron.ipcRenderer.invoke('closeApp')
+    }
 
 
     return (
@@ -100,65 +121,98 @@ const AppTwo = () => {
                 <Login />
             </Route>
             <Route path="/main">
+                <div className="relative flex flex-col h-screen w-screen justify-start items-center">
 
-            <div className="relative flex flex-row h-screen w-screen justify-start items-center bg-gradient-to-r from-theta-bg-start to-theta-bg">
-                {/* Bar */}
-                <div className="relative  z-10 flex h-screen w-14 bg-theta-sidebar shadow-2xl flex-col justify-between items-center">
-
-                    {/* Icons */}
-                    <div className="flex flex-col space-y-4 justify-start items-center">
-                        <div className="p-1 mt-2 mb-2 text-theta-logo rounded-lg">
-                            <TempLogo />
+                    {/* <div className="z-30 rounded-lg absolute right-0 top-0 w-auto h-8">
+                        <div className="rounded-tr-lg  rounded-bl-lg bg-theta-sidebar flex flex-row h-full justify-end items-center space-x-2 px-2">
+                            <div className="text-theta-gray-2">
+                                <MoveIcon />
+                            </div>     
+                            <div className="text-theta-gray-2">
+                                <MinimizeIcon />
+                            </div>
+                            <div className="text-theta-gray-2">
+                                <ExitIcon />
+                            </div>
                         </div>
-                        {iconsArray.map((icon, index : number) => (
-                            <Link to={"/main" + toArray[index]}>
-                                <button className={`transition transform hover:scale-110 duration-500 ease-in-out focus:outline-none p-1 rounded-lg ${toArray[index] === selectedRoute ? 'text-theta-sidebar-icon-selected shadow-md bg-theta-sidebar-dark' : 'text-theta-sidebar-icon'}`}
-                                onClick={() => setSelectedRoute(toArray[index])}
+                    </div> */}
+
+                    <div className="rounded-lg relative flex flex-row h-full w-screen justify-start items-center bg-gradient-to-r from-theta-bg-start to-theta-bg">
+                        {/* Bar */}
+                        <div className="rounded-l-lg relative  z-10 flex h-full w-14 bg-theta-sidebar shadow-2xl flex-col justify-between items-center">
+
+                            {/* Icons */}
+                            <div className="relative flex flex-col justify-between items-center h-full">
+                                <div className="flex flex-col space-y-4 justify-between items-center">
+                                    <div className="p-1 mt-2 mb-2 text-theta-logo rounded-lg">
+                                        <TempLogo />
+                                    </div>
+                                    {iconsArray.map((icon, index : number) => (
+                                        <Link to={"/main" + toArray[index]}>
+                                            <button className={`transition transform hover:scale-110 duration-500 ease-in-out focus:outline-none p-1 rounded-lg ${toArray[index] === selectedRoute ? 'text-theta-sidebar-icon-selected shadow-md bg-theta-sidebar-dark' : 'text-theta-sidebar-icon'}`}
+                                            onClick={() => setSelectedRoute(toArray[index])}
+                                            >
+                                                {icon}
+                                            </button>
+                                        </Link>
+                                    ))}
+                                </div>
+
+                                {/* Draggable Region */}
+                                <div className="w-full h-full"
+                                id="dragRegion"
                                 >
-                                    {icon}
+
+                                </div>
+
+                                {/* Exit Button */}
+                                <button className="text-theta-logo mb-4 focus:outline-none"
+                                onClick={() => exitApp()}
+                                >
+                                    <ExitIcon />
                                 </button>
-                            </Link>
-                        ))}
+                            </div>
+                        </div>
+
+                        {/* Home */}
+                        <Route path="/main/home" exact>
+                            <Home />
+                        </Route>
+
+                        {/* AddTasks */}
+                        <Route path="/main/addtasks">
+                            {/* <AddTasks 
+                                tasks={tasks}
+                                setTasks={setTasks}
+                            /> */}
+                        </Route>
+                        
+                        {/* Tasks */}
+                        <Route path="/main/tasks">
+                            <Tasks />
+                        </Route>
+
+                        {/* Home */}
+                        <Route path="/main/profiles">
+                            <Profiles />
+                        </Route>
+
+                        {/* Home */}
+                        <Route path="/main/proxies">
+                            {/* <Proxies /> */}
+                        </Route>
+
+                        {/* Home */}
+                        <Route path="/main/accounts">
+                            {/* <Accounts /> */}
+                        </Route>
+
+                        {/* Home */}
+                        <Route path="/main/settings">
+                            {/* <Settings /> */}
+                        </Route>
                     </div>
                 </div>
-                {/* Home */}
-                <Route path="/main/home" exact>
-                    <Home />
-                </Route>
-
-                {/* AddTasks */}
-                <Route path="/main/addtasks">
-                    {/* <AddTasks 
-                        tasks={tasks}
-                        setTasks={setTasks}
-                    /> */}
-                </Route>
-                
-                {/* Tasks */}
-                <Route path="/main/tasks">
-                    <Tasks />
-                </Route>
-
-                {/* Home */}
-                <Route path="/main/profiles">
-                    <Profiles />
-                </Route>
-
-                {/* Home */}
-                <Route path="/main/proxies">
-                    {/* <Proxies /> */}
-                </Route>
-
-                {/* Home */}
-                <Route path="/main/accounts">
-                    {/* <Accounts /> */}
-                </Route>
-
-                {/* Home */}
-                <Route path="/main/settings">
-                    {/* <Settings /> */}
-                </Route>
-            </div>
             </Route>
         </HashRouter> 
     );

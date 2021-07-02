@@ -62,3 +62,8 @@ a:hover {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#dragRegion {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+}
