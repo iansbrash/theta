@@ -89,7 +89,7 @@ const AppTwo = () => {
 
     const iconsArray = [
         <HomeIcon />,
-        <AddTasksIcon />,
+        // <AddTasksIcon />,
         <TasksIcon />,
         <ProfilesIcon />,
         <ProxiesIcon />,
@@ -99,7 +99,7 @@ const AppTwo = () => {
 
     const toArray = [
         '/home',
-        '/addtasks',
+        // '/addtasks',
         '/tasks',
         '/profiles',
         '/proxies',
@@ -180,12 +180,12 @@ const AppTwo = () => {
                         </Route>
 
                         {/* AddTasks */}
-                        <Route path="/main/addtasks">
+                        {/* <Route path="/main/addtasks"> */}
                             {/* <AddTasks 
                                 tasks={tasks}
                                 setTasks={setTasks}
                             /> */}
-                        </Route>
+                        {/* </Route> */}
                         
                         {/* Tasks */}
                         <Route path="/main/tasks">

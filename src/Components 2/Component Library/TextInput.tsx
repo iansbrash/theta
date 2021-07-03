@@ -25,10 +25,10 @@ const TextInput : FC<TextInputProps> = ({
 
 
     return (
-        <div className={`${border ? `border ${border}` : null} ${bg} relative w-full h-full rounded-lg bg-transparent flex flex-row justify-start items-center`}
+        <div className={`${border ? `border ${border}` : null} ${bg} transition duration-250 ease-in-out hover:border-theta-logo relative w-full h-full rounded-lg bg-transparent flex flex-row justify-start items-center`}
         onClick={() => null}
         >
-            <div className="h-full flex flex-row justify-start items-center">
+            <div className="h-full flex flex-row justify-start items-center w-full">
                 {icon ? <div className={`${offsetWidth ? offsetWidth : 'w-6'}`}></div> : null}
                 <input
                     value={input}
