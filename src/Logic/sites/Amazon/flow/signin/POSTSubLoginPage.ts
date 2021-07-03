@@ -61,7 +61,7 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
             "cookie": joinCookies(allCookies)
         },
         maxRedirects: 0,
-        validateStatus: function (a) {return true;},
+        validateStatus: function () {return true;},
         data : POSTSubData,
         httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     })

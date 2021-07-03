@@ -3,7 +3,6 @@ import { joinCookies } from "../../../../../requestFunctions";
 import tsLogger from "../../../../../logger";
 import requestRetryWrapper from "../../../../../requestRetryWrapper";
 import { Proxy } from "../../../../../interfaces/ProxyList";
-import HttpsProxyAgent from 'https-proxy-agent'
 
 const GETCheckoutScreen = async (allCookies : string[], proxy : Proxy) : Promise<AxiosResponse> => {
 

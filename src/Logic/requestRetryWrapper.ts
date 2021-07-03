@@ -7,10 +7,10 @@ import tsLogger from './logger';
 // option for infinite retries
 // option for both infinite retries and break on error code
 
-interface requestWrapperOptions {
-    retryLimit: number,
-    delay: number
-}
+// interface requestWrapperOptions {
+//     retryLimit: number,
+//     delay: number
+// }
 
 interface RetryWrapperOptions {
     baseDelay: number,

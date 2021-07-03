@@ -3,7 +3,6 @@ import { Proxy } from "../../../../interfaces/ProxyList";
 import axios, {AxiosResponse} from "axios";
 import { joinCookies } from "../../../../requestFunctions";
 import testProxyList from "../../../../sensitive/testInterfaces/testProxyList";
-import https from 'https';
 import HttpsProxyAgent from 'https-proxy-agent'
 
 
@@ -11,7 +10,7 @@ const GETProduct = async (allCookies : string[], product : string, proxy : Proxy
     
     timestampLogger(`ProductURL: ${`https://amazon.com/dp/${product}`}`)
 
-    const httpsAgent = new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+    // const httpsAgent = new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
 
     const GETAmazonProductRes : any = await axios({
         method: 'get',

@@ -40,7 +40,7 @@ function getRandomInt(min : number, max : number) {
 
 const crack = () : string => {
     let starttime = (new Date).getTime();
-	let he = starttime + 4442;
+	// let he = starttime + 4442;
 	let lsu = lsubid()
 
 
@@ -92,15 +92,15 @@ const crack = () : string => {
 	return strhahah
 }
 
-function crcTable(r : any){
-    var crc = Array();
-    for (var t=0; t<256; t++){
-        for (var e=t, c=0; c<8;c++)
-            1 == (1 & e) ? e = e >>> 1 ^ 3988292384 : e >>>= 1;
-        crc[t] = e
-    };
-    return crc
-}
+// function crcTable(r : any){
+//     var crc = Array();
+//     for (var t=0; t<256; t++){
+//         for (var e=t, c=0; c<8;c++)
+//             1 == (1 & e) ? e = e >>> 1 ^ 3988292384 : e >>>= 1;
+//         crc[t] = e
+//     };
+//     return crc
+// }
 
 const crc32_js = (r : any) => {
     function crcTable2(){
@@ -124,7 +124,7 @@ const crc32_js = (r : any) => {
         return 4294967295 ^ e
     };
 
-    let crclist = crcTable2();
+    // let crclist = crcTable2();
     let cr32 = crc(r);
 
     return cr32;

@@ -1,7 +1,7 @@
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import {
     returnParsedCookies,
-    joinCookies,
+    // joinCookies,
     accumulateCookies,
     convertCookieArrayToObject,
     getValueByDelimiters

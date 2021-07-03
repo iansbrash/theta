@@ -30,13 +30,13 @@ const SignIn = async (email : string, password : string, proxy : Proxy) : Promis
     let prevRID = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="prevRID" value="', '" />');
     let workflowState = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="workflowState" value="', '" />');
 
-    interface POSTMainLoginPageProps {
-        appActionToken: string,
-        appAction: string,
-        prevRID: string,
-        workflowState: string,
-        email: string
-    }
+    // interface POSTMainLoginPageProps {
+    //     appActionToken: string,
+    //     appAction: string,
+    //     prevRID: string,
+    //     workflowState: string,
+    //     email: string
+    // }
 
     const POSTMainLoginPageResponse = await POSTMainLoginPageRetry(allCookies, allCookiesObject['session-id'], {
         appActionToken,

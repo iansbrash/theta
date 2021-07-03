@@ -1,7 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { joinCookies } from '../../../../../requestFunctions';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
-import qs from 'qs';
 import { ProfilePayment } from '../../../../../interfaces/ProfileObject';
 import { Proxy } from '../../../../../interfaces/ProxyList';
 import HttpsProxyAgent from 'https-proxy-agent'
@@ -19,15 +18,15 @@ interface POSTAddPaymentMethodDynamicParams {
 const POSTAddPaymentMethod = async (allCookies : string[], customerId : string, params : POSTAddPaymentMethodDynamicParams, payment : ProfilePayment, proxy : Proxy) : Promise<AxiosResponse> => {
 
     const url = `https://apx-security.amazon.com/payments-portal/data/f1/widgets2/v1/customer/${customerId}/continueWidget?sif_profile=APX-Encrypt-All-NA`
-    const POSTAddPaymentMethodConfig : POSTAddPaymentMethodDynamicParams = params;
+    // const POSTAddPaymentMethodConfig : POSTAddPaymentMethodDynamicParams = params;
     
     // also needs CC name expm expy
-    const POSTAddPaymentMethodData = qs.stringify(POSTAddPaymentMethodConfig) + `&ie=${'UTF-8'}&addCreditCardNumber=${splitCC(payment.number).join('+')}&ppw-accountHolderName=${payment.name.split(' ').join('+')}&ppw-expirationDate_month=${payment.expiryMonth.charAt(0) === "0" ? payment.expiryMonth.substring(1) : payment.expiryMonth}&ppw-expirationDate_year=${payment.expiryYear}`;
+    // const POSTAddPaymentMethodData = qs.stringify(POSTAddPaymentMethodConfig) + `&ie=${'UTF-8'}&addCreditCardNumber=${splitCC(payment.number).join('+')}&ppw-accountHolderName=${payment.name.split(' ').join('+')}&ppw-expirationDate_month=${payment.expiryMonth.charAt(0) === "0" ? payment.expiryMonth.substring(1) : payment.expiryMonth}&ppw-expirationDate_year=${payment.expiryYear}`;
 
 
     const tempData2 = `ppw-widgetEvent%3AAddCreditCardEvent=&ppw-jsEnabled=true&ppw-widgetState=${params["ppw-widgetState"]}` + `&ie=UTF-8&addCreditCardNumber=${splitCC(payment.number).join('+')}&ppw-accountHolderName=${payment.name.split(' ').join('+')}&ppw-expirationDate_month=${payment.expiryMonth.charAt(0) === "0" ? payment.expiryMonth.substring(1) : payment.expiryMonth}&ppw-expirationDate_year=${payment.expiryYear.length === 2 ? '20' + payment.expiryYear : payment.expiryYear}`;
 
-    const tempData = `ppw-widgetEvent%3AAddCreditCardEvent=&ppw-jsEnabled=true&ppw-widgetState=${params["ppw-widgetState"]}&ie=UTF-8&addCreditCardNumber=${'4767+7184+3996+8928'}&ppw-accountHolderName=Ian+brash&ppw-expirationDate_month=11&ppw-expirationDate_year=2023`
+    // const tempData = `ppw-widgetEvent%3AAddCreditCardEvent=&ppw-jsEnabled=true&ppw-widgetState=${params["ppw-widgetState"]}&ie=UTF-8&addCreditCardNumber=${'4767+7184+3996+8928'}&ppw-accountHolderName=Ian+brash&ppw-expirationDate_month=11&ppw-expirationDate_year=2023`
 
    
     const POSTAddPaymentMethodResponse = await axios({

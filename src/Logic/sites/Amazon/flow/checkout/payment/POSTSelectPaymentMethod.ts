@@ -15,13 +15,13 @@ const POSTSelectPaymentMethod = async (allCookies : string[], customerId : strin
     const ppwWidgetState = params["ppw-widgetState"];
     const ppwPaymentMethodId = params["ppw-paymentMethodId"];
 
-    const POSTSelectPaymentMethodDatConfig = {
-        "ppw-jsEnabled": true,
-        "ppw-widgetState": ppwWidgetState,
-        "ppw-widgetEvent": 'AddPaymentMethodRefreshEvent',
-        "ppw-paymentMethodId": ppwPaymentMethodId,
-        "ppw-widgetAction": 'add-credit-card-workflow-complete'
-    }
+    // const POSTSelectPaymentMethodDatConfig = {
+    //     "ppw-jsEnabled": true,
+    //     "ppw-widgetState": ppwWidgetState,
+    //     "ppw-widgetEvent": 'AddPaymentMethodRefreshEvent',
+    //     "ppw-paymentMethodId": ppwPaymentMethodId,
+    //     "ppw-widgetAction": 'add-credit-card-workflow-complete'
+    // }
 
     const otherData = `ppw-jsEnabled=true&ppw-widgetState=${ppwWidgetState}&ppw-widgetEvent=AddPaymentMethodRefreshEvent&ppw-paymentMethodId=${ppwPaymentMethodId}&ppw-widgetAction=add-credit-card-workflow-complete`
 

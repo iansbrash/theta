@@ -1,11 +1,8 @@
 import {
     returnParsedCookies,
-    joinCookies,
     accumulateCookies,
     getValueByDelimiters
 } from '../../../../requestFunctions';
-import qs from 'qs';
-import axios, { AxiosResponse } from 'axios';
 import tsLogger from '../../../../logger';
 import genShippingPayload from "../../logic/genShippingPayload";
 import testProfile from "../../../../sensitive/testInterfaces/testProfile";
@@ -175,12 +172,12 @@ const Checkout = async (allCookies : string[], proxy : Proxy) => {
     )
 
     const SelectPaymentHTML = POSTSelectPaymentMethodResponse.data.htmlContent;
-    const paymentInstrumentId = POSTSelectPaymentMethodResponse.data.additionalWidgetResponseData.additionalData.paymentInstrumentId
+    // const paymentInstrumentId = POSTSelectPaymentMethodResponse.data.additionalWidgetResponseData.additionalData.paymentInstrumentId
     
     // console.log(SelectPaymentHTML)
     // console.log(paymentInstrumentId)
 
-    const ppwLength = 46;
+    // const ppwLength = 46;
 
     const ppw_instrumentRowSelection = getValueByDelimiters(SelectPaymentHTML, '" type="radio" name="ppw-instrumentRowSelection" value="', '">');
     const _rewardsAccountSelection_customAmountValue = getValueByDelimiters(SelectPaymentHTML, '_rewardsAccountSelection_rewardsApplied" value="', '"');

@@ -46,6 +46,8 @@ const EditIcon = () => (
     </svg>  
 )
 
+const delay = (ms : number) => new Promise(res => setTimeout(res, ms));
+
 interface TaskComponentProps {
     task: TaskClass
 }
@@ -59,8 +61,17 @@ const TaskComponent : FC<TaskComponentProps> = ({
     const [status, setStatus] = useState<string>('Idle')
     const [productTitle, setProductTitle] = useState<string>(task.input)
 
-    const startTask = () => {
+    const startTask = async () => {
+        task.start();
+        setStatus('Signing in (1)')
+        while (task.status === 'Active') {
+            const res = await task.cycle();
+            setStatus(res.message);
 
+            if (res.status === "Error") {
+                await delay(7500);
+            }
+        }
     }
 
     const deleteTask = () => {
@@ -72,7 +83,7 @@ const TaskComponent : FC<TaskComponentProps> = ({
     }
 
     const stopTask = () => {
-
+        task.stop()
     }
 
     return (
