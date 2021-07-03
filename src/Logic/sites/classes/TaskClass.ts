@@ -1,3 +1,4 @@
+import { resolve } from "path";
 import Site from "../../interfaces/enums/Site";
 import Size from "../../interfaces/enums/Size";
 import ProfileObject from "../../interfaces/ProfileObject";
@@ -7,6 +8,11 @@ import Task from "../../interfaces/Task";
 export enum internalStatus {
     "Idle",
     "Active"
+}
+
+export interface cycleStatus {
+    status: "Success" | "Error" | "Stopped",
+    message: string
 }
 
 abstract class TaskClass implements Task {
@@ -46,6 +52,15 @@ abstract class TaskClass implements Task {
 
     abstract start(): void;
     abstract stop(): void;
+
+    // Cycle methods and variables
+    abstract cycle(): Promise<cycleStatus>;
+    nextFunction : (() => Promise<any>) = () => {
+        return new Promise((res, rej) => {
+            return res(null);
+        })
+    };
+
 
     getId() : number {
         return this.identifier;

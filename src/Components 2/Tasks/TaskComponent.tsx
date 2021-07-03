@@ -1,6 +1,7 @@
 import React, {
     FC, useState, ReactNode
 } from 'react';
+import TaskClass from '../../Logic/sites/classes/TaskClass';
 
 interface InterestingWrapperProps {
     children: ReactNode,
@@ -45,40 +46,73 @@ const EditIcon = () => (
     </svg>  
 )
 
-const TaskComponent = () => {
+interface TaskComponentProps {
+    task: TaskClass
+}
+
+const TaskComponent : FC<TaskComponentProps> = ({
+    task
+} : TaskComponentProps) => {
 
     const taskBg = 'bg-theta-tasks-taskgroup' // or taskgroup-individual
+
+    const [status, setStatus] = useState<string>('Idle')
+    const [productTitle, setProductTitle] = useState<string>(task.input)
+
+    const startTask = () => {
+
+    }
+
+    const deleteTask = () => {
+
+    }
+
+    const editTask = () => {
+
+    }
+
+    const stopTask = () => {
+
+    }
 
     return (
         <div className={`z-0 w-full flex flex-row justify-start items-center px-2 ${taskBg} h-12 rounded-md shadow-md`}>
             <div className="relative select-none text-theta-gray-2 text-xl w-full">
-                <div className="z-10 absolute left-0 top-0 bottom-0 w-auto h-full flex justify-center items-center">
-                    https://amazon.com/dp/PRODUCTIDasdhttps://amazon.com/dp/PRODUCTIDasdhttps://amazon.com/dp/PRODUCTIDasd
+                <div className="z-10 absolute left-0 top-0 bottom-0 w-auto h-full flex justify-start items-center whitespace-nowrap">
+                    {productTitle}
                 </div>
             </div>
             <InterestingWrapperProps width={'w-3/10'} bg={taskBg}>
-                Real Card
+                {task.profile.information.name}
             </InterestingWrapperProps>
             <InterestingWrapperProps width={'w-3/10'} bg={taskBg}>
-                Main ISP
+                {task.proxyList.name}
             </InterestingWrapperProps>
             <InterestingWrapperProps width={'w-4/10'} bg={taskBg}>
-                Waiting for product
+                {status}
             </InterestingWrapperProps>
             <InterestingWrapperProps width={'w-72'} bg={taskBg}>
                 <div className="h-full w-full flex flex-row justify-between items-center">
-                    <div className="text-green-200">
+                    <button className="text-green-200 focus:outline-none"
+                    onClick={() => startTask()}
+                    >
                         <PlayIcon />
-                    </div>
-                    <div className="text-blue-200">
+                    </button>
+                    <button className="text-blue-200 focus:outline-none"
+                    onClick={() => editTask()}
+                    >
                         <EditIcon />
-                    </div>
-                    <div className="text-yellow-200">
+                    </button>
+                    <button className="text-yellow-200 focus:outline-none"
+                    onClick={() => stopTask()}
+                    >
                         <StopIcon />
-                    </div>
-                    <div className="text-red-200">
+                    </button>
+                    <button className="text-red-200 focus:outline-none"
+                    onClick={() => deleteTask()}
+                    >
                         <DeleteIcon />
-                    </div>
+                    </button>
                 </div>
             </InterestingWrapperProps>
         </div>

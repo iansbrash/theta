@@ -2,7 +2,7 @@ import Site from "../../../interfaces/enums/Site";
 import Size from "../../../interfaces/enums/Size";
 import ProfileObject from "../../../interfaces/ProfileObject";
 import ProxyList from "../../../interfaces/ProxyList";
-import TaskClass, { internalStatus } from "../../classes/TaskClass";
+import TaskClass, { internalStatus, cycleStatus } from "../../classes/TaskClass";
 import AmazonTaskConfig from "../../../interfaces/site_task_config/AmazonTaskConfig";
 import electron from 'electron';
 import { convertCookieArrayToObject } from "../../../requestFunctions";
@@ -29,6 +29,25 @@ class AmazonTaskClass extends TaskClass {
     storage : storage = {};
     status : string = "Idle";
 
+    normalFlow : string[] = [
+        'GETCheckoutScreen',
+        'GETMainLoginPage',
+        'POSTSubLoginPage',
+        'AmazonGETProduct',
+        'AmazonPOSTAddToCart',
+        'GETCheckoutScreen',
+        'POSTAddShippingAddressFormHandler',
+        'POSTSelectShippingAddress',
+        'GETAddPaymentPage',
+        'POSTRegister',
+        'POSTAddPaymentMethod',
+        'POSTSelectPaymentMethod',
+        'POSTAsyncContinueAfterSelection',
+        'POSTSubmitOrder'
+    ]
+
+    nextFunctionIndex : number = 0;
+
 
     constructor (
         identifier : number, 
@@ -53,35 +72,49 @@ class AmazonTaskClass extends TaskClass {
     }
 
     // deprecated ?
-    async start() : Promise<void> {
+    async start() : Promise<string> {
         if (this.internalStatus === internalStatus.Idle){
 
-            // @ts-ignore
-            this.statusWatcher('Starting...');
-
+            this.nextFunction = this.GETMainLoginPage;
+            this.nextFunctionIndex = 0;
             this.internalStatus = internalStatus.Active;
+            this.storage = {};
+            this.allCookies = [];
 
-            const t = {
-                identifier: this.identifier,
-                site: this.site,
-                // siteConfig: TaskConfig,
-                profile: this.profile,
-                size: this.size,
-                proxyList: this.proxyList
-            }
-            // const res = await ipcRenderer.invoke('StartAmazon', 'testtask')
+            return "Ready";
 
-            // return res;
-
-            const res = await electron.ipcRenderer.invoke('StartAmazon', 'arg1', 'arg2');
-
-            return res;
         }
         else {
             throw "Task is not idle"
         }
     }
 
+    async cycle() : Promise<cycleStatus> {
+        if (this.status === "Active") {
+            try {
+
+                // @ts-ignore
+                const res = await this[this.normalFlow[this.nextFunctionIndex]]();
+
+                this.nextFunctionIndex += 1;
+
+                return {
+                    status: 'Success',
+                    message: res.message
+                }
+            }
+            // catches thrown error from nextFunction
+            catch (err) {
+                return err;
+            }
+        }
+        else {
+            return {
+                status: "Stopped", 
+                message: "Stopped"
+            }
+        }
+    }
 
     /// thoughts:
     // each class has a "cycle" abstract method
@@ -90,25 +123,29 @@ class AmazonTaskClass extends TaskClass {
     //      if it succeeds, it returns the next status code, and sets nextFunctions to the next step of the flow
     //      if it fails, it returns "failed", and sets nextFunction to itself, after setting a delay of say 3000
 
-    async signIn() : Promise<void> {
-        // user, pass, proxy
-        const res = await electron.ipcRenderer.invoke('AmazonSignIn', this.config.account.username, this.config.account.password, this.proxyList.proxies[0]);
-        
-        console.log('res')
-        console.log(res);
-        this.allCookies = res;
-    }
-
     /** SignIn Flow via IPC */
 
-    async GETMainLoginPage() : Promise<void> {
+    async GETMainLoginPage() : Promise<cycleStatus> {
 
-        this.status = "Active";
+        try {
+            const res : ipcResponse = await electron.ipcRenderer.invoke('AmazonGETMainLoginPage', this.allCookies, this.proxyList.proxies[0]);
+            this.allCookies = res.allCookies;
+            this.storage = res.storage;
+            this.nextFunction = this.POSTMainLoginPage;
+            return {
+                status: "Success",
 
-        // allCookies, proxy
-        const res : ipcResponse = await electron.ipcRenderer.invoke('AmazonGETMainLoginPage', this.allCookies, this.proxyList.proxies[0]);
-        this.allCookies = res.allCookies;
-        this.storage = res.storage;
+                // aka the next action
+                message: "Signing in (2)"
+            }
+        }
+        catch (err) {
+            throw {
+                status: "Error",
+                message: err
+            }
+        }
+
     }
 
     async POSTMainLoginPage() : Promise<void> {

@@ -25,7 +25,7 @@ const TextInput : FC<TextInputProps> = ({
     const border = '' //border-theta-sidebar
 
     return (
-        <button className={`${border !== '' ? 'border' : ''} ${border} relative focus:outline-none w-full h-full rounded-lg ${bg} flex flex-col justify-start items-center`}
+        <button className={`${border !== '' ? 'border' : ''} ${border} relative focus:outline-none w-full h-full rounded-lg bg-transparent flex flex-col justify-start items-center`}
         onClick={() => null}
         >
             <div className="h-full flex flex-row justify-start items-center">
@@ -35,8 +35,8 @@ const TextInput : FC<TextInputProps> = ({
                     onChange={(e) => setInput(e.target.value)}
                     // onFocus={() => onInputFocus()}
                     // onBlur={() => onInputBlur()}
-                    placeholder={placeholder}
-                    className={`rounded-lg h-full w-full ${bg} focus:outline-none placeholder-theta-gray-7 text-theta-gray-2 text-xl`}
+                    style={{WebkitAppearance: 'none'}}
+                    className={`rounded-lg h-full w-full bg-transparent focus:outline-none placeholder-theta-gray-7 text-theta-gray-2 text-xl`}
                 />
             </div>
             <div className="text-theta-gray-7 absolute left-0 top-0 bottom-0 flex justify-center items-center">
@@ -391,11 +391,14 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
                 {/* MLC. 48 because thats the monitor/error size */}
                 <div className="flex flex-col justify-center items-end w-48 ">
-                    {/* <div className="text-blue-300 rounded-full shadow-lg bg-theta-sidebar h-12 w-12 flex justify-center items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clipRule="evenodd" />
+                <button className="transition transform duration-250 ease-in-out hover:scale-110 focus:outline-none rounded-full bg-theta-sidebar-dark shadow-lg text-blue-400 flex flex-row justify-center items-center">
+                        <div className="ml-4 mr-2 text-theta-gray-2 font-medium text-2xl">
+                            Add Tasks
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
                         </svg>
-                    </div> */}
+                    </button>
                 </div>
             </div>
         </ScreenWrapper>
