@@ -48,7 +48,10 @@ module.exports = {
                 'theta-tasks-taskcomponent': '#2e282c',
                 'theta-tasks-taskcomponent-start': '#4cc26b',
                 'theta-tasks-taskcomponent-stop': '#ba9e4c',
-                'theta-tasks-taskcomponent-delete': '#9c4155'
+                'theta-tasks-taskcomponent-delete': '#9c4155',
+                'theta-profiles-individual': '#3b3438',
+                'theta-profiles-individual-selected': '#423a3f',
+                'theta-profiles-individual-border': '#4a2f3d'
             },
             height: {
                 '0.25': '0.0625rem'

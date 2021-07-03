@@ -13,7 +13,7 @@ const ScreenWrapper : FC<ScreenWrapperProps> = ({
 }) => {
     return (
         <div className={`w-full h-full flex p-4 ${hidden ? 'hidden' : '' }`}>
-            <div className="w-full h-full flex flex-col justify-start items-center">
+            <div className="w-full h-full flex flex-col justify-start items-center relative">
                 {children}
             </div>
         </div>

@@ -87,7 +87,7 @@ const Task : FC<TaskFunctionProps> = ({
         setStatusWatcher('Adding payment (2)')
         await (task as AmazonTaskClass).POSTRegister();
 
-        setStatusWatcher('Adding payment (2)')
+        setStatusWatcher('Adding payment (3)')
         await (task as AmazonTaskClass).POSTAddPaymentMethod();
 
         setStatusWatcher('Selecting payment')

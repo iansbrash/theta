@@ -1,6 +1,5 @@
 import React, {
     FC, useState,
-    useRef,
     useEffect,
     ReactNode
 } from 'react';
@@ -11,31 +10,30 @@ import 'react-virtualized/styles.css';
 
 interface TextInputProps {
     placeholder: string,
-    icon: ReactNode
+    icon: ReactNode,
+    input: number,
+    setInput: (s : number) => void
 }
 
 const TextInput : FC<TextInputProps> = ({
     placeholder,
-    icon
+    icon,
+    input,
+    setInput
 }: TextInputProps) => {
 
-    const [input, setInput] = useState<string>('')
-
-    const bg = 'bg-theta-bg'
-    const border = '' //border-theta-sidebar
 
     return (
-        <button className={`${border !== '' ? 'border' : ''} ${border} relative focus:outline-none w-full h-full rounded-lg bg-transparent flex flex-col justify-start items-center`}
+        <button className={`relative focus:outline-none w-full h-full rounded-lg bg-transparent flex flex-col justify-start items-center`}
         onClick={() => null}
         >
             <div className="h-full flex flex-row justify-start items-center">
                 <div className="w-8"></div>
                 <input
                     value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    // onFocus={() => onInputFocus()}
-                    // onBlur={() => onInputBlur()}
+                    onChange={(e) => setInput(parseInt( e.target.value ))}
                     style={{WebkitAppearance: 'none'}}
+                    placeholder={placeholder}
                     className={`rounded-lg h-full w-full bg-transparent focus:outline-none placeholder-theta-gray-7 text-theta-gray-2 text-xl`}
                 />
             </div>
@@ -165,6 +163,8 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
     const [dropdownDown, setDowndownDown] = useState<boolean>(false);
     const [selectSiteInput, setSelectSiteInput] = useState<string>('');
+    const [monitorDelay, setMonitorDelay] = useState<number>(3000);
+    const [errorDelay, setErrorDelay] = useState<number>(3000);
 
     const [tasks, setTasks] = useState<string[]>([]);
 
@@ -345,7 +345,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
             <div className="h-20 w-full flex flex-row justify-between items-center mt-2">
                 {/* Error and Mintor Delay */}
                 <div className="flex flex-col justify-center items-start w-48 space-y-1">
-                    <TextInput placeholder={'Error delay'} 
+                    <TextInput placeholder={'Error delay'}
+                    input={errorDelay}
+                    setInput={setErrorDelay} 
                     icon={
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -353,7 +355,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                     }
                     />
 
-                    <TextInput placeholder={'Monitor delay'} 
+                    <TextInput placeholder={'Monitor delay'}
+                    input={monitorDelay}
+                    setInput={setMonitorDelay} 
                     icon={
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
