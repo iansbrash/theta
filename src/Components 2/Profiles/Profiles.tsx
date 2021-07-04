@@ -57,9 +57,17 @@ const Profiles : FC = () => {
                 <div className="w-1/3 h-full">
                     <ScreenWrapper>
                         <div className="px-4 mb-2 flex flex-row justify-between items-center w-full">
-                            <div className="text-2xl font-medium text-theta-white">
-                                Profiles
+                            <div className="flex flex-row justify-start items-center">
+                                <div className="text-2xl font-medium text-theta-white">
+                                    Profiles
+                                </div>
+                                <div className="ml-2 text-theta-gray-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
                             </div>
+
                             <div className="flex flex-row justify-end items-center">
                                 <button className="focus:outline-none w-8 h-8 rounded-md shadow-md bg-theta-logo flex justify-center items-center text-theta-white"
                                 onClick={() => null}

@@ -52,7 +52,12 @@ module.exports = {
                 'theta-profiles-individual': '#3b3438',
                 'theta-profiles-individual-selected': '#423a3f',
                 'theta-profiles-individual-border': '#4a2f3d',
-                'theta-accounts-accountgroup-individual': '#40383c'
+                'theta-accounts-accountgroup-individual': '#40383c',
+                'theta-settings-dashboard': '#995a7b',
+                'theta-settings-deactivate': '#9c3346',
+                'theta-settings-deactivate-border': '#ad4054',
+                'theta-settings-dashboard-text': '#edd8e9'
+
             },
             height: {
                 '0.25': '0.0625rem'

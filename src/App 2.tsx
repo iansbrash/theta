@@ -8,9 +8,8 @@ import {
 } from "react-router-dom";
 
 import Home from './Components 2/Home/Home';
-import AddTasks from "./Components/Add Tasks/AddTasks";
 import Profiles from "./Components 2/Profiles/Profiles";
-import Settings from "./Components/Settings/Settings";
+import Settings from "./Components 2/Settings/Settings";
 import Tasks from "./Components 2/Tasks/Tasks";
 import Accounts from "./Components 2/Accounts/Accounts";
 import Proxies from "./Components 2/Proxies/Proxies";
@@ -25,17 +24,6 @@ const ExitIcon = () => (
     </svg>
 )
 
-const MoveIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-    </svg>
-)
-
-const MinimizeIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-    </svg>
-)
 
 const HomeIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
@@ -48,11 +36,6 @@ const TasksIcon = () =>
         <path fillRule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm14 1a1 1 0 11-2 0 1 1 0 012 0zM2 13a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2zm14 1a1 1 0 11-2 0 1 1 0 012 0z" clipRule="evenodd" />
     </svg>
 
-
-const AddTasksIcon = () => 
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
-        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
-    </svg>
 
 
 const ProxiesIcon = () => 
@@ -123,20 +106,6 @@ const AppTwo = () => {
             <Route path="/main">
                 <div className="relative flex flex-col h-screen w-screen justify-start items-center">
 
-                    {/* <div className="z-30 rounded-lg absolute right-0 top-0 w-auto h-8">
-                        <div className="rounded-tr-lg  rounded-bl-lg bg-theta-sidebar flex flex-row h-full justify-end items-center space-x-2 px-2">
-                            <div className="text-theta-gray-2">
-                                <MoveIcon />
-                            </div>     
-                            <div className="text-theta-gray-2">
-                                <MinimizeIcon />
-                            </div>
-                            <div className="text-theta-gray-2">
-                                <ExitIcon />
-                            </div>
-                        </div>
-                    </div> */}
-
                     <div className="rounded-lg relative flex flex-row h-full w-screen justify-start items-center bg-gradient-to-r from-theta-bg-start to-theta-bg">
                         {/* Bar */}
                         <div className="rounded-l-lg relative  z-10 flex h-full w-14 bg-theta-sidebar shadow-2xl flex-col justify-between items-center">
@@ -178,14 +147,6 @@ const AppTwo = () => {
                         <Route path="/main/home" exact>
                             <Home />
                         </Route>
-
-                        {/* AddTasks */}
-                        {/* <Route path="/main/addtasks"> */}
-                            {/* <AddTasks 
-                                tasks={tasks}
-                                setTasks={setTasks}
-                            /> */}
-                        {/* </Route> */}
                         
                         {/* Tasks */}
                         <Route path="/main/tasks">
@@ -209,7 +170,7 @@ const AppTwo = () => {
 
                         {/* Home */}
                         <Route path="/main/settings">
-                            {/* <Settings /> */}
+                            <Settings />
                         </Route>
                     </div>
                 </div>

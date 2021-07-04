@@ -42,9 +42,17 @@ const Proxies : FC = () => {
                 <div className="w-1/3 h-full">
                     <ScreenWrapper>
                         <div className="px-4 mb-2 flex flex-row justify-between items-center w-full">
-                            <div className="text-2xl font-medium text-theta-white">
-                                Proxies
+                            <div className="flex flex-row justify-start items-center">
+                                <div className="text-2xl font-medium text-theta-white">
+                                    Proxies
+                                </div>
+                                <div className="ml-2 text-theta-gray-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                                    </svg>
+                                </div>
                             </div>
+
                             <div className="flex flex-row justify-end items-center">
                                 <button className="focus:outline-none w-8 h-8 rounded-md shadow-md bg-theta-logo flex justify-center items-center text-theta-white"
                                 onClick={() => null}
