@@ -51,7 +51,8 @@ module.exports = {
                 'theta-tasks-taskcomponent-delete': '#9c4155',
                 'theta-profiles-individual': '#3b3438',
                 'theta-profiles-individual-selected': '#423a3f',
-                'theta-profiles-individual-border': '#4a2f3d'
+                'theta-profiles-individual-border': '#4a2f3d',
+                'theta-accounts-accountgroup-individual': '#40383c'
             },
             height: {
                 '0.25': '0.0625rem'

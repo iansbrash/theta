@@ -6,13 +6,15 @@ import React, {
 interface IndividualProfileProps {
     name: string,
     selectedProfile: string,
-    setSelectedProfile: (s : string) => void
+    setSelectedProfile: (s : string) => void,
+    bg?: string
 }
 
 const IndividualProfile : FC<IndividualProfileProps> = ({
     name,
     selectedProfile,
-    setSelectedProfile
+    setSelectedProfile,
+    bg
 } : IndividualProfileProps) => {
 
     const [isFavorite, setIsFavorite] = useState<boolean>(false)
@@ -22,7 +24,7 @@ const IndividualProfile : FC<IndividualProfileProps> = ({
     }
 
     return (
-        <button className={`transition duration-250 ease-in-out focus:outline-none w-full h-14 ${selectedProfile === name ? 'bg-theta-profiles-individual-selected' : 'bg-theta-profiles-individual'} rounded-md shadow-md border ${selectedProfile === name ? 'border-theta-gray-2' : 'border-theta-tasks-taskgroup'} flex flex-row justify-between items-center`}
+        <button className={`transition duration-250 ease-in-out focus:outline-none w-full h-14 ${selectedProfile === name ? 'bg-theta-profiles-individual-selected' : (bg ? bg : 'bg-theta-profiles-individual')} rounded-md shadow-md border ${selectedProfile === name ? 'border-theta-gray-2' : 'border-theta-tasks-taskgroup'} flex flex-row justify-between items-center`}
         onClick={() => setSelectedProfile(name)}
         >
             {/* Left Side */}
