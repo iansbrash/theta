@@ -13,7 +13,7 @@ import Profiles from "./Components 2/Profiles/Profiles";
 import Settings from "./Components/Settings/Settings";
 import Tasks from "./Components 2/Tasks/Tasks";
 import Accounts from "./Components/Accounts/Accounts";
-import Proxies from "./Components/Proxies/Proxies";
+import Proxies from "./Components 2/Proxies/Proxies";
 import TaskClass from "./Logic/sites/classes/TaskClass";
 import "./App.global.css";
 import Login from './Components/Login/Login';
@@ -199,7 +199,7 @@ const AppTwo = () => {
 
                         {/* Home */}
                         <Route path="/main/proxies">
-                            {/* <Proxies /> */}
+                            <Proxies />
                         </Route>
 
                         {/* Home */}
