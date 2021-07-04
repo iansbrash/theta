@@ -7,6 +7,7 @@ import ScreenWrapper from '../Component Library/ScreenWrapper';
 import AutoResizerTaskComponent from './AutoResizerTaskComponent'
 import { AutoSizer, List } from 'react-virtualized'
 import 'react-virtualized/styles.css';
+import ScreenWrapperModal from '../Component Library/ScreenWrapperModal'
 
 interface TextInputProps {
     placeholder: string,
@@ -166,6 +167,8 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     const [monitorDelay, setMonitorDelay] = useState<number>(3000);
     const [errorDelay, setErrorDelay] = useState<number>(3000);
 
+    const [addTasksEnabled, setAddTasksEnabled] = useState<boolean>(false);
+
     const [tasks, setTasks] = useState<string[]>([]);
 
     const onInputFocus = () => {
@@ -230,6 +233,20 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
     return (
         <ScreenWrapper hidden={hidden}>
+            <ScreenWrapperModal 
+                isEnabled={addTasksEnabled}
+                setIsEnabled={setAddTasksEnabled}>
+                <div className="w-1/2 h-1/2 rounded-lg shadow-lg bg-theta-bg flex justify-center items-center flex-col">
+                    <div className="text-2xl text-theta-white font-medium">
+                        Sup Hoe.
+                    </div>
+                    <button className="w-64 h-12 rounded-lg shadow-lg focus:outline-none bg-theta-logo"
+                    onClick={() => setAddTasksEnabled(false)}
+                    >
+
+                    </button>
+                </div>
+            </ScreenWrapperModal>
             <div className={`h-auto w-full z-20`}>
                 <div className="p-4 flex flex-col justify-start items-center rounded-lg shadow-lg bg-theta-sidebar w-full h-full">
                     <div className="flex flex-row w-full justify-between items-center h-full">
@@ -395,7 +412,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
                 {/* MLC. 48 because thats the monitor/error size */}
                 <div className="flex flex-col justify-center items-end w-48 ">
-                <button className="transition transform duration-250 ease-in-out hover:scale-110 focus:outline-none rounded-full bg-theta-sidebar-dark shadow-lg text-blue-400 flex flex-row justify-center items-center">
+                <button className="transition transform duration-250 ease-in-out hover:scale-110 focus:outline-none rounded-full bg-theta-sidebar-dark shadow-lg text-blue-400 flex flex-row justify-center items-center"
+                onClick={() => setAddTasksEnabled(true)}
+                >
                         <div className="ml-4 mr-2 text-theta-gray-2 font-medium text-2xl">
                             Add Tasks
                         </div>
