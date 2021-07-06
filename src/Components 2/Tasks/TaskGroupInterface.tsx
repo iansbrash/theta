@@ -213,14 +213,6 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
     const [cW, setCW ] = useState<number>(0);
 
-    const modalContentRef = useRef<HTMLDivElement>(null)
-    // useEffect(() => {
-    //     if (addTasksEnabled) {
-
-    //         modalContentRef.current?.focus();
-    //     }
-    // }, [addTasksEnabled])
-
     useEffect(() => {
         // @ts-ignore
         setCW(document.getElementById('sliderDiv')?.clientWidth)
@@ -234,34 +226,13 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
         setTasks(t)
     }, [])
 
-    // @ts-ignore
-    
 
-
-    const [divW, setdivW] = useState(10);
-
-    
     const handleSiteChange = (s : string) => {
         setCurrentSite(s);
         setSelectSiteInput(s);
         onInputBlur();
     }
 
-    const tableHeaders = [
-        "Items",
-        "Order #",
-        "Amount",
-        "Status",
-        "Delivery Driver"
-    ];
-
-   
-
-    const siteMinW = 'min-w-1/10'
-    const productMinW = 'min-w-3/10'
-    const profileMinW = 'min-w-1/10'
-    const buttonsMinW = 'min-w-1/10'
-    const siteMaxW = 'max-w-4/10'
 
     const [addTasksInput, setAddTasksInput] = useState<string>('');
 
@@ -271,9 +242,6 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
             isEnabled={addTasksEnabled}
             setIsEnabled={setAddTasksEnabled}>
                 <div className="w-1/2 h-auto rounded-lg shadow-lg bg-theta-bg flex justify-start items-center flex-col focus:outline-none p-4"
-                // tabIndex={0}
-                // onBlur={() => setAddTasksEnabled(false)}
-                // ref={modalContentRef}
                 onClick={(e) => e.stopPropagation()}
                 >
                         <div className="w-full text-2xl text-theta-white font-medium">

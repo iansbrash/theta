@@ -252,7 +252,9 @@
     "yarn-deduplicate": "^3.1.0"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.6.0",
     "@types/qs": "^6.9.6",
+    "@types/react-redux": "^7.1.16",
     "@types/react-resizable": "^1.7.2",
     "@types/react-virtualized": "^9.21.11",
     "@types/react-window": "^1.8.3",
@@ -270,6 +272,7 @@
     "qs": "^6.10.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-redux": "^7.2.4",
     "react-resizable": "^3.0.4",
     "react-router-dom": "^5.2.0",
     "react-virtualized": "^9.22.3",

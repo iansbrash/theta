@@ -43,6 +43,7 @@ export interface ProfilePayment {
 }
 
 interface ProfileSettings {
+    favorite: boolean
     //quicktask?: QuicktaskSettings
 }
 

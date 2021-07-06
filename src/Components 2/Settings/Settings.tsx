@@ -4,14 +4,30 @@ import React, {
 } from 'react';
 import ScreenWrapper from '../Component Library/ScreenWrapper';
 import TextInput from '../Component Library/TextInput';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { updateDefaultDelays, updateDefaultWebhooks } from '../../redux/reducers/settingsSlice';
 
 const Settings = () => {
 
+    const defaultMonitorDelay : number = useSelector((state : RootState)  => state.settings.defaults.delays.monitor)
+    const defaultErrorDelay : number = useSelector((state : RootState)  => state.settings.defaults.delays.error)
+    const defaultDiscordWebhook : string = useSelector((state : RootState)  => state.settings.defaults.webhooks.discord)
 
-    const [defaultMonitorDelay, setDefaultMonitorDelay] = useState<string>('');
-    const [defaultErrorDelay, setDefaultErrorDelay] = useState<string>('');
 
+    const dispatch = useDispatch();
 
+    const dMDOnChange = (s : string) => {
+        dispatch(updateDefaultDelays("monitor", s === '' ? 0 : parseInt(s)))
+    }
+
+    const dEDOnChange = (s : string) => {
+        dispatch(updateDefaultDelays("error", s === '' ? 0 : parseInt(s)))
+    }
+
+    const discordWebhookOnChange = (s : string) => {
+        dispatch(updateDefaultWebhooks("discord", s))
+    }
 
     return (
         <div className="flex flex-1 h-full">
@@ -42,8 +58,8 @@ const Settings = () => {
                                     <div className="w-full h-8">
                                         <TextInput 
                                         placeholder={'3000'}
-                                        input={defaultMonitorDelay}
-                                        onChange={setDefaultMonitorDelay}
+                                        input={defaultMonitorDelay.toString()}
+                                        onChange={dMDOnChange}
                                         bg={'bg-theta-sidebar'}
                                         icon={
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -63,8 +79,8 @@ const Settings = () => {
                                     <div className="w-full h-8">
                                         <TextInput 
                                         placeholder={'3000'}
-                                        input={defaultMonitorDelay}
-                                        onChange={setDefaultMonitorDelay}
+                                        input={defaultErrorDelay.toString()}
+                                        onChange={dEDOnChange}
                                         bg={'bg-theta-sidebar'}
                                         icon={
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -84,8 +100,8 @@ const Settings = () => {
                                 <div className="w-full h-8">
                                     <TextInput 
                                         placeholder={'https://discord.com/api/webhooks/736390069473629573...'} //https://discord.com/api/webhooks/736390069473629573/Kau5912875o128574_b12W9ks01lZ04mSo284A9sgmz311K7HjB92105Ka8sS210c5S1
-                                        input={defaultMonitorDelay}
-                                        onChange={setDefaultMonitorDelay}
+                                        input={defaultDiscordWebhook}
+                                        onChange={discordWebhookOnChange}
                                         bg={'bg-theta-sidebar'}
                                         icon={
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">

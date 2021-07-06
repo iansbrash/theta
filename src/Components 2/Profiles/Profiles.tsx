@@ -7,6 +7,9 @@ import ScreenWrapper from '../Component Library/ScreenWrapper';
 import IndividualProfile from './IndividualProfile';
 import TextInput from '../Component Library/TextInput';
 import ProfileObject from '../../Logic/interfaces/ProfileObject';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { addOrUpdateProfile, removeProfile } from '../../redux/reducers/profilesSlice';
 
 
 const Profiles : FC = () => {
@@ -14,7 +17,9 @@ const Profiles : FC = () => {
     const [profileName, setProfileName] = useState<string>('');
     const [selectedProfile, setSelectedProfile] = useState<string>('');
 
-    const [loadedProfiles, setLoadedProfiles] = useState<ProfileObject[]>([]);
+    const loadedProfiles : ProfileObject[] = useSelector((state : RootState) => state.profiles.profilesArray)
+    const dispatch = useDispatch();
+    // const [loadedProfiles, setLoadedProfiles] = useState<ProfileObject[]>([]);
 
     // info
     const [email, setEmail] = useState<string>('');
@@ -48,6 +53,56 @@ const Profiles : FC = () => {
     const [paymentCVV, setPaymentCVV] = useState<string>('');
 
     const [profileSearch, setProfileSearch] = useState<string>('');
+
+    const handleAddProfile = () => {
+        const newProfile : ProfileObject = {
+            information: {
+                name: profileName,
+                email: email,
+                phone: phone
+            },
+            shipping: {
+                firstName: shipFname,
+                lastName: shipLname,
+                address1: shipAddr1,
+                address2: shipAddr2,
+                country: shipCountry,
+                state: shipState,
+                zip: shipZip,
+                city: shipCity
+            },
+            billing: {
+                firstName: billFname,
+                lastName: billLname,
+                address1: billAddr1,
+                address2: billAddr2,
+                country: billCountry,
+                state: billState,
+                zip: billZip,
+                city: billCity
+            },
+            payment: {
+                name: paymentName,
+                number: paymentNumber,
+                expiryMonth: paymentExpMonth,
+                expiryYear: paymentExpYear,
+                cvv: paymentCVV
+            },
+            settings: {
+                favorite: false
+            }
+        }
+
+        dispatch(addOrUpdateProfile(newProfile));
+    }
+
+    const handleDeleteProfile = () => {
+
+    }
+
+    const handleDuplicateProfile = () => {
+
+    }
 
 
 
@@ -93,11 +148,13 @@ const Profiles : FC = () => {
                             />
                         </div>
                         <div className="w-full h-full overflow-y-scroll scrollbar-hide flex flex-col justify-start items-center space-y-2">
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => `Real Profile ${n}`).filter(p => p.toLowerCase().includes(profileSearch.toLowerCase())).map(n => (
+                            {loadedProfiles.filter((p : ProfileObject) => p.information.name.toLowerCase().includes(profileSearch.toLowerCase())).map((prof : ProfileObject) => (
                                 <IndividualProfile 
-                                name={n} 
-                                selectedProfile={selectedProfile}
-                                setSelectedProfile={setSelectedProfile}/>
+                                    item={prof} 
+                                    selectedItem={selectedProfile}
+                                    setSelectedItem={setSelectedProfile}
+                                    itemToString={(p : ProfileObject) => p.information.name}
+                                />
                             ))}
                         </div>
                     </ScreenWrapper>
@@ -126,18 +183,24 @@ const Profiles : FC = () => {
                                         />
                                     </div>
                                     <div className="flex flex-row justify-end items-center space-x-4">
-                                        <button className="focus:outline-none px-2 w-12 h-12 rounded-md shadow-md bg-theta-logo flex justify-center items-center text-theta-white">
+                                        <button className="focus:outline-none px-2 w-12 h-12 rounded-md shadow-md bg-theta-logo flex justify-center items-center text-theta-white"
+                                        onClick={() => handleAddProfile()}
+                                        >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
                                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                             </svg>
                                         </button>
-                                        <button className="focus:outline-none h-12 w-12 rounded-md shadow-md bg-red-400 flex justify-center items-center text-theta-white">
+                                        <button className="focus:outline-none h-12 w-12 rounded-md shadow-md bg-red-400 flex justify-center items-center text-theta-white"
+                                        onClick={() => handleDuplicateProfile()}
+                                        >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
                                                 <path d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z" />
                                                 <path d="M3 8a2 2 0 012-2v10h8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
                                             </svg>
                                         </button>
-                                        <button className="focus:outline-none h-12 w-12 rounded-md shadow-md bg-red-500 flex justify-center items-center text-theta-white">
+                                        <button className="focus:outline-none h-12 w-12 rounded-md shadow-md bg-red-500 flex justify-center items-center text-theta-white"
+                                        onClick={() => handleDeleteProfile()}
+                                        >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                             </svg>
