@@ -13,12 +13,13 @@ const ChevronRight = () => (
 
 
 interface DrowndownSelectMultiProps {
-    selection: string[],
-    setSelection: (s : string[]) => void,
-    selectionArray: string[],
+    selection: any[],
+    setSelection: (s : any[]) => void,
+    selectionArray: any[],
     bg: string,
     textSize?: string,
-    placeholder: string
+    placeholder: string,
+    itemToString: (a : any) => string,
 }
 
 const DropdownSelectMulti : FC<DrowndownSelectMultiProps> = ({
@@ -27,7 +28,8 @@ const DropdownSelectMulti : FC<DrowndownSelectMultiProps> = ({
     bg,
     textSize,
     selection,
-    placeholder
+    placeholder,
+    itemToString,
 } : DrowndownSelectMultiProps) => {
 
     const [selectSearchInput, setSelectSearchInput] = useState<string>('');
@@ -38,16 +40,14 @@ const DropdownSelectMulti : FC<DrowndownSelectMultiProps> = ({
 
 
 
-    const handleSiteChange = (s : string, needsRemove : boolean) => {
+    const handleSelectionChange = (a : any, needsRemove : boolean) => {
 
         if (needsRemove) {
-            setSelection(selection.filter(sel => sel !== s))
+            setSelection(selection.filter(sel => sel !== a))
         }
         else {
-            setSelection([...selection, s]);
+            setSelection([...selection, a]);
         }
-        // setSelectSearchInput(s);
-        // onInputBlur();
     }
 
     const onInputFocus = () => {
@@ -121,23 +121,25 @@ const DropdownSelectMulti : FC<DrowndownSelectMultiProps> = ({
             >
                 <div className={`${dropdownDown ? '' : 'hidden'} focus:outline-none border-b border-l border-r border-theta-gray-7 rounded-bl-lg rounded-br-lg ${bg} h-auto w-full absolute top-0 left-0 right-0 flex flex-col justify-start items-center`}
                 >
-                    {selectionArray.filter(s => s.toLowerCase().includes(selectSearchInput.toLowerCase())).map(site => (
+                    {selectionArray.filter(i => itemToString(i).toLowerCase().includes(selectSearchInput.toLowerCase())).map(item => (
                         <SelectOption 
-                            name={site}
-                            handleSelectChange={handleSiteChange}
+                            item={item}
+                            handleSelectChange={handleSelectionChange}
                             textSize={textSize}
                             selection={selection}
-                            key={site}
+                            key={item}
+                            itemToString={itemToString}
                         />
                     ))}
                     {/* Adding this adds the ones that don't match the criteria below */}
-                    {selectionArray.filter(s => !s.toLowerCase().includes(selectSearchInput.toLowerCase())).map(site => (
+                    {selectionArray.filter(i => !itemToString(i).toLowerCase().includes(selectSearchInput.toLowerCase())).map(item => (
                         <SelectOption 
-                            name={site}
-                            handleSelectChange={handleSiteChange}
+                            item={item}
+                            handleSelectChange={handleSelectionChange}
                             textSize={textSize}
                             selection={selection}
-                            key={site}
+                            key={item}
+                            itemToString={itemToString}
                         />
                     ))}
                 </div>
@@ -153,31 +155,31 @@ const SelectedCheck = () => (
 )
 
 interface SelectOptionProps {
-    name: string,
-    handleSelectChange: (s : string, b : boolean) => void,
+    item: any,
+    handleSelectChange: (a : any, b : boolean) => void,
     textSize?: string,
-    selection: string[],
+    selection: any[],
+    itemToString: (a : any) => string
 }
 
 const SelectOption : FC<SelectOptionProps> = ({
-    name,
+    item,
     handleSelectChange,
     textSize,
     selection,
+    itemToString
 } : SelectOptionProps) => {
 
-    console.log(selection)
-    console.log(name)
 
-    const [isSelected, setIsSelected] = useState<boolean>(selection.includes(name));
-    console.log(`isSlected: ${isSelected}`)
+
+    const [isSelected, setIsSelected] = useState<boolean>(selection.includes(item));
 
     useEffect(() => {
-        setIsSelected(selection.includes(name))
+        setIsSelected(selection.includes(item))
     }, [selection])
 
     const bundleSelectChange = () => {
-        handleSelectChange(name, isSelected)
+        handleSelectChange(item, isSelected)
         setIsSelected(!isSelected)
     }
 
@@ -190,7 +192,7 @@ const SelectOption : FC<SelectOptionProps> = ({
                 {isSelected ? <SelectedCheck /> : null}
             </div>
             <div className={`${textSize ? textSize : 'text-2xl'} ${isSelected ? 'text-theta-gray-2' : ''}`}>
-                {name}
+                {itemToString(item)}
             </div>
         </button>
     )

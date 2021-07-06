@@ -12,11 +12,12 @@ const ChevronRight = () => (
 )
 
 interface DrowndownSelectProps {
-    setSelection: (s : string) => void,
-    selectionArray: string[],
+    setSelection: (s : any) => void,
+    selectionArray: any[],
     bg: string,
     textSize?: string,
-    placeholder: string
+    placeholder: string,
+    itemToString: (a : any) => string,
 }
 
 const DropdownSelect : FC<DrowndownSelectProps> = ({
@@ -24,7 +25,8 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
     selectionArray,
     bg,
     textSize,
-    placeholder
+    placeholder,
+    itemToString,
 } : DrowndownSelectProps) => {
 
     const [selectSearchInput, setSelectSearchInput] = useState<string>('');
@@ -33,9 +35,9 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
     const relativeRef = useRef<HTMLDivElement>(null);
 
 
-    const handleSiteChange = (s : string) => {
-        setSelection(s);
-        setSelectSearchInput(s);
+    const handleSiteChange = (a : any) => {
+        setSelection(a);
+        setSelectSearchInput(itemToString(a));
         onInputBlur();
     }
 
@@ -97,19 +99,21 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
                 <div className={`${dropdownDown ? '' : 'hidden'} focus:outline-none border-b border-l border-r border-theta-gray-7 rounded-bl-lg rounded-br-lg ${bg} h-auto w-full absolute top-0 left-0 right-0 flex flex-col justify-start items-center`}
                 >
                     
-                    {selectionArray.filter(s => s.toLowerCase().includes(selectSearchInput.toLowerCase())).map(site => (
+                    {selectionArray.filter(i => itemToString(i).toLowerCase().includes(selectSearchInput.toLowerCase())).map(item => (
                         <SelectOption 
-                            name={site}
+                            item={item}
                             handleSelectChange={handleSiteChange}
                             textSize={textSize}
+                            itemToString={itemToString}
                         />
                     ))}
                     {/* Adding this adds the ones that don't match the criteria below */}
-                    {selectionArray.filter(s => !s.toLowerCase().includes(selectSearchInput.toLowerCase())).map(site => (
+                    {selectionArray.filter(i => !itemToString(i).toLowerCase().includes(selectSearchInput.toLowerCase())).map(item => (
                         <SelectOption 
-                            name={site}
+                            item={item}
                             handleSelectChange={handleSiteChange}
                             textSize={textSize}
+                            itemToString={itemToString}
                         />
                     ))}
                 </div>
@@ -119,25 +123,27 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
 }
 
 interface SelectOptionProps {
-    name: string,
-    handleSelectChange: (s : string) => void,
-    textSize?: string
+    item: any,
+    handleSelectChange: (s : any) => void,
+    textSize?: string,
+    itemToString: (i : any) => string
 }
 
 const SelectOption : FC<SelectOptionProps> = ({
-    name,
+    item,
     handleSelectChange,
-    textSize
+    textSize,
+    itemToString
 } : SelectOptionProps) => {
 
     return ( 
         <button className={`"relative text-theta-gray-7 hover:text-theta-gray-2 focus:outline-none transition flex flex-row justify-start items-center w-full ${textSize === 'text-xl' ? 'h-8' : 'h-10'}`}
-            onClick={() => handleSelectChange(name)}
+            onClick={() => handleSelectChange(item)}
         >
             {/* This is w-8 because we have a space in front of the placeholder in the input */}
             <div className="w-7"></div>
             <div className={`${textSize ? textSize : 'text-2xl'}`}>
-                {name}
+                {itemToString(item)}
             </div>
         </button>
     )

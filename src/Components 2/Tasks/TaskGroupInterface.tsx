@@ -11,13 +11,21 @@ import 'react-virtualized/styles.css';
 import ScreenWrapperModal from '../Component Library/ScreenWrapperModal'
 import TextInputCL from '../Component Library/TextInput'
 import DropdownSelect from '../Component Library/DropdownSelect';
-import DropdownSelectMulti from '../Component Library/DropdownSelectMulti'
+import DropdownSelectMulti from '../Component Library/DropdownSelectMulti';
+import { AmazonModes } from '../../Logic/interfaces/site_task_config/AmazonTaskConfig';
+import ProfileObject from '../../Logic/interfaces/ProfileObject';
+import ProxyList from '../../Logic/interfaces/ProxyList';
+import Account from '../../Logic/interfaces/Account';
+import testProxyList from '../../Logic/sensitive/testInterfaces/testProxyList';
+import testAccount from '../../Logic/sensitive/testInterfaces/testAccount';
+import testProfile from '../../Logic/sensitive/testInterfaces/testProfile';
+
 
 interface TextInputProps {
     placeholder: string,
     icon: ReactNode,
     input: number,
-    setInput: (s : number) => void
+    setInput: (s : number) => void,
 }
 
 const TextInput : FC<TextInputProps> = ({
@@ -172,10 +180,15 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     const [monitorDelay, setMonitorDelay] = useState<number>(3000);
     const [errorDelay, setErrorDelay] = useState<number>(3000);
 
+    // Add Tasks hooks
     const [addTasksEnabled, setAddTasksEnabled] = useState<boolean>(false);
 
-    const [addTasksProfiles, setAddTasksProfiles] = useState<string[]>([]);
-    const [addTasksProxies, setAddTasksProxies] = useState<string>('');
+    const [addTasksAccountGroup, setAddTasksAccountGroup] = useState([]);
+    const [addTasksAccount, setAddTasksAccount] = useState<Account[]>([]);
+
+    const [addTasksMode, setAddTasksMode] = useState<AmazonModes[]>([]);
+    const [addTasksProfiles, setAddTasksProfiles] = useState<ProfileObject[]>([]);
+    const [addTasksProxies, setAddTasksProxies] = useState<ProxyList[]>([]);
 
     const [tasks, setTasks] = useState<string[]>([]);
 
@@ -257,7 +270,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
             <ScreenWrapperModal 
             isEnabled={addTasksEnabled}
             setIsEnabled={setAddTasksEnabled}>
-                <div className="w-1/2 h-1/2 rounded-lg shadow-lg bg-theta-bg flex justify-start items-center flex-col focus:outline-none p-4"
+                <div className="w-1/2 h-auto rounded-lg shadow-lg bg-theta-bg flex justify-start items-center flex-col focus:outline-none p-4"
                 // tabIndex={0}
                 // onBlur={() => setAddTasksEnabled(false)}
                 // ref={modalContentRef}
@@ -281,32 +294,38 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                 </div>
                             </div>
 
-                            <div className="w-full flex flex-row justify-start items-center p-2">
+                            <div className="z-20 w-full flex flex-row justify-start items-center p-2">
                                 <div className="w-1/2 flex flex-col justify-start items-center pr-4">
                                     <div className="w-full text-lg text-theta-gray-2 ml-4">
                                         Mode
                                     </div>
                                     <div className="w-full h-8">
-                                        <TextInputCL 
-                                            placeholder={'https://amazon.com/dp/123456ASDFG'}
-                                            input={addTasksInput}
-                                            onChange={setAddTasksInput}
+                                        <DropdownSelect 
+                                            setSelection={setAddTasksMode}
+                                            selectionArray={Object.keys(AmazonModes)}
                                             bg={'bg-theta-sidebar'}
+                                            textSize={'text-xl'}
+                                            placeholder={'Select mode'}
+                                            itemToString={(a : AmazonModes) => AmazonModes[a]}
                                         />
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="w-full flex flex-row justify-start items-center p-2">
+                            <div className="z-10 w-full flex flex-row justify-start items-center p-2">
                                 <div className="w-1/2 flex flex-col justify-start items-center pr-4">
                                     <div className="w-full text-lg text-theta-gray-2 ml-4">
                                         Account Group
                                     </div>
                                     <div className="w-full h-8">
-                                        {/* <DropdownSelect 
-                                            setSelection={}
-                                            selectionArray={}
-                                        /> */}
+                                        <DropdownSelect 
+                                            setSelection={setAddTasksProxies}
+                                            selectionArray={['prox1', 'proxies 2', 'ISPs main', 'asasd']}
+                                            bg={'bg-theta-sidebar'}
+                                            textSize={'text-xl'}
+                                            placeholder={'Select account group'}
+                                            itemToString={(a : any) => a}
+                                        />
                                     </div>
                                 </div>
                                 <div className="w-1/2 flex flex-col justify-start items-center pl-4">
@@ -314,11 +333,13 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                         Account
                                     </div>
                                     <div className="w-full h-8">
-                                        <TextInputCL 
-                                            placeholder={'https://amazon.com/dp/123456ASDFG'}
-                                            input={addTasksInput}
-                                            onChange={setAddTasksInput}
+                                        <DropdownSelect 
+                                            setSelection={setAddTasksProxies}
+                                            selectionArray={[testAccount]}
                                             bg={'bg-theta-sidebar'}
+                                            textSize={'text-xl'}
+                                            placeholder={'Select account'}
+                                            itemToString={(acc : Account) => acc.username}
                                         />
                                     </div>
                                 </div>
@@ -333,10 +354,11 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                         <DropdownSelectMulti 
                                             setSelection={setAddTasksProfiles}
                                             selection={addTasksProfiles}
-                                            selectionArray={['prof1', 'profile s2', 'profile s3', 'profile x2', 'real card']}
+                                            selectionArray={[testProfile]}
                                             bg={'bg-theta-sidebar'}
                                             textSize={'text-xl'}
                                             placeholder={'Select profiles'}
+                                            itemToString={(pr : ProfileObject) => pr.information.name}
                                         />
                                     </div>
                                 </div>
@@ -347,13 +369,22 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                     <div className="w-full h-8">
                                         <DropdownSelect 
                                             setSelection={setAddTasksProxies}
-                                            selectionArray={['prox1', 'proxies 2', 'ISPs main', 'asasd']}
+                                            selectionArray={[testProxyList]}
                                             bg={'bg-theta-sidebar'}
                                             textSize={'text-xl'}
                                             placeholder={'Select proxies'}
+                                            itemToString={(p : ProxyList) => p.name}
                                         />
                                     </div>
                                 </div>
+                            </div>
+
+                            <div className="w-full flex flex-row justify-start items-center p-2 mt-4">
+                                <button className="focus:outline-none font-medium text-xl flex justify-center items-center w-auto h-10 rounded-md shadow-md bg-theta-logo px-3 text-theta-gray-2"
+                                onClick={() => null}
+                                >
+                                    Add Tasks
+                                </button>
                             </div>
                         </div>
                     
