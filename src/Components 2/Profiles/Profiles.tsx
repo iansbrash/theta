@@ -1,7 +1,8 @@
 // import { ResizableBox, Resizable } from 'react-resizable';
 import React, {
     FC,
-    useState
+    useState,
+    useEffect
 } from 'react';
 import ScreenWrapper from '../Component Library/ScreenWrapper';
 import IndividualProfile from './IndividualProfile';
@@ -10,14 +11,16 @@ import ProfileObject from '../../Logic/interfaces/ProfileObject';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { addOrUpdateProfile, removeProfile } from '../../redux/reducers/profilesSlice';
+import electron from 'electron';
 
 
 const Profiles : FC = () => {
 
-    const [profileName, setProfileName] = useState<string>('');
-    const [selectedProfile, setSelectedProfile] = useState<string>('');
-
     const loadedProfiles : ProfileObject[] = useSelector((state : RootState) => state.profiles.profilesArray)
+
+    const [profileName, setProfileName] = useState<string>('');
+    const [selectedProfile, setSelectedProfile] = useState<ProfileObject | undefined>(loadedProfiles.length === 0 ? undefined : loadedProfiles[0]);
+
     const dispatch = useDispatch();
     // const [loadedProfiles, setLoadedProfiles] = useState<ProfileObject[]>([]);
 
@@ -54,7 +57,133 @@ const Profiles : FC = () => {
 
     const [profileSearch, setProfileSearch] = useState<string>('');
 
-    const handleAddProfile = () => {
+    // updates side info when we select a profile
+    useEffect(() => {
+
+        if (!selectedProfile) return console.log("useEffect ERROR: No profiles to select.");
+
+        const {
+            email,
+            phone,
+            name
+        } = selectedProfile.information
+
+        setProfileName(name)
+        setEmail(email);
+        setPhone(phone);
+
+        (() => {
+            const {
+                firstName,
+                lastName,
+                address1,
+                address2,
+                country,
+                city,
+                zip,
+                state
+            } = selectedProfile.shipping;
+
+            setShipFname(firstName);
+            setShipLname(lastName);
+            setShipAddr1(address1);
+            setShipAddr2(address2)
+            setShipCountry(country);
+            setShipCity(city);
+            setShipZip(zip);
+            setShipState(state);
+        })();
+
+        (() => {
+            const {
+                firstName,
+                lastName,
+                address1,
+                address2,
+                country,
+                city,
+                zip,
+                state
+            } = selectedProfile.billing;
+
+            setBillFname(firstName);
+            setBillLname(lastName);
+            setBillAddr1(address1);
+            setBillAddr2(address2)
+            setBillCountry(country);
+            setBillCity(city);
+            setBillZip(zip);
+            setBillState(state);
+        })();
+
+        const {
+            number,
+            cvv,
+            expiryMonth,
+            expiryYear
+        } = selectedProfile.payment;
+
+        setPaymentCVV(cvv);
+        setPaymentExpMonth(expiryMonth)
+        setPaymentExpYear(expiryYear)
+        setPaymentNumber(number)
+
+    }, [selectedProfile])
+
+
+    enum SanitizationStatus {
+        BlankError,
+        InvalidInformation,
+        InvalidShip,
+        InvalidBilling,
+        InvalidPayment,
+        Success
+    }
+
+    const ensureSanitizedProfile = () : SanitizationStatus => {
+
+        console.log("Beginning profile sanitization.")
+
+        const cantBeEmpty : string[] = [
+            profileName,
+            email,
+            phone,
+            shipFname,
+            shipLname,
+            shipAddr1,
+            shipCountry,
+            shipState,
+            shipCity,
+            shipZip,
+            billFname,
+            billLname,
+            billAddr1,
+            billCountry,
+            billState,
+            billCity,
+            billZip,
+            paymentName,
+            paymentNumber,
+            paymentExpMonth,
+            paymentExpYear,
+            paymentCVV
+        ]
+
+        for (const i in cantBeEmpty) {
+            if (cantBeEmpty[i] === '') {
+                return SanitizationStatus.BlankError;
+            }
+        }
+
+        return SanitizationStatus.Success;
+    }
+
+    const handleAddProfile = async () => {
+
+        const res : SanitizationStatus = ensureSanitizedProfile();
+
+        if (res !== SanitizationStatus.Success) return console.log(`ERROR ${SanitizationStatus[res]}: Profile is not sanitized correctly.`);
+
         const newProfile : ProfileObject = {
             information: {
                 name: profileName,
@@ -92,16 +221,52 @@ const Profiles : FC = () => {
                 favorite: false
             }
         }
-
-        dispatch(addOrUpdateProfile(newProfile));
+        try {
+            await electron.ipcRenderer.invoke('writejson', 'profiles.json', [...loadedProfiles, newProfile]);
+            dispatch(addOrUpdateProfile(newProfile));
+            setSelectedProfile(newProfile);
+        }
+        catch (err) {
+            console.log(err)
+        }
     }
 
-    const handleDeleteProfile = () => {
+    const handleDeleteProfile = async () => {
+        try {
+            dispatch(removeProfile(selectedProfile));
 
+            // @ts-ignore
+            await electron.ipcRenderer.invoke('writejson', 'profiles.json', loadedProfiles.filter(prof => prof.information.name !== selectedProfile.information.name));
+        }
+        catch (err) {
+            console.log(err)
+        }
     }
 
-    const handleDuplicateProfile = () => {
+    const handleDuplicateProfile = async () => {
+        if (selectedProfile) {
+            let dupProfileName = selectedProfile.information.name + " Copy"
+            let iter = 1;
 
+            while (loadedProfiles.findIndex((prof : ProfileObject) => prof.information.name === dupProfileName + " " + iter) !== -1) {
+                iter += 1;
+            }
+
+            let newProfile : ProfileObject = {
+                information: {
+                    name: dupProfileName + " " + iter,
+                    email: selectedProfile.information.email,
+                    phone: selectedProfile.information.phone
+                },
+                shipping: selectedProfile.shipping,
+                billing: selectedProfile.billing,
+                payment: selectedProfile.payment,
+                settings: selectedProfile.settings
+            };
+
+            dispatch(addOrUpdateProfile(newProfile));
+            await electron.ipcRenderer.invoke('writejson', 'profiles.json', [...loadedProfiles, newProfile]);
+        }
     }
 
 

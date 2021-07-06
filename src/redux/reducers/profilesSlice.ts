@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import ProfileObject from '../../Logic/interfaces/ProfileObject';
+import electron from 'electron'
 
 type SliceState = { profilesArray : ProfileObject[] };
 
@@ -40,11 +41,12 @@ export const profilesSlice = createSlice({
                     profile,
                 } = action.payload;
 
-                if (state.profilesArray.includes(profile) === false) {
+                if (state.profilesArray.findIndex((p : ProfileObject) => p.information.name === profile.information.name) === -1) {
                     console.log(`ERROR: Profile does not exist. Not removing from store.`)
+                    throw "Profile does not exist";
                 }
                 else {
-                    state.profilesArray = state.profilesArray.filter(prof => prof !== profile);
+                    state.profilesArray = state.profilesArray.filter(prof => prof.information.name !== profile.information.name);
                 }
             },
             prepare (profile) {
@@ -55,10 +57,26 @@ export const profilesSlice = createSlice({
                 }
             }
         },
+        populateProfiles: {
+            reducer (state, action : PayloadAction<{profiles : ProfileObject[]}>) { //; anotherProp: string; uuid: string
+                const {
+                    profiles,
+                } = action.payload;
+
+                state.profilesArray = profiles;
+            },
+            prepare (profiles) {
+                return {
+                    payload: {
+                        profiles,
+                    }
+                }
+            }
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { addOrUpdateProfile, removeProfile } = profilesSlice.actions
+export const { addOrUpdateProfile, removeProfile, populateProfiles } = profilesSlice.actions
 
 export default profilesSlice.reducer

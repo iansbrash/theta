@@ -1,5 +1,6 @@
 import React, {
-    useState
+    useState,
+    useEffect
 } from "react";
 import {
     HashRouter,
@@ -16,6 +17,10 @@ import Accounts from "./Components 2/Accounts/Accounts";
 import Proxies from "./Components 2/Proxies/Proxies";
 import Login from './Components/Login/Login';
 
+// redux
+import { useDispatch } from "react-redux";
+import { populateProfiles } from "./redux/reducers/profilesSlice";
+
 // dunno y this is here
 import TaskClass from "./Logic/sites/classes/TaskClass";
 
@@ -24,6 +29,7 @@ import "./App.global.css";
 
 // electron
 import electron from 'electron'
+import ProfileObject from "./Logic/interfaces/ProfileObject";
 
 
 
@@ -98,6 +104,18 @@ const AppTwo = () => {
     const exitApp = () => {
         electron.ipcRenderer.invoke('closeApp')
     }
+    
+    const dispatch = useDispatch()
+
+    // runs once at the beginning of the app and loads everything into the redux store
+    useEffect(() => {
+        (async () => {
+            console.log("Beginning store population on app open/restart")
+            const toSetProfiles : ProfileObject[] = await electron.ipcRenderer.invoke("readjson", 'profiles.json');
+
+            dispatch(populateProfiles(toSetProfiles))
+        })();
+    }, [])
 
 
     return (

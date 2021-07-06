@@ -142,7 +142,7 @@ const Profiles : FC = () => {
                 cvv: paymentCVV
             },
             settings: {
-                
+                favorite: false
             }
         }
 
