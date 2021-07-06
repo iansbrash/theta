@@ -1,13 +1,16 @@
 import React, {
     FC, useState,
     useEffect,
-    ReactNode
+    ReactNode,
+    useRef
 } from 'react';
 import ScreenWrapper from '../Component Library/ScreenWrapper';
 import AutoResizerTaskComponent from './AutoResizerTaskComponent'
 import { AutoSizer, List } from 'react-virtualized'
 import 'react-virtualized/styles.css';
 import ScreenWrapperModal from '../Component Library/ScreenWrapperModal'
+import TextInputCL from '../Component Library/TextInput'
+import DropdownSelect from '../Component Library/DropdownSelect';
 
 interface TextInputProps {
     placeholder: string,
@@ -66,6 +69,7 @@ const SliderContainer : FC<SliderContainerProps> = ({
     const [divW, setDivW] = useState<number>(origDivW);
     const [mousePosition, setMousePosition] = useState({ x: -1, y: -1 });
     const [mouseDown, setMouseDown] = useState(false);
+
 
     useEffect(() => {
         setDivW(origDivW)
@@ -169,6 +173,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
     const [addTasksEnabled, setAddTasksEnabled] = useState<boolean>(false);
 
+    const [addTasksProfiles, setAddTasksProfiles] = useState<string>('');
+    const [addTasksProxies, setAddTasksProxies] = useState<string>('');
+
     const [tasks, setTasks] = useState<string[]>([]);
 
     const onInputFocus = () => {
@@ -178,6 +185,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     const onInputBlur = () => {
         setDowndownDown(false)
     }
+
+  
+
     const impliedPadding = 'p-2'
 
     const [currentSite, setCurrentSite] = useState<string>('');
@@ -188,6 +198,14 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
 
     const [cW, setCW ] = useState<number>(0);
+
+    const modalContentRef = useRef<HTMLDivElement>(null)
+    // useEffect(() => {
+    //     if (addTasksEnabled) {
+
+    //         modalContentRef.current?.focus();
+    //     }
+    // }, [addTasksEnabled])
 
     useEffect(() => {
         // @ts-ignore
@@ -231,20 +249,113 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     const buttonsMinW = 'min-w-1/10'
     const siteMaxW = 'max-w-4/10'
 
+    const [addTasksInput, setAddTasksInput] = useState<string>('');
+
     return (
         <ScreenWrapper hidden={hidden}>
             <ScreenWrapperModal 
-                isEnabled={addTasksEnabled}
-                setIsEnabled={setAddTasksEnabled}>
-                <div className="w-1/2 h-1/2 rounded-lg shadow-lg bg-theta-bg flex justify-center items-center flex-col">
-                    <div className="text-2xl text-theta-white font-medium">
-                        Sup Hoe.
-                    </div>
-                    <button className="w-64 h-12 rounded-lg shadow-lg focus:outline-none bg-theta-logo"
-                    onClick={() => setAddTasksEnabled(false)}
-                    >
+            isEnabled={addTasksEnabled}
+            setIsEnabled={setAddTasksEnabled}>
+                <div className="w-1/2 h-1/2 rounded-lg shadow-lg bg-theta-bg flex justify-start items-center flex-col focus:outline-none p-4"
+                // tabIndex={0}
+                // onBlur={() => setAddTasksEnabled(false)}
+                // ref={modalContentRef}
+                onClick={(e) => e.stopPropagation()}
+                >
+                        <div className="w-full text-2xl text-theta-white font-medium">
+                            Add Tasks
+                        </div>
+                        <div className="w-full flex flex-col justify-start items-center my-2">
+                            <div className="w-full flex flex-col justify-start items-center p-2">
+                                <div className="w-full text-lg text-theta-gray-2 ml-4">
+                                    Input
+                                </div>
+                                <div className="w-full h-8">
+                                    <TextInputCL 
+                                        placeholder={'https://amazon.com/dp/123456ASDFG'}
+                                        input={addTasksInput}
+                                        onChange={setAddTasksInput}
+                                        bg={'bg-theta-sidebar'}
+                                    />
+                                </div>
+                            </div>
 
-                    </button>
+                            <div className="w-full flex flex-row justify-start items-center p-2">
+                                <div className="w-1/2 flex flex-col justify-start items-center pr-4">
+                                    <div className="w-full text-lg text-theta-gray-2 ml-4">
+                                        Mode
+                                    </div>
+                                    <div className="w-full h-8">
+                                        <TextInputCL 
+                                            placeholder={'https://amazon.com/dp/123456ASDFG'}
+                                            input={addTasksInput}
+                                            onChange={setAddTasksInput}
+                                            bg={'bg-theta-sidebar'}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="w-full flex flex-row justify-start items-center p-2">
+                                <div className="w-1/2 flex flex-col justify-start items-center pr-4">
+                                    <div className="w-full text-lg text-theta-gray-2 ml-4">
+                                        Account Group
+                                    </div>
+                                    <div className="w-full h-8">
+                                        {/* <DropdownSelect 
+                                            setSelection={}
+                                            selectionArray={}
+                                        /> */}
+                                    </div>
+                                </div>
+                                <div className="w-1/2 flex flex-col justify-start items-center pl-4">
+                                    <div className="w-full text-lg text-theta-gray-2 ml-4">
+                                        Account
+                                    </div>
+                                    <div className="w-full h-8">
+                                        <TextInputCL 
+                                            placeholder={'https://amazon.com/dp/123456ASDFG'}
+                                            input={addTasksInput}
+                                            onChange={setAddTasksInput}
+                                            bg={'bg-theta-sidebar'}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="w-full flex flex-row justify-start items-center p-2">
+                                <div className="w-1/2 flex flex-col justify-start items-center pr-4">
+                                    <div className="w-full text-lg text-theta-gray-2 ml-4">
+                                        Profile
+                                    </div>
+                                    <div className="w-full h-8">
+                                        <DropdownSelect 
+                                            setSelection={setAddTasksProfiles}
+                                            selectionArray={['prof1', 'profile s2', 'real card']}
+                                            bg={'bg-theta-sidebar'}
+                                            textSize={'text-xl'}
+                                            placeholder={'Select profiles'}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="w-1/2 flex flex-col justify-start items-center pl-4">
+                                    <div className="w-full text-lg text-theta-gray-2 ml-4">
+                                        Proxies
+                                    </div>
+                                    <div className="w-full h-8">
+                                        <DropdownSelect 
+                                            setSelection={setAddTasksProxies}
+                                            selectionArray={['prox1', 'proxies 2', 'ISPs main', 'asasd']}
+                                            bg={'bg-theta-sidebar'}
+                                            textSize={'text-xl'}
+                                            placeholder={'Select proxies'}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                    
                 </div>
             </ScreenWrapperModal>
             <div className={`h-auto w-full z-20`}>
@@ -283,7 +394,8 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                             </button>
 
                             {/* Drop down part */}
-                            <div className="relative w-full">
+                            <div className="relative w-full"
+                            >
                                 <div className={`${dropdownDown ? '' : 'hidden'} border-b border-l border-r border-theta-gray-7 rounded-bl-lg rounded-br-lg bg-theta-bg absolute top-0 left-0 right-0 flex flex-col justify-start items-center`}
                                 onBlur={() => onInputBlur()}
                                 >
