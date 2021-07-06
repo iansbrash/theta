@@ -2,7 +2,7 @@ import React, {
     FC,
     useState,
     useEffect,
-    useRef
+    useRef,
 } from 'react';
 
 const ChevronRight = () => (
@@ -11,32 +11,43 @@ const ChevronRight = () => (
     </svg>
 )
 
-interface DrowndownSelectProps {
-    setSelection: (s : string) => void,
+
+interface DrowndownSelectMultiProps {
+    selection: string[],
+    setSelection: (s : string[]) => void,
     selectionArray: string[],
     bg: string,
     textSize?: string,
     placeholder: string
 }
 
-const DropdownSelect : FC<DrowndownSelectProps> = ({
+const DropdownSelectMulti : FC<DrowndownSelectMultiProps> = ({
     setSelection,
     selectionArray,
     bg,
     textSize,
+    selection,
     placeholder
-} : DrowndownSelectProps) => {
+} : DrowndownSelectMultiProps) => {
 
     const [selectSearchInput, setSelectSearchInput] = useState<string>('');
     const [dropdownDown, setDropdownDown] = useState<boolean>(false);
 
+    
     const relativeRef = useRef<HTMLDivElement>(null);
 
 
-    const handleSiteChange = (s : string) => {
-        setSelection(s);
-        setSelectSearchInput(s);
-        onInputBlur();
+
+    const handleSiteChange = (s : string, needsRemove : boolean) => {
+
+        if (needsRemove) {
+            setSelection(selection.filter(sel => sel !== s))
+        }
+        else {
+            setSelection([...selection, s]);
+        }
+        // setSelectSearchInput(s);
+        // onInputBlur();
     }
 
     const onInputFocus = () => {
@@ -53,10 +64,11 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
         } else {
             setDropdownDown(false)
         }
-    }
+    } 
 
-
+ 
     useEffect(() => {
+        selectionArray = [...selectionArray]
         
         document.addEventListener('mousedown', handleMDown)
 
@@ -64,6 +76,11 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
             document.removeEventListener('mousedown', handleMDown)
         }
     }, [])
+
+    const resetSelection = () => {
+        setSelection([])
+    }
+
 
 
     return (
@@ -89,6 +106,14 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
                 <div className="text-theta-gray-7 absolute left-0 top-0 bottom-0 flex justify-center items-center">
                     <ChevronRight />
                 </div>
+
+                <button className="focus:outline-none absolute right-1 top-0 bottom-0 flex justify-center items-center text-theta-gray-7"
+                onClick={() => resetSelection()}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </button>
 
             {/* Drop down part */}
@@ -96,12 +121,13 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
             >
                 <div className={`${dropdownDown ? '' : 'hidden'} focus:outline-none border-b border-l border-r border-theta-gray-7 rounded-bl-lg rounded-br-lg ${bg} h-auto w-full absolute top-0 left-0 right-0 flex flex-col justify-start items-center`}
                 >
-                    
                     {selectionArray.filter(s => s.toLowerCase().includes(selectSearchInput.toLowerCase())).map(site => (
                         <SelectOption 
                             name={site}
                             handleSelectChange={handleSiteChange}
                             textSize={textSize}
+                            selection={selection}
+                            key={site}
                         />
                     ))}
                     {/* Adding this adds the ones that don't match the criteria below */}
@@ -110,6 +136,8 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
                             name={site}
                             handleSelectChange={handleSiteChange}
                             textSize={textSize}
+                            selection={selection}
+                            key={site}
                         />
                     ))}
                 </div>
@@ -118,29 +146,54 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
     )
 }
 
+const SelectedCheck = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+    </svg>
+)
+
 interface SelectOptionProps {
     name: string,
-    handleSelectChange: (s : string) => void,
-    textSize?: string
+    handleSelectChange: (s : string, b : boolean) => void,
+    textSize?: string,
+    selection: string[],
 }
 
 const SelectOption : FC<SelectOptionProps> = ({
     name,
     handleSelectChange,
-    textSize
+    textSize,
+    selection,
 } : SelectOptionProps) => {
 
-    return ( 
+    console.log(selection)
+    console.log(name)
+
+    const [isSelected, setIsSelected] = useState<boolean>(selection.includes(name));
+    console.log(`isSlected: ${isSelected}`)
+
+    useEffect(() => {
+        setIsSelected(selection.includes(name))
+    }, [selection])
+
+    const bundleSelectChange = () => {
+        handleSelectChange(name, isSelected)
+        setIsSelected(!isSelected)
+    }
+
+    return (
         <button className={`"relative text-theta-gray-7 hover:text-theta-gray-2 focus:outline-none transition flex flex-row justify-start items-center w-full ${textSize === 'text-xl' ? 'h-8' : 'h-10'}`}
-            onClick={() => handleSelectChange(name)}
-        >
+            onClick={() => bundleSelectChange()}
+        >   
             {/* This is w-8 because we have a space in front of the placeholder in the input */}
-            <div className="w-7"></div>
-            <div className={`${textSize ? textSize : 'text-2xl'}`}>
+            <div className="w-7 text-theta-gray-2">
+                {isSelected ? <SelectedCheck /> : null}
+            </div>
+            <div className={`${textSize ? textSize : 'text-2xl'} ${isSelected ? 'text-theta-gray-2' : ''}`}>
                 {name}
             </div>
         </button>
     )
 }
 
-export default DropdownSelect;
+export default DropdownSelectMulti;

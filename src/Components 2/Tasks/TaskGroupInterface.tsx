@@ -11,6 +11,7 @@ import 'react-virtualized/styles.css';
 import ScreenWrapperModal from '../Component Library/ScreenWrapperModal'
 import TextInputCL from '../Component Library/TextInput'
 import DropdownSelect from '../Component Library/DropdownSelect';
+import DropdownSelectMulti from '../Component Library/DropdownSelectMulti'
 
 interface TextInputProps {
     placeholder: string,
@@ -173,7 +174,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
     const [addTasksEnabled, setAddTasksEnabled] = useState<boolean>(false);
 
-    const [addTasksProfiles, setAddTasksProfiles] = useState<string>('');
+    const [addTasksProfiles, setAddTasksProfiles] = useState<string[]>([]);
     const [addTasksProxies, setAddTasksProxies] = useState<string>('');
 
     const [tasks, setTasks] = useState<string[]>([]);
@@ -329,9 +330,10 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                         Profile
                                     </div>
                                     <div className="w-full h-8">
-                                        <DropdownSelect 
+                                        <DropdownSelectMulti 
                                             setSelection={setAddTasksProfiles}
-                                            selectionArray={['prof1', 'profile s2', 'real card']}
+                                            selection={addTasksProfiles}
+                                            selectionArray={['prof1', 'profile s2', 'profile s3', 'profile x2', 'real card']}
                                             bg={'bg-theta-sidebar'}
                                             textSize={'text-xl'}
                                             placeholder={'Select profiles'}
