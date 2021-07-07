@@ -20,6 +20,10 @@ import testProxyList from '../../Logic/sensitive/testInterfaces/testProxyList';
 import testAccount from '../../Logic/sensitive/testInterfaces/testAccount';
 import testProfile from '../../Logic/sensitive/testInterfaces/testProfile';
 
+// redux
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+
 
 interface TextInputProps {
     placeholder: string,
@@ -183,6 +187,8 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     // Add Tasks hooks
     const [addTasksEnabled, setAddTasksEnabled] = useState<boolean>(false);
 
+    const allProfiles : ProfileObject[] = useSelector((state : RootState) => state.profiles.profilesArray)
+
     const [addTasksAccountGroup, setAddTasksAccountGroup] = useState([]);
     const [addTasksAccount, setAddTasksAccount] = useState<Account[]>([]);
 
@@ -322,7 +328,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                         <DropdownSelectMulti 
                                             setSelection={setAddTasksProfiles}
                                             selection={addTasksProfiles}
-                                            selectionArray={[testProfile]}
+                                            selectionArray={allProfiles}
                                             bg={'bg-theta-sidebar'}
                                             textSize={'text-xl'}
                                             placeholder={'Select profiles'}

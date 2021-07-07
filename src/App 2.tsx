@@ -30,6 +30,8 @@ import "./App.global.css";
 // electron
 import electron from 'electron'
 import ProfileObject from "./Logic/interfaces/ProfileObject";
+import { populateProxies } from "./redux/reducers/proxiesSlice";
+import ProxyList from "./Logic/interfaces/ProxyList";
 
 
 
@@ -111,9 +113,12 @@ const AppTwo = () => {
     useEffect(() => {
         (async () => {
             console.log("Beginning store population on app open/restart")
-            const toSetProfiles : ProfileObject[] = await electron.ipcRenderer.invoke("readjson", 'profiles.json');
 
+            const toSetProfiles : ProfileObject[] = await electron.ipcRenderer.invoke("readjson", 'profiles.json');
             dispatch(populateProfiles(toSetProfiles))
+
+            const toSetProxies : ProxyList[] = await electron.ipcRenderer.invoke("readjson", 'proxies.json');
+            dispatch(populateProxies(toSetProxies))
         })();
     }, [])
 

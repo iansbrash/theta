@@ -6,10 +6,17 @@ import IndividualProxy from './IndividualProxy'
 interface AutoResizerProxyComponentProps {
     key: any,
     index: number,
-    style: React.CSSProperties
+    style: React.CSSProperties,
+    data?: any,
+    itemData?: any,
+    parent: any
 }
 
-const AutoResizerProxyComponent : FC<AutoResizerProxyComponentProps> = ({key, index, style} : AutoResizerProxyComponentProps) => {
+const AutoResizerProxyComponent : FC<AutoResizerProxyComponentProps> = (props) => {
+    
+    console.log(`autoResizerProps`)
+    console.log(props)
+    console.log(props.parent.props.data)
 
     const proxy = {
         ip: '123.5234.123.693',
@@ -19,9 +26,9 @@ const AutoResizerProxyComponent : FC<AutoResizerProxyComponentProps> = ({key, in
     }
 
     return (
-        <div className="block" style={style}>
+        <div className="block" style={props.style}>
             <IndividualProxy 
-            {...proxy}
+            {...(props.parent.props.data[props.index])}
             />
             <div className="h-4"></div>
         </div>

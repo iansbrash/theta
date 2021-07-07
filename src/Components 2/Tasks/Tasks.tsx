@@ -1,5 +1,5 @@
 import React, {
-    FC, useState, useEffect
+    FC, useState
 } from 'react';
 import TaskGroupInterfaceRenderer from './TaskGroupInterfaceRenderer'
 

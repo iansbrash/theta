@@ -178,6 +178,41 @@ const Profiles : FC = () => {
         return SanitizationStatus.Success;
     }
 
+    const beginAddProfile = () => {
+        setSelectedProfile(undefined);
+
+        const toEmpty : ((s : string) => void)[] = [
+            setProfileName,
+            setEmail,
+            setPhone,
+            setShipFname,
+            setShipLname,
+            setShipAddr1,
+            setShipAddr2,
+            setShipCountry,
+            setShipState,
+            setShipCity,
+            setShipZip,
+            setBillFname,
+            setBillLname,
+            setBillAddr1,
+            setBillAddr2,
+            setBillCountry,
+            setBillState,
+            setBillCity,
+            setBillZip,
+            setPaymentName,
+            setPaymentNumber,
+            setPaymentExpMonth,
+            setPaymentExpYear,
+            setPaymentCVV
+        ]
+
+        for (let i in toEmpty) {
+            toEmpty[i]('');
+        }
+    }
+
     const handleAddProfile = async () => {
 
         const res : SanitizationStatus = ensureSanitizedProfile();
@@ -232,6 +267,9 @@ const Profiles : FC = () => {
     }
 
     const handleDeleteProfile = async () => {
+
+        if (selectedProfile === undefined) return console.log(`ERROR: Profile selection is undefined, cannot delete.`)
+
         try {
             dispatch(removeProfile(selectedProfile));
 
@@ -267,6 +305,9 @@ const Profiles : FC = () => {
             dispatch(addOrUpdateProfile(newProfile));
             await electron.ipcRenderer.invoke('writejson', 'profiles.json', [...loadedProfiles, newProfile]);
         }
+        else {
+            console.log(`ERROR: Profile selection is undefined, cannot duplicate.`)
+        }
     }
 
 
@@ -290,7 +331,7 @@ const Profiles : FC = () => {
 
                             <div className="flex flex-row justify-end items-center">
                                 <button className="focus:outline-none w-8 h-8 rounded-md shadow-md bg-theta-logo flex justify-center items-center text-theta-white"
-                                onClick={() => null}
+                                onClick={() => beginAddProfile()}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />

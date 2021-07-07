@@ -1,6 +1,7 @@
 import React, {
     useState,
-    FC
+    FC,
+    useEffect
 } from 'react';
 
 interface IndividualProfileProps {
@@ -8,7 +9,8 @@ interface IndividualProfileProps {
     selectedItem: any,
     setSelectedItem: (a : any) => void,
     bg?: string,
-    itemToString: (a : any) => string
+    itemToString: (a : any) => string,
+    comparator?: (a1 : any, a2: any) => boolean
 }
 
 const IndividualProfile : FC<IndividualProfileProps> = ({
@@ -16,7 +18,8 @@ const IndividualProfile : FC<IndividualProfileProps> = ({
     selectedItem,
     setSelectedItem,
     bg,
-    itemToString
+    itemToString,
+    comparator
 } : IndividualProfileProps) => {
 
     const [isFavorite, setIsFavorite] = useState<boolean>(false)
@@ -25,14 +28,20 @@ const IndividualProfile : FC<IndividualProfileProps> = ({
         setIsFavorite(!isFavorite)
     }
 
+    const [isSelected, setIsSelected] = useState(comparator ? comparator(selectedItem, item) : selectedItem === item);
+
+    useEffect(() => {
+        setIsSelected(comparator ? comparator(selectedItem, item) : selectedItem === item)
+    }, [selectedItem])
+
     return (
-        <button className={`transition duration-250 ease-in-out focus:outline-none w-full h-14 ${selectedItem === item ? 'bg-theta-profiles-individual-selected' : (bg ? bg : 'bg-theta-profiles-individual')} rounded-md shadow-md border ${selectedItem === item ? 'border-theta-gray-2' : 'border-theta-tasks-taskgroup'} flex flex-row justify-between items-center`}
+        <button className={`transition duration-250 ease-in-out focus:outline-none w-full h-14 ${isSelected ? 'bg-theta-profiles-individual-selected' : (bg ? bg : 'bg-theta-profiles-individual')} rounded-md shadow-md border ${isSelected ? 'border-theta-gray-2' : 'border-theta-tasks-taskgroup'} flex flex-row justify-between items-center`}
         onClick={() => setSelectedItem(item)}
         >
             {/* Left Side */}
             <div className="h-14 flex flex-row justify-start items-center">
                 <div className=" w-10 h-10 rounded-md shadow-md bg-theta-bg ml-2"></div>
-                <div className={`font-medium ${selectedItem === item ? 'text-theta-gray-2' : 'text-theta-gray-7'} text-xl ml-2`}>
+                <div className={`font-medium ${isSelected ? 'text-theta-gray-2' : 'text-theta-gray-7'} text-xl ml-2`}>
                     {itemToString(item)}
                 </div>
             </div>

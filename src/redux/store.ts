@@ -2,10 +2,12 @@ import { configureStore } from '@reduxjs/toolkit'
 import { combineReducers } from 'redux'
 import settingsSlice from './reducers/settingsSlice'
 import profilesSlice from './reducers/profilesSlice'
+import proxiesSlice from './reducers/proxiesSlice'
 
 const rootReducer = combineReducers({
     settings: settingsSlice,
-    profiles: profilesSlice
+    profiles: profilesSlice,
+    proxies: proxiesSlice
 })
 
 const store = configureStore({

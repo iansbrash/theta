@@ -4,8 +4,6 @@ import {
 } from '../Add Tasks/AddTasks';
 import electron from 'electron';
 import ProxyList, { Proxy } from "../../Logic/interfaces/ProxyList";
-import { program } from "@babel/types";
-
 const stringToProxy = (s : string) : Proxy => {
 
     const ip = s.substring(0, s.indexOf(':'));
