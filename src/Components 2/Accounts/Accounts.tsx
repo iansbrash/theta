@@ -1,4 +1,3 @@
-// import { ResizableBox, Resizable } from 'react-resizable';
 import React, {
     FC,
     useState,
@@ -8,12 +7,9 @@ import ScreenWrapper from '../Component Library/ScreenWrapper';
 import ScreenWrapperModal from '../Component Library/ScreenWrapperModal';
 import IndividualProfile from '../Profiles/IndividualProfile';
 import TextInput from '../Component Library/TextInput';
-import ProfileObject from '../../Logic/interfaces/ProfileObject';
 import IndividualAccount, {
     IndividualAccountModal
 } from './IndividualAccount';
-// import AutoResizerProxyComponent from './AutoResizerProxyComponent';
-import { AutoSizer, List } from 'react-virtualized'
 import Site from '../../Logic/interfaces/enums/Site';
 import Account, { AccountGroup } from '../../Logic/interfaces/Account';
 import MultiLineTextInput from '../Component Library/MultiLineTextInput';
@@ -22,7 +18,13 @@ import electron from 'electron'
 
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import { addAccounts, addAccountGroup } from '../../redux/reducers/accountsSlice';
+import { 
+    addAccounts, 
+    addAccountGroup, 
+    addAccountsToAccountGroup, 
+    deleteAccount,
+    deleteAccountGroup
+} from '../../redux/reducers/accountsSlice';
 import { RootState } from '../../redux/store';
 
 const stringToAccount = (s : string, site : Site) : Account => {
@@ -38,9 +40,24 @@ const stringToAccount = (s : string, site : Site) : Account => {
     return acc;
 }
 
-const AccountForMap : FC<Account>= ({
-    username
-}: Account) => {
+interface AccountForMapProps {
+    account: Account
+}
+
+const AccountForMap : FC<AccountForMapProps>= ({
+    account
+}: AccountForMapProps) => {
+
+    const dispatch = useDispatch();
+
+    const deleteSelf = async () => {
+        dispatch(deleteAccount(account));
+
+        let accs = await electron.ipcRenderer.invoke("readjson", "accounts.json");
+        accs[Site[account.site]] = accs[Site[account.site]].filter((a : Account) => a.username !== account.username);
+        await electron.ipcRenderer.invoke("writejson", "accounts.json", accs)
+    }
+
     return (
         <div className={`transition duration-250 ease-in-out focus:outline-none w-full h-14 rounded-md shadow-md border border-theta-tasks-taskgroup bg-theta-profiles-individual flex flex-row justify-between items-center`}
         >
@@ -48,29 +65,19 @@ const AccountForMap : FC<Account>= ({
             <div className="h-14 flex flex-row justify-start items-center">
                 <div className=" w-10 h-10 rounded-md shadow-md bg-theta-bg ml-2"></div>
                 <div className={`font-medium text-theta-gray-7 text-xl ml-2`}>
-                    {username}
+                    {account.username}
                 </div>
             </div>
 
             {/* Right Side */}
             <div className="w-auto justify-end flex flex-row items-center space-x-2 mr-3">
                 <button className={ `text-red-500 focus:outline-none`}
-                // onClick={() => toggleFavorite()}
+                onClick={() => deleteSelf()}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                     </svg>
                 </button>
-                {/* <button className="text-theta-gray-2 focus:outline-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                    </svg>
-                </button> */}
-                {/* <button className="text-red-600 focus:outline-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
-                </button> */}
             </div>
         </div>
     )
@@ -94,7 +101,8 @@ const Accounts : FC = () => {
     const loadedAccounts = useSelector((state : RootState) => state.accounts.accountsObject)
     const loadedAccountGroups = useSelector((state : RootState) => state.accounts.accountGroupObject)
 
-    const [selectedAccountGroup, setSelectedAccountGroup] = useState<AccountGroup | undefined>();
+    // @ts-ignore
+    const [selectedAccountGroup, setSelectedAccountGroup] = useState<AccountGroup | undefined>(loadedAccountGroups["Amazon"].length !== 0 ? loadedAccountGroups["Amazon"][0] : undefined);
     const [addAccountGroupModalSelectedSite, setAddAccountGroupModalSelectedSite] = useState<Site>(Site.Amazon)
 
 
@@ -167,6 +175,105 @@ const Accounts : FC = () => {
         setAddAccountGroupsModal(false);
         setSelectedAccountGroup(newAccountGroup)
     }
+
+    const addAccountsToAccountGroupFromModal = async () => {
+        dispatch(addAccountsToAccountGroup(selectedAccountGroup, addAccountsInAccountGroupSelectedAccounts))
+
+        let toSelectAccountGroup = {
+            // @ts-ignore
+            name: selectedAccountGroup.name,
+            site: Site.Amazon,
+            // @ts-ignore
+            accounts: [...selectedAccountGroup.accounts, ...addAccountsInAccountGroupSelectedAccounts]
+        }
+
+        setSelectedAccountGroup(toSelectAccountGroup)
+
+        // @ts-ignore
+        const fuckIndex : number = loadedAccountGroups[Site[selectedAccountGroup.site]].findIndex(accGr => accGr.name === selectedAccountGroup.name)
+        console.log(`fuckIndex: ${fuckIndex}`)
+        let tempCopy = JSON.parse(JSON.stringify(loadedAccountGroups));
+        // @ts-ignore
+        tempCopy[Site[selectedAccountGroup.site]][fuckIndex].accounts = toSelectAccountGroup.accounts;
+
+        await electron.ipcRenderer.invoke("writejson", "accountgroups.json", tempCopy)
+
+        setAddAccountsInAccountGroupModal(false);
+    }
+
+    const duplicateAccountGroup = async () => {
+        if (selectedAccountGroup) {
+            let duplicateGroupName = selectedAccountGroup.name + " Copy"
+            let iter = 1;
+
+            // @ts-ignore
+            while (loadedAccountGroups[Site[selectedAccountGroup.site]].findIndex(accG => accG.name === duplicateGroupName + " " + iter) !== -1) {
+                iter += 1;
+            }
+
+            let newAccGr = {
+                name: duplicateGroupName + " " + iter,
+                site: selectedAccountGroup.site,
+                accounts: selectedAccountGroup.accounts
+            }
+
+            dispatch(addAccountGroup(newAccGr))
+
+            let accGrCopy = await electron.ipcRenderer.invoke("readjson", "accountgroups.json")
+            accGrCopy[Site[selectedAccountGroup.site]] = [...accGrCopy[Site[selectedAccountGroup.site]], newAccGr];
+
+            await electron.ipcRenderer.invoke("writejson", "accountgroups.json", accGrCopy);
+
+            setSelectedAccountGroup(newAccGr)
+        }
+        else {
+            throw "Account group does not exist"
+        }
+    }
+
+    const deleteAccountGroupHandler = async () => {
+        try {
+
+            // @ts-ignore
+            let accGLength = loadedAccountGroups["Amazon"].length;
+
+            dispatch(deleteAccountGroup(selectedAccountGroup))
+
+            let accGr = await electron.ipcRenderer.invoke("readjson", "accountgroups.json")
+
+            // @ts-ignore
+            accGr[Site[selectedAccountGroup.site]] = accGr[Site[selectedAccountGroup.site]].filter(accG => accG.name !== selectedAccountGroup.name);
+            
+            await electron.ipcRenderer.invoke("writejson", "accountgroups.json", accGr)
+
+            // select next account group 
+            // @ts-ignore
+            if (accGLength > 1) {
+                // gotta make sure we're not selecting the AccountGroup we just deleted
+                // @ts-ignore
+                if (loadedAccountGroups["Amazon"][0].name === selectedAccountGroup.name) { 
+                    // @ts-ignore
+                    setSelectedAccountGroup(loadedAccountGroups["Amazon"][1])
+                }
+                else {
+                    // @ts-ignore
+                    setSelectedAccountGroup(loadedAccountGroups["Amazon"][0])
+                }
+                // @ts-ignore
+            }
+            else {
+                setSelectedAccountGroup(undefined)
+            }
+
+        }
+        catch (err) {
+            console.error(err)
+        }
+    }
+
+    useEffect(() => {
+        setSelectedAccountGroupName(selectedAccountGroup ? selectedAccountGroup.name : '')
+    }, [selectedAccountGroup])
 
     const [addAccountsModal, setAddAccountsModal] = useState<boolean>(false);
     const [addAccountGroupsModal, setAddAccountGroupsModal] = useState<boolean>(false);
@@ -269,9 +376,7 @@ const Accounts : FC = () => {
                             // @ts-ignore
                             Object.keys(loadedAccounts).map(key =>  loadedAccounts[key].filter((acc : Account) => acc.username.toLowerCase().includes(accountsSearch.toLowerCase())).map((acc : Account) => {
                                 return <AccountForMap 
-                                username={acc.username} 
-                                site={acc.site}
-                                password={acc.password}
+                                    account={acc}
                                 />
                             }))}
                         </div>
@@ -359,6 +464,7 @@ const Accounts : FC = () => {
                                     selectedItem={selectedAccountGroup}
                                     setSelectedItem={setSelectedAccountGroup}
                                     itemToString={(acc : AccountGroup) => acc.name}
+                                    comparator={(ag1 : AccountGroup, ag2 : AccountGroup) => (ag1 && ag2 ? ag1.name === ag2.name : false)}
                                 />
                             }))}
                         </div>
@@ -382,7 +488,7 @@ const Accounts : FC = () => {
                                             Add Accounts
                                         </div>
                                         <button className="focus:outline-none font-medium text-xl flex justify-center items-center w-8 h-8 rounded-md shadow-md bg-theta-logo text-theta-gray-2"
-                                        onClick={() => addAccountsModalAddAccounts()}
+                                        onClick={() => addAccountsToAccountGroupFromModal()}
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -415,16 +521,17 @@ const Accounts : FC = () => {
                                             />
                                         }))}
                                     </div>
-                                    <div className="w-full flex flex-row justify-start items-center mt-4 h-8">
-                                        <DropdownSelect 
-                                            setSelection={setAddAccountsSite}
-                                            selectionArray={[Site.Amazon]}
-                                            bg={'bg-theta-sidebar'}
-                                            textSize={'text-xl'}
-                                            placeholder={'Select site'}
-                                            itemToString={(site : Site) => Site[site]}
-                                            offsetWidth={'-mr-2'}
-                                        />
+                                    <div className="w-full flex flex-row justify-start items-center">
+                                        <div className="w-64 flex flex-row justify-start items-center mt-4 h-8">
+                                            <DropdownSelect 
+                                                setSelection={setAddAccountsSite}
+                                                selectionArray={[Site.Amazon]}
+                                                bg={'bg-theta-sidebar'}
+                                                textSize={'text-xl'}
+                                                placeholder={'Select site'}
+                                                itemToString={(site : Site) => Site[site]}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -456,13 +563,17 @@ const Accounts : FC = () => {
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                             </svg>
                                         </button>
-                                        <button className="focus:outline-none h-12 w-12 rounded-md shadow-md bg-red-400 flex justify-center items-center text-theta-white">
+                                        <button className="focus:outline-none h-12 w-12 rounded-md shadow-md bg-red-400 flex justify-center items-center text-theta-white"
+                                        onClick={() => duplicateAccountGroup()}
+                                        >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
                                                 <path d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z" />
                                                 <path d="M3 8a2 2 0 012-2v10h8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
                                             </svg>
                                         </button>
-                                        <button className="focus:outline-none h-12 w-12 rounded-md shadow-md bg-red-500 flex justify-center items-center text-theta-white">
+                                        <button className="focus:outline-none h-12 w-12 rounded-md shadow-md bg-red-500 flex justify-center items-center text-theta-white"
+                                        onClick={() => deleteAccountGroupHandler()}
+                                        >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                             </svg>
@@ -495,7 +606,7 @@ const Accounts : FC = () => {
                                 <div className="flex flex-col justify-start items-start w-full h-full">
                                     {selectedAccountGroup?.accounts.map(acc => {
 
-                                        return <IndividualAccount {...acc} />
+                                        return <IndividualAccount account={acc} accountGroup={selectedAccountGroup} setSelectedAccountGroup={setSelectedAccountGroup}/>
                                     })}
                                 </div>
                             </div>

@@ -37,6 +37,24 @@ export const accountsSlice = createSlice({
                 }
             }
         },
+        deleteAccount: {
+            reducer (state, action : PayloadAction<{account : Account}>) { //; anotherProp: string; uuid: string
+                const {
+                    account,
+                } = action.payload;
+                
+                // @ts-ignore
+                state.accountsObject[Site[account.site]] = state.accountsObject[Site[account.site]].filter(acc => acc.username !== account.username);
+
+            },
+            prepare (account) {
+                return {
+                    payload: {
+                        account,
+                    }
+                }
+            }
+        },
         populateAccounts: {
             reducer (state, action : PayloadAction<{accountsObject : object}>) { //; anotherProp: string; uuid: string
                 const {
@@ -71,6 +89,81 @@ export const accountsSlice = createSlice({
                 }
             }
         },
+        deleteAccountGroup: {
+            reducer (state, action : PayloadAction<{accountGroup : AccountGroup}>) { //; anotherProp: string; uuid: string
+                const {
+                    accountGroup,
+                } = action.payload;
+
+                if (accountGroup === undefined || accountGroup === null) throw "AccountGroup does not exist."
+
+                // @ts-ignore
+                state.accountGroupObject[Site[accountGroup.site]] = state.accountGroupObject[Site[accountGroup.site]].filter(accG => accG.name !== accountGroup.name);
+            },
+            prepare (accountGroup) {
+                return {
+                    payload: {
+                        accountGroup,
+                    }
+                }
+            }
+        },
+        addAccountsToAccountGroup: {
+            reducer (state, action : PayloadAction<{accountGroup : AccountGroup, accounts : Account[]}>) { //; anotherProp: string; uuid: string
+                const {
+                    accountGroup,
+                    accounts
+                } = action.payload;
+
+                // @ts-ignore
+                const indexOfAccG = state.accountGroupObject["Amazon"].findIndex(accGr => accGr.name === accountGroup.name);
+
+                if (indexOfAccG === -1) {
+                    throw "Account group does not exist";
+                }
+                else {
+                    // @ts-ignore
+                    state.accountGroupObject["Amazon"][indexOfAccG].accounts = [...state.accountGroupObject["Amazon"][indexOfAccG].accounts, ...accounts]
+                }
+
+            },
+            prepare (accountGroup, accounts) {
+                return {
+                    payload: {
+                        accountGroup,
+                        accounts
+                    }
+                }
+            }
+        },
+        deleteAccountFromAccountGroup: {
+            reducer (state, action : PayloadAction<{accountGroup : AccountGroup, account : Account}>) { //; anotherProp: string; uuid: string
+                const {
+                    accountGroup,
+                    account
+                } = action.payload;
+
+                // @ts-ignore
+                const indexOfAccG = state.accountGroupObject["Amazon"].findIndex(accGr => accGr.name === accountGroup.name);
+
+                if (indexOfAccG === -1) {
+                    throw "Account group does not exist";
+                }
+                else {
+                    // @ts-ignore
+                    state.accountGroupObject["Amazon"][indexOfAccG].accounts = state.accountGroupObject["Amazon"][indexOfAccG].accounts.filter((acc : Account) => acc.username !== account.username)
+                }
+
+            },
+            prepare (accountGroup, account) {
+                return {
+                    payload: {
+                        accountGroup,
+                        account
+                    }
+                }
+            }
+        },
         populateAccountGroups: {
             reducer (state, action : PayloadAction<{accountGroupsObject : object}>) { //; anotherProp: string; uuid: string
                 const {
@@ -91,6 +184,15 @@ export const accountsSlice = createSlice({
     },
 })
 
-export const { addAccounts, populateAccounts, addAccountGroup, populateAccountGroups } = accountsSlice.actions
+export const { 
+    addAccounts, 
+    deleteAccount,
+    populateAccounts, 
+    addAccountGroup, 
+    deleteAccountGroup,
+    populateAccountGroups, 
+    addAccountsToAccountGroup,
+    deleteAccountFromAccountGroup
+} = accountsSlice.actions
 
 export default accountsSlice.reducer

@@ -3,21 +3,58 @@ import React, {
     useState,
     useEffect
 } from 'react';
-import Account from '../../Logic/interfaces/Account';
+import Account, { AccountGroup } from '../../Logic/interfaces/Account';
 import Site from '../../Logic/interfaces/enums/Site';
+import { useDispatch } from 'react-redux'
+import { deleteAccountFromAccountGroup } from '../../redux/reducers/accountsSlice'
+import electron from 'electron';
 
-const IndividualAccount : FC<Account> = ({
-    site,
-    username,
-    password
-}) => {
+interface IndividualAccountProps {
+    account: Account,
+    accountGroup?: AccountGroup,
+    setSelectedAccountGroup: ( ag : AccountGroup) => void
+}
+
+const IndividualAccount : FC<IndividualAccountProps> = ({
+    account,
+    accountGroup,
+    setSelectedAccountGroup
+} : IndividualAccountProps) => {
+
+    const dispatch = useDispatch();
 
     const [passHidden, setPassHidden] = useState<boolean>(true);
+
+    const deleteSelf = async () => {
+        try {
+            dispatch(deleteAccountFromAccountGroup(accountGroup, account))
+
+            let accGrCopyaccGrCopy = {...accountGroup};
+
+            // @ts-ignore
+            accGrCopyaccGrCopy.accounts = accGrCopyaccGrCopy.accounts.filter((acc : Account) => acc.username !== account.username)
+
+            // @ts-ignore
+            setSelectedAccountGroup(accGrCopyaccGrCopy)
+            let loadedACCG = await electron.ipcRenderer.invoke("readjson", "accountgroups.json")
+
+            // @ts-ignore
+            let index = loadedACCG[Site[accountGroup.site]].findIndex(accG => accG.name === accountGroup.name);
+            // @ts-ignore
+            loadedACCG[Site[accountGroup.site]][index] = accGrCopyaccGrCopy;
+
+            await electron.ipcRenderer.invoke("writejson", "accountgroups.json", loadedACCG)
+        }
+        catch (err) {
+            console.error(err)
+        }
+
+    }
 
     return (
         <div className="w-full h-10 my-0.5 px-2 bg-theta-bg rounded-md shadow-md flex flex-row justify-start items-center">
             <div className="text-theta-gray-2 text-xl w-6/12">
-                {username}
+                {account.username}
             </div>
             <div className="relative h-full">
                 <button className="h-8 w-8 m-1 p-1 text-theta-gray-7 absolute right-0 top-0 bottom-0 flex justify-center items-center focus:outline-none"
@@ -36,11 +73,11 @@ const IndividualAccount : FC<Account> = ({
                 </button>
             </div>
             <div className="text-theta-gray-2 text-xl w-5/12">
-                {passHidden ? <div className="ml-0.5">{"•".repeat(password.length)}</div> : password}
+                {passHidden ? <div className="ml-0.5">{"•".repeat(account.password.length)}</div> : account.password}
             </div>
             <div className="flex flex-row justify-end items-center space-x-2 w-1/12">
                 <button className="h-8 w-8 p-1 rounded-md shadow-md bg-red-500 flex justify-center items-center text-theta-gray-2 focus:outline-none"
-                onClick={() => null}
+                onClick={() => deleteSelf()}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
