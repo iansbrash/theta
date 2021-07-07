@@ -20,6 +20,8 @@ import Login from './Components/Login/Login';
 // redux
 import { useDispatch } from "react-redux";
 import { populateProfiles } from "./redux/reducers/profilesSlice";
+import { populateAccounts } from './redux/reducers/accountsSlice';
+import { populateAccountGroups } from "./redux/reducers/accountsSlice";
 
 // dunno y this is here
 import TaskClass from "./Logic/sites/classes/TaskClass";
@@ -119,6 +121,12 @@ const AppTwo = () => {
 
             const toSetProxies : ProxyList[] = await electron.ipcRenderer.invoke("readjson", 'proxies.json');
             dispatch(populateProxies(toSetProxies))
+
+            const toSetAccounts : object = await electron.ipcRenderer.invoke("readjson", 'accounts.json');
+            dispatch(populateAccounts(toSetAccounts))
+
+            const toSetAccountGroups : object = await electron.ipcRenderer.invoke("readjson", 'accountgroups.json');
+            dispatch(populateAccountGroups(toSetAccountGroups))
         })();
     }, [])
 

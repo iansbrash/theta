@@ -3,11 +3,13 @@ import { combineReducers } from 'redux'
 import settingsSlice from './reducers/settingsSlice'
 import profilesSlice from './reducers/profilesSlice'
 import proxiesSlice from './reducers/proxiesSlice'
+import accountsSlice from './reducers/accountsSlice'
 
 const rootReducer = combineReducers({
     settings: settingsSlice,
     profiles: profilesSlice,
-    proxies: proxiesSlice
+    proxies: proxiesSlice,
+    accounts: accountsSlice
 })
 
 const store = configureStore({

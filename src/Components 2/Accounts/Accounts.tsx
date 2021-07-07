@@ -5,14 +5,38 @@ import React, {
     useEffect
 } from 'react';
 import ScreenWrapper from '../Component Library/ScreenWrapper';
+import ScreenWrapperModal from '../Component Library/ScreenWrapperModal';
 import IndividualProfile from '../Profiles/IndividualProfile';
 import TextInput from '../Component Library/TextInput';
 import ProfileObject from '../../Logic/interfaces/ProfileObject';
-import IndividualAccount from './IndividualAccount';
+import IndividualAccount, {
+    IndividualAccountModal
+} from './IndividualAccount';
 // import AutoResizerProxyComponent from './AutoResizerProxyComponent';
 import { AutoSizer, List } from 'react-virtualized'
 import Site from '../../Logic/interfaces/enums/Site';
-import Account from '../../Logic/interfaces/Account';
+import Account, { AccountGroup } from '../../Logic/interfaces/Account';
+import MultiLineTextInput from '../Component Library/MultiLineTextInput';
+import DropdownSelect from '../Component Library/DropdownSelect';
+import electron from 'electron'
+
+// redux
+import { useDispatch, useSelector } from 'react-redux';
+import { addAccounts, addAccountGroup } from '../../redux/reducers/accountsSlice';
+import { RootState } from '../../redux/store';
+
+const stringToAccount = (s : string, site : Site) : Account => {
+
+    let username = s.substring(0, s.indexOf(':'))
+
+    const acc : Account = {
+        site: site,
+        username: username,
+        password: s.substring(username.length + 1)
+    }
+
+    return acc;
+}
 
 const AccountForMap : FC<Account>= ({
     username
@@ -56,23 +80,102 @@ const AccountForMap : FC<Account>= ({
 
 const Accounts : FC = () => {
 
+    const dispatch = useDispatch();
+
+    // search bars
+    const [accountsSearch, setAccountsSearch] = useState<string>('');
+    const [accountGroupsSearch, setAccountGroupsSearch] = useState<string>('');
+
     const [proxyGroupName, setProxyGroupName] = useState<string>('');
-    const [selectedProxyGroup, setSelectedProxyGroup] = useState<string>('');
-
-    const [loadedProfiles, setLoadedProfiles] = useState<ProfileObject[]>([]);
+    const [selectedAccountGroupName, setSelectedAccountGroupName] = useState<string>('');
 
 
-    const [proxyGroupSearch, setProxyGroupSearch] = useState<string>('');
 
-    const [curProx, setCurProx] = useState<number[]>([]);
+    const loadedAccounts = useSelector((state : RootState) => state.accounts.accountsObject)
+    const loadedAccountGroups = useSelector((state : RootState) => state.accounts.accountGroupObject)
 
-    useEffect(() => {
-        let arr = [];
-        for (let i = 0; i < 1000; i++){
-            arr.push(i)
+    const [selectedAccountGroup, setSelectedAccountGroup] = useState<AccountGroup | undefined>();
+    const [addAccountGroupModalSelectedSite, setAddAccountGroupModalSelectedSite] = useState<Site>(Site.Amazon)
+
+
+    // adds accounts from the modal in the far left accounts section
+    const addAccountsModalAddAccounts = async () => {
+
+        try {
+            validateAddAccountsFromModal()
         }
-        setCurProx(arr)
-    }, [])
+        catch (err) {
+            return console.error(err);
+        }
+
+        const accountsToAdd = addAccountsAccounts.split(/\r?\n/).map(stringAcc => {
+            return stringToAccount(stringAcc, addAccountsSite)
+        })
+
+        dispatch(addAccounts( accountsToAdd ));
+
+        // then save it to file
+        let accountsCopy = {...loadedAccounts};
+
+        // @ts-ignore
+        accountsCopy[Site[addAccountsSite]] = [
+
+            // @ts-ignore
+            ...accountsCopy[Site[addAccountsSite]],
+            ...accountsToAdd
+        ]
+        await electron.ipcRenderer.invoke("writejson", "accounts.json", accountsCopy)
+        setAddAccountsModal(false)
+        setAddAccountsAccounts('')
+    }
+
+    const validateAddAccountsFromModal = () => {
+        if (addAccountsSite === null || addAccountsSite == undefined) {
+            throw "Site selector is undefined or null";
+        }
+        else if (addAccountsAccounts === '') {
+            throw "Account input is empty"
+        }
+        else {
+            return;
+        }
+    }
+
+    const createNewBlankAccountGroup = async () => {
+
+        let newAccountGroupName = "Account Group"
+        let iter = 1;
+        // @ts-ignore
+        while (loadedAccountGroups[Site[addAccountGroupModalSelectedSite]].findIndex(accGr => accGr.name === newAccountGroupName + " " + iter) !== -1) {
+            iter += 1;
+        }
+
+        const newAccountGroup : AccountGroup = {
+            name: newAccountGroupName + " " + iter,
+            site: addAccountGroupModalSelectedSite,
+            accounts: []
+        }
+
+        dispatch(addAccountGroup(newAccountGroup))
+
+        let tempAccountGroupObject = {...loadedAccountGroups};
+        // @ts-ignore
+        tempAccountGroupObject[Site[addAccountGroupModalSelectedSite]] = [...tempAccountGroupObject[Site[addAccountGroupModalSelectedSite]], newAccountGroup];
+
+        await electron.ipcRenderer.invoke("writejson", "accountgroups.json", tempAccountGroupObject)
+
+        setAddAccountGroupsModal(false);
+        setSelectedAccountGroup(newAccountGroup)
+    }
+
+    const [addAccountsModal, setAddAccountsModal] = useState<boolean>(false);
+    const [addAccountGroupsModal, setAddAccountGroupsModal] = useState<boolean>(false);
+    const [addAccountsInAccountGroupModal, setAddAccountsInAccountGroupModal] = useState<boolean>(false);
+    const [addAccountsInAccountGroupSearch, setAddAccountsInAccountGroupSearch] = useState<string>('')
+    const [addAccountsInAccountGroupSelectedAccounts, setAddAccountsInAccountGroupSelectedAccounts] = useState<Account[]>([])
+
+    const [addAccountsAccounts, setAddAccountsAccounts] = useState<string>('');
+    const [addAccountsSite, setAddAccountsSite] = useState<Site>(Site.Amazon);
 
 
 
@@ -83,6 +186,48 @@ const Accounts : FC = () => {
                 {/* Accounts */}
                 <div className="w-1/4 h-full">
                     <ScreenWrapper>
+                        <ScreenWrapperModal
+                        isEnabled={addAccountsModal}
+                        setIsEnabled={setAddAccountsModal}
+                        >
+                            <div className="w-full h-1/2 p-4"
+                            onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="p-4 w-full h-full bg-theta-bg rounded-lg shadow-lg flex flex-col justify-start items-center">
+                                    <div className="w-full flex flex-row justify-start items-center mb-2">
+                                        <div className="text-theta-white w-full text-2xl font-medium">
+                                            Add Accounts
+                                        </div>
+                                        <button className="focus:outline-none font-medium text-xl flex justify-center items-center w-8 h-8 rounded-md shadow-md bg-theta-logo text-theta-gray-2"
+                                        onClick={() => addAccountsModalAddAccounts()}
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div className="w-full h-full">
+                                        <MultiLineTextInput 
+                                            placeholder={'user:pass'}
+                                            input={addAccountsAccounts}
+                                            onChange={setAddAccountsAccounts}
+                                            bg={'bg-theta-sidebar'}
+                                        />
+                                    </div>
+                                    <div className="w-full flex flex-row justify-start items-center mt-4 h-8">
+                                        <DropdownSelect 
+                                            setSelection={setAddAccountsSite}
+                                            selectionArray={[Site.Amazon]}
+                                            bg={'bg-theta-sidebar'}
+                                            textSize={'text-xl'}
+                                            placeholder={'Select site'}
+                                            itemToString={(site : Site) => Site[site]}
+                                            offsetWidth={'-mr-2'}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </ScreenWrapperModal>
                         <div className="px-4 mb-2 flex flex-row justify-between items-center w-full">
                             <div className="flex flex-row justify-start items-center">
                                 <div className="text-2xl font-medium text-theta-white">
@@ -97,7 +242,7 @@ const Accounts : FC = () => {
 
                             <div className="flex flex-row justify-end items-center">
                                 <button className="focus:outline-none w-8 h-8 rounded-md shadow-md bg-theta-logo flex justify-center items-center text-theta-white"
-                                onClick={() => null}
+                                onClick={() => setAddAccountsModal(true)}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -108,8 +253,8 @@ const Accounts : FC = () => {
                         <div className="w-full h-10 mt-1 mb-2">
                             <TextInput 
                                 placeholder={'Search for accounts'}
-                                input={proxyGroupSearch}
-                                onChange={setProxyGroupSearch}
+                                input={accountsSearch}
+                                onChange={setAccountsSearch}
                                 bg={''}
                                 icon={
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -120,13 +265,15 @@ const Accounts : FC = () => {
                             />
                         </div>
                         <div className="w-full h-full overflow-y-scroll scrollbar-hide flex flex-col justify-start items-center space-y-2">
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => `Account ${n}`).filter(p => p.toLowerCase().includes(proxyGroupSearch.toLowerCase())).map(n => (
-                                <AccountForMap 
-                                username={n} 
-                                site={Site.Amazon}
-                                password={'asd'}
+                            {
+                            // @ts-ignore
+                            Object.keys(loadedAccounts).map(key =>  loadedAccounts[key].filter((acc : Account) => acc.username.toLowerCase().includes(accountsSearch.toLowerCase())).map((acc : Account) => {
+                                return <AccountForMap 
+                                username={acc.username} 
+                                site={acc.site}
+                                password={acc.password}
                                 />
-                            ))}
+                            }))}
                         </div>
                     </ScreenWrapper>
                 </div>
@@ -134,6 +281,40 @@ const Accounts : FC = () => {
                 {/* Account Groups */}
                 <div className="w-1/4 h-full">
                     <ScreenWrapper>
+                        <ScreenWrapperModal
+                        isEnabled={addAccountGroupsModal}
+                        setIsEnabled={setAddAccountGroupsModal}
+                        >
+                            <div className="w-full h-auto p-4"
+                            onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="p-4 w-full h-full bg-theta-bg rounded-lg shadow-lg flex flex-col justify-start items-center">
+                                    <div className="w-full flex flex-row justify-start items-center mb-2">
+                                        <div className="text-theta-white w-full text-2xl font-medium">
+                                            Add Account Group
+                                        </div>
+                                        <button className="focus:outline-none font-medium text-xl flex justify-center items-center w-8 h-8 rounded-md shadow-md bg-theta-logo text-theta-gray-2"
+                                        onClick={() => createNewBlankAccountGroup()}
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div className="w-full flex flex-row justify-start items-center mt-4 h-8">
+                                        <DropdownSelect 
+                                            setSelection={setAddAccountGroupModalSelectedSite}
+                                            selectionArray={[Site.Amazon]}
+                                            bg={'bg-theta-sidebar'}
+                                            textSize={'text-xl'}
+                                            placeholder={'Select site'}
+                                            itemToString={(site : Site) => Site[site]}
+                                            offsetWidth={'-mr-2'}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </ScreenWrapperModal>
                         <div className="px-4 mb-2 flex flex-row justify-between items-center w-full">
                             <div className="flex flex-row justify-start items-center">
                                 <div className="text-2xl font-medium text-theta-white">
@@ -147,7 +328,7 @@ const Accounts : FC = () => {
                             </div>
                             <div className="flex flex-row justify-end items-center">
                                 <button className="focus:outline-none w-8 h-8 rounded-md shadow-md bg-theta-logo flex justify-center items-center text-theta-white"
-                                onClick={() => null}
+                                onClick={() => setAddAccountGroupsModal(true)}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -158,8 +339,8 @@ const Accounts : FC = () => {
                         <div className="w-full h-10 mt-1 mb-2">
                             <TextInput 
                                 placeholder={'Search for account groups'}
-                                input={proxyGroupSearch}
-                                onChange={setProxyGroupSearch}
+                                input={accountGroupsSearch}
+                                onChange={setAccountGroupsSearch}
                                 bg={''}
                                 icon={
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -170,14 +351,16 @@ const Accounts : FC = () => {
                             />
                         </div>
                         <div className="w-full h-full overflow-y-scroll scrollbar-hide flex flex-col justify-start items-center space-y-2">
-                            {[1, 2, 3, 4, ].map(n => `Account Group ${n}`).filter(p => p.toLowerCase().includes(proxyGroupSearch.toLowerCase())).map(n => (
-                                <IndividualProfile 
-                                name={n} 
-                                selectedProfile={selectedProxyGroup}
-                                setSelectedProfile={setSelectedProxyGroup}
-                                bg={'bg-theta-accounts-accountgroup-individual'}
+                            {
+                            // @ts-ignore
+                            Object.keys(loadedAccountGroups).map(key =>  loadedAccountGroups[key].filter((acc : AccountGroup) => acc.name.toLowerCase().includes(accountGroupsSearch.toLowerCase())).map((acc : AccountGroup) => {
+                                return <IndividualProfile 
+                                    item={acc}
+                                    selectedItem={selectedAccountGroup}
+                                    setSelectedItem={setSelectedAccountGroup}
+                                    itemToString={(acc : AccountGroup) => acc.name}
                                 />
-                            ))}
+                            }))}
                         </div>
                     </ScreenWrapper>
                 </div>
@@ -186,13 +369,73 @@ const Accounts : FC = () => {
                 {/* Account Group Screen */}
                 <div className="w-1/2 h-full">
                     <ScreenWrapper>
+                        <ScreenWrapperModal
+                        isEnabled={addAccountsInAccountGroupModal}
+                        setIsEnabled={setAddAccountsInAccountGroupModal}
+                        >
+                            <div className="w-full h-1/2 p-4"
+                            onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="p-4 w-full h-full bg-theta-bg rounded-lg shadow-lg flex flex-col justify-start items-center">
+                                    <div className="w-full flex flex-row justify-start items-center mb-2">
+                                        <div className="text-theta-white w-full text-2xl font-medium">
+                                            Add Accounts
+                                        </div>
+                                        <button className="focus:outline-none font-medium text-xl flex justify-center items-center w-8 h-8 rounded-md shadow-md bg-theta-logo text-theta-gray-2"
+                                        onClick={() => addAccountsModalAddAccounts()}
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div className="w-full h-10 mt-1 mb-2">
+                                        <TextInput 
+                                            placeholder={'Search for accounts'}
+                                            input={addAccountsInAccountGroupSearch}
+                                            onChange={setAddAccountsInAccountGroupSearch}
+                                            bg={''}
+                                            icon={
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                                </svg>
+                                            }
+                                            offsetWidth={'w-7'}
+                                        />
+                                    </div>
+                                    <div className="w-full h-full overflow-y-scroll scrollbar-hide flex flex-col justify-start items-center space-y-2">
+                                        {
+                                        // @ts-ignore
+                                        Object.keys(loadedAccounts).map(key =>  loadedAccounts[key].filter((acc : Account) => acc.username.toLowerCase().includes(addAccountsInAccountGroupSearch.toLowerCase())).map((acc : Account) => {
+                                            return <IndividualAccountModal 
+                                            key={acc.username + '###' + acc.password}
+                                            account={acc}
+                                            addAccountsInAccountGroupSelectedAccounts={addAccountsInAccountGroupSelectedAccounts}
+                                            setAddAccountsInAccountGroupSelectedAccounts={setAddAccountsInAccountGroupSelectedAccounts}
+                                            />
+                                        }))}
+                                    </div>
+                                    <div className="w-full flex flex-row justify-start items-center mt-4 h-8">
+                                        <DropdownSelect 
+                                            setSelection={setAddAccountsSite}
+                                            selectionArray={[Site.Amazon]}
+                                            bg={'bg-theta-sidebar'}
+                                            textSize={'text-xl'}
+                                            placeholder={'Select site'}
+                                            itemToString={(site : Site) => Site[site]}
+                                            offsetWidth={'-mr-2'}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </ScreenWrapperModal>
                         <div className="w-full h-full bg-theta-tasks-taskgroup rounded-lg shadow-lg flex flex-col justify-start items-center p-4">
                             <div className="w-full justify-start items-start flex flex-col space-y-2 h-full">
                                 <div className="w-full flex flex-row justify-between items-center">
                                     <div className="w-96 h-12">
                                         <TextInput 
-                                            input={proxyGroupName}
-                                            onChange={setProxyGroupName}
+                                            input={selectedAccountGroupName}
+                                            onChange={setSelectedAccountGroupName}
                                             placeholder={'Account Group'}
                                             bg={'bg-theta-bg'}
                                             border={'border-theta-sidebar'}
@@ -206,7 +449,9 @@ const Accounts : FC = () => {
                                         />
                                     </div>
                                     <div className="flex flex-row justify-end items-center space-x-4">
-                                        <button className="focus:outline-none px-2 w-12 h-12 rounded-md shadow-md bg-theta-logo flex justify-center items-center text-theta-white">
+                                        <button className="focus:outline-none px-2 w-12 h-12 rounded-md shadow-md bg-theta-logo flex justify-center items-center text-theta-white"
+                                        onClick={() => setAddAccountsInAccountGroupModal(true)}
+                                        >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                             </svg>
@@ -248,28 +493,10 @@ const Accounts : FC = () => {
 
 
                                 <div className="flex flex-col justify-start items-start w-full h-full">
-                                    {[1, 2, 3, 4, 5].map(n => {
-                                        
-                                        const acc = {
-                                            site: Site.Amazon,
-                                            username: 'brash@usc.edu',
-                                            password: '123456'
-                                        }
+                                    {selectedAccountGroup?.accounts.map(acc => {
 
                                         return <IndividualAccount {...acc} />
                                     })}
-                                    {/* <AutoSizer>
-                                        {({height, width}) => (
-                                            <List 
-                                                rowCount={curProx.length}
-                                                rowHeight={44}
-                                                width={width}
-                                                height={height}
-                                                rowRenderer={AutoResizerProxyComponent}
-                                                className="scrollbar-hide focus:outline-none"
-                                            ></List>
-                                        )}
-                                    </AutoSizer> */}
                                 </div>
                             </div>
                         </div>

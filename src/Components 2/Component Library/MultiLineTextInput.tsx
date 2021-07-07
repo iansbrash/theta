@@ -34,7 +34,7 @@ const MultiLineTextInput : FC<MultiLineTextInputProps> = ({
                     value={input}
                     onChange={(e) => onChange(e.target.value)}
                     placeholder={placeholder}
-                    className={`${bg} resize-none p-1 rounded-lg h-full w-full bg-transparent focus:outline-none placeholder-theta-gray-7 text-theta-gray-2 ${textSize ? textSize : 'text-xl'}`}
+                    className={`${bg} scrollbar-hide resize-none p-1 rounded-lg h-full w-full bg-transparent focus:outline-none placeholder-theta-gray-7 text-theta-gray-2 ${textSize ? textSize : 'text-xl'}`}
                 />
             </div>
             <div className="text-theta-gray-7 absolute left-1 top-0 bottom-0 flex justify-center items-center">

@@ -6,4 +6,11 @@ interface Account {
     password: string
 }
 
+export interface AccountGroup {
+    name: string,
+    site: Site,
+    accounts: Account[]
+}
+
+
 export default Account;

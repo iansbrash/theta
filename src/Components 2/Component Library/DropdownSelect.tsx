@@ -18,6 +18,7 @@ interface DrowndownSelectProps {
     textSize?: string,
     placeholder: string,
     itemToString: (a : any) => string,
+    offsetWidth?: string
 }
 
 const DropdownSelect : FC<DrowndownSelectProps> = ({
@@ -27,6 +28,7 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
     textSize,
     placeholder,
     itemToString,
+    offsetWidth
 } : DrowndownSelectProps) => {
 
     const [selectSearchInput, setSelectSearchInput] = useState<string>('');
@@ -79,7 +81,7 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
             onClick={() => null}
             >
                 <div className="h-full flex flex-row justify-start items-center">
-                    <div className="w-7"></div>
+                    <div className={offsetWidth ? offsetWidth : 'w-7'}></div>
                     <input
                         value={selectSearchInput}
                         onChange={(e) => setSelectSearchInput(e.target.value)}
