@@ -70,7 +70,7 @@ const AutoResizerTaskComponent : FC<AutoResizerTaskComponentProps> = (props) => 
     return (
         <div className="block" style={props.style}>
             <TaskComponent 
-            task={task}
+            task={testTask}
             />
             <div className="h-4"></div>
         </div>

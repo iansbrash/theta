@@ -131,6 +131,12 @@ class AmazonTaskClass extends TaskClass {
                 return err;
             }
         }
+        else if (this.status === "Checked Out") {
+            return {
+                status: "Stopped",
+                message: "Checked Out"
+            }
+        }
         else {
             return {
                 status: "Stopped", 
@@ -456,7 +462,6 @@ class AmazonTaskClass extends TaskClass {
 
             this.storage = res.storage;
         }, "Submitting order...")
-        const res = await electron.ipcRenderer.invoke('POSTAsyncContinueAfterSelection', this.allCookies, this.storage, this.proxyList.proxies[0]);
     }
 
     async POSTSubmitOrder() : Promise<cycleStatus> {
@@ -467,21 +472,9 @@ class AmazonTaskClass extends TaskClass {
             if (response !== "Success") {
                 throw "Checkout Error"
             }
-            // if (response === "Success") {
-            //     return AmazonStatus.CheckoutSuccess
-            // }
-            // else {
-            //     return AmazonStatus.CheckoutError
-            // }
-        }, 'Checked out')
-        // const response = await electron.ipcRenderer.invoke('POSTSubmitOrder', this.allCookies, this.storage, this.proxyList.proxies[0]);
 
-        // if (response === "Success") {
-        //     return AmazonStatus.CheckoutSuccess
-        // }
-        // else {
-        //     return AmazonStatus.CheckoutError
-        // }
+            this.status = "Checked Out"
+        }, 'Checked Out')
     }
 
     async checkout() : Promise<void> {

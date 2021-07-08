@@ -18,7 +18,10 @@ interface DrowndownSelectProps {
     textSize?: string,
     placeholder: string,
     itemToString: (a : any) => string,
-    offsetWidth?: string
+    offsetWidth?: string,
+    maxRowsBeforeOverflow?: number,
+    border?: string,
+    noShadow?: boolean
 }
 
 const DropdownSelect : FC<DrowndownSelectProps> = ({
@@ -28,7 +31,10 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
     textSize,
     placeholder,
     itemToString,
-    offsetWidth
+    offsetWidth,
+    maxRowsBeforeOverflow,
+    border,
+    noShadow
 } : DrowndownSelectProps) => {
 
     const [selectSearchInput, setSelectSearchInput] = useState<string>('');
@@ -72,15 +78,13 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
 
     return (
         <div className="h-full w-full flex flex-col"
-        onClick={() => console.log('oinclick')}
-        onFocus={() => console.log('focus in outder div')}
         ref={relativeRef}
         >
             {/* Input part */}
-            <button className={`border-t border-l border-r border-theta-gray-7 relative focus:outline-none w-full h-full rounded-t-lg ${dropdownDown ? '' : 'rounded-b-lg border-b'} shadow-md ${bg} flex flex-col justify-start items-center`}
+            <button className={`border-t border-l border-r ${border ? border : 'border-theta-gray-7'} relative focus:outline-none w-full h-full rounded-t-lg ${dropdownDown ? '' : 'rounded-b-lg border-b'} ${noShadow ? '' : 'shadow-md'} ${bg} flex flex-col justify-start items-center`}
             onClick={() => null}
             >
-                <div className="h-full flex flex-row justify-start items-center">
+                <div className="h-full flex flex-row justify-start items-center w-full">
                     <div className={offsetWidth ? offsetWidth : 'w-7'}></div>
                     <input
                         value={selectSearchInput}
@@ -98,7 +102,7 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
             {/* Drop down part */}
             <div className="relative w-full" 
             >
-                <div className={`${dropdownDown ? '' : 'hidden'} focus:outline-none border-b border-l border-r border-theta-gray-7 rounded-bl-lg rounded-br-lg ${bg} h-auto w-full absolute top-0 left-0 right-0 flex flex-col justify-start items-center`}
+                <div className={`${dropdownDown ? '' : 'hidden'} focus:outline-none border-b border-l border-r ${border ? border : 'border-theta-gray-7'} rounded-bl-lg rounded-br-lg ${bg} ${maxRowsBeforeOverflow ? `max-h-${maxRowsBeforeOverflow * 10} scrollbar-hide overflow-y-scroll` : 'h-auto'} w-full absolute top-0 left-0 right-0 flex flex-col justify-start items-center`}
                 >
                     
                     {selectionArray.filter(i => itemToString(i).toLowerCase().includes(selectSearchInput.toLowerCase())).map(item => (
@@ -107,6 +111,7 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
                             handleSelectChange={handleSiteChange}
                             textSize={textSize}
                             itemToString={itemToString}
+                            key={itemToString(item)}
                         />
                     ))}
                     {/* Adding this adds the ones that don't match the criteria below */}
@@ -116,6 +121,7 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
                             handleSelectChange={handleSiteChange}
                             textSize={textSize}
                             itemToString={itemToString}
+                            key={itemToString(item)}
                         />
                     ))}
                 </div>
@@ -143,7 +149,7 @@ const SelectOption : FC<SelectOptionProps> = ({
             onClick={() => handleSelectChange(item)}
         >
             {/* This is w-8 because we have a space in front of the placeholder in the input */}
-            <div className="w-7"></div>
+            <div className={`${textSize === 'text-xl' ? 'h-8' : 'h-10'} w-7`}></div>
             <div className={`${textSize ? textSize : 'text-2xl'}`}>
                 {itemToString(item)}
             </div>

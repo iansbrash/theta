@@ -11,8 +11,10 @@ import ProfileObject from '../../Logic/interfaces/ProfileObject';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { addOrUpdateProfile, removeProfile } from '../../redux/reducers/profilesSlice';
+import DropdownSelect from '../Component Library/DropdownSelect';
 import electron from 'electron';
-
+import { Country, State, City }  from 'country-state-city';
+import { ICountry, IState } from 'country-state-city/dist/lib/interface';
 
 const Profiles : FC = () => {
 
@@ -33,8 +35,8 @@ const Profiles : FC = () => {
     const [shipLname, setShipLname] = useState<string>('');
     const [shipAddr1, setShipAddr1] = useState<string>('');
     const [shipAddr2, setShipAddr2] = useState<string>('');
-    const [shipCountry, setShipCountry] = useState<string>('');
-    const [shipState, setShipState] = useState<string>('');
+    const [shipCountry, setShipCountry] = useState<ICountry>();
+    const [shipState, setShipState] = useState<IState>();
     const [shipZip, setShipZip] = useState<string>('');
     const [shipCity, setShipCity] = useState<string>('');
 
@@ -43,8 +45,8 @@ const Profiles : FC = () => {
     const [billLname, setBillLname] = useState<string>('');
     const [billAddr1, setBillAddr1] = useState<string>('');
     const [billAddr2, setBillAddr2] = useState<string>('');
-    const [billCountry, setBillCountry] = useState<string>('');
-    const [billState, setBillState] = useState<string>('');
+    const [billCountry, setBillCountry] = useState<ICountry>();
+    const [billState, setBillState] = useState<IState>();
     const [billZip, setBillZip] = useState<string>('');
     const [billCity, setBillCity] = useState<string>('');
 
@@ -93,10 +95,10 @@ const Profiles : FC = () => {
             setShipLname(lastName);
             setShipAddr1(address1);
             setShipAddr2(address2)
-            setShipCountry(country);
+            setShipCountry(Country.getCountryByCode(country));
             setShipCity(city);
             setShipZip(zip);
-            setShipState(state);
+            setShipState(State.getStateByCode(state));
         })();
 
         (() => {
@@ -115,10 +117,10 @@ const Profiles : FC = () => {
             setBillLname(lastName);
             setBillAddr1(address1);
             setBillAddr2(address2)
-            setBillCountry(country);
+            setBillCountry(Country.getCountryByCode(country));
             setBillCity(city);
             setBillZip(zip);
-            setBillState(state);
+            setBillState(State.getStateByCode(state));
         })();
 
         const {
@@ -140,6 +142,7 @@ const Profiles : FC = () => {
 
     enum SanitizationStatus {
         BlankError,
+        UndefinedError,
         InvalidInformation,
         InvalidShip,
         InvalidBilling,
@@ -151,22 +154,18 @@ const Profiles : FC = () => {
 
         console.log("Beginning profile sanitization.")
 
-        const cantBeEmpty : string[] = [
+        const cantBeEmptyString : string[] = [
             profileName,
             email,
             phone,
             shipFname,
             shipLname,
             shipAddr1,
-            shipCountry,
-            shipState,
             shipCity,
             shipZip,
             billFname,
             billLname,
             billAddr1,
-            billCountry,
-            billState,
             billCity,
             billZip,
             paymentName,
@@ -176,9 +175,22 @@ const Profiles : FC = () => {
             paymentCVV
         ]
 
-        for (const i in cantBeEmpty) {
-            if (cantBeEmpty[i] === '') {
+        for (const i in cantBeEmptyString) {
+            if (cantBeEmptyString[i] === '') {
                 return SanitizationStatus.BlankError;
+            }
+        }
+
+        const cantBeUndefined : any[] = [
+            shipCountry,
+            shipState,
+            billCountry,
+            billState,      
+        ]
+
+        for (const i in cantBeUndefined) {
+            if (cantBeEmptyString[i] === undefined) {
+                return SanitizationStatus.UndefinedError;
             }
         }
 
@@ -196,16 +208,12 @@ const Profiles : FC = () => {
             setShipLname,
             setShipAddr1,
             setShipAddr2,
-            setShipCountry,
-            setShipState,
             setShipCity,
             setShipZip,
             setBillFname,
             setBillLname,
             setBillAddr1,
             setBillAddr2,
-            setBillCountry,
-            setBillState,
             setBillCity,
             setBillZip,
             setPaymentName,
@@ -217,6 +225,17 @@ const Profiles : FC = () => {
 
         for (let i in toEmpty) {
             toEmpty[i]('');
+        }
+
+        const toUndefined : any[] = [
+            setBillCountry,
+            setBillState,
+            setShipCountry,
+            setShipState,
+        ]
+
+        for (let i in toEmpty) {
+            toUndefined[i]();
         }
     }
 
@@ -237,8 +256,11 @@ const Profiles : FC = () => {
                 lastName: shipLname,
                 address1: shipAddr1,
                 address2: shipAddr2,
-                country: shipCountry,
-                state: shipState,
+
+                // @ts-ignore
+                country: shipCountry.isoCode,
+                // @ts-ignore
+                state: shipState.isoCode,
                 zip: shipZip,
                 city: shipCity
             },
@@ -247,8 +269,10 @@ const Profiles : FC = () => {
                 lastName: billLname,
                 address1: billAddr1,
                 address2: billAddr2,
-                country: billCountry,
-                state: billState,
+                // @ts-ignore
+                country: billCountry.isoCode,
+                // @ts-ignore
+                state: billState.isoCode,
                 zip: billZip,
                 city: billCity
             },
@@ -566,26 +590,22 @@ const Profiles : FC = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex flex-row justify-start items-center w-full">
+                                    <div className="z-20 flex flex-row justify-start items-center w-full">
                                         <div className="w-1/2 pr-3 flex flex-col justify-start items-center">
                                             <div className="text-theta-gray-4 text-lg w-full pl-4 -mt-2">
                                                 Country
                                             </div>
                                             <div className="w-full h-10">
-                                                <TextInput 
-                                                    input={shipCountry}
-                                                    onChange={setShipCountry}
-                                                    placeholder={'United States'}
+                                                <DropdownSelect 
+                                                    setSelection={setShipCountry}
+                                                    selectionArray={Country.getAllCountries()}
                                                     bg={'bg-theta-bg'}
-                                                    border={'border-theta-sidebar'}
-                                                    icon={
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                        </svg>
-                                                    }
                                                     textSize={'text-2xl'}
-                                                    offsetWidth={'w-7'}
+                                                    placeholder={'Select country'}
+                                                    itemToString={(c : ICountry) => c.name}
+                                                    maxRowsBeforeOverflow={5}
+                                                    border={'border-theta-sidebar'}
+                                                    noShadow={true}
                                                 />
                                             </div>
                                         </div>
@@ -594,20 +614,16 @@ const Profiles : FC = () => {
                                                 State
                                             </div>
                                             <div className="w-full h-10">
-                                                <TextInput 
-                                                    input={shipState}
-                                                    onChange={setShipState}
-                                                    placeholder={'California'}
+                                                <DropdownSelect 
+                                                    setSelection={setShipState}
+                                                    selectionArray={shipCountry ? State.getStatesOfCountry(shipCountry.isoCode) : []}
                                                     bg={'bg-theta-bg'}
-                                                    border={'border-theta-sidebar'}
-                                                    icon={
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                        </svg>
-                                                    }
                                                     textSize={'text-2xl'}
-                                                    offsetWidth={'w-7'}
+                                                    placeholder={'Select country'}
+                                                    itemToString={(s : IState) => s.name}
+                                                    maxRowsBeforeOverflow={5}
+                                                    border={'border-theta-sidebar'}
+                                                    noShadow={true}
                                                 />
                                             </div>
                                         </div>
@@ -755,26 +771,22 @@ const Profiles : FC = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex flex-row justify-start items-center w-full">
+                                    <div className="z-10 flex flex-row justify-start items-center w-full">
                                         <div className="w-1/2 pr-3 flex flex-col justify-start items-center">
                                             <div className="text-theta-gray-4 text-lg w-full pl-4 -mt-2">
                                                 Country
                                             </div>
                                             <div className="w-full h-10">
-                                                <TextInput 
-                                                    input={billCountry}
-                                                    onChange={setBillCountry}
-                                                    placeholder={'United States'}
+                                                <DropdownSelect 
+                                                    setSelection={setBillCountry}
+                                                    selectionArray={Country.getAllCountries()}
                                                     bg={'bg-theta-bg'}
-                                                    border={'border-theta-sidebar'}
-                                                    icon={
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                        </svg>
-                                                    }
                                                     textSize={'text-2xl'}
-                                                    offsetWidth={'w-7'}
+                                                    placeholder={'Select country'}
+                                                    itemToString={(c : ICountry) => c.name}
+                                                    maxRowsBeforeOverflow={5}
+                                                    border={'border-theta-sidebar'}
+                                                    noShadow={true}
                                                 />
                                             </div>
                                         </div>
@@ -783,20 +795,16 @@ const Profiles : FC = () => {
                                                 State
                                             </div>
                                             <div className="w-full h-10">
-                                                <TextInput 
-                                                    input={billState}
-                                                    onChange={setBillState}
-                                                    placeholder={'California'}
+                                                <DropdownSelect 
+                                                    setSelection={setBillState}
+                                                    selectionArray={billCountry ? State.getStatesOfCountry(billCountry.isoCode) : []}
                                                     bg={'bg-theta-bg'}
-                                                    border={'border-theta-sidebar'}
-                                                    icon={
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                        </svg>
-                                                    }
                                                     textSize={'text-2xl'}
-                                                    offsetWidth={'w-7'}
+                                                    placeholder={'Select country'}
+                                                    itemToString={(s : IState) => s.name}
+                                                    maxRowsBeforeOverflow={5}
+                                                    border={'border-theta-sidebar'}
+                                                    noShadow={true}
                                                 />
                                             </div>
                                         </div>

@@ -9,16 +9,18 @@ import electron from 'electron'
 interface InterestingWrapperProps {
     children: ReactNode,
     width: string,
-    bg: string
+    bg: string,
+    textColor?: string
 }
 
 const InterestingWrapperProps : FC<InterestingWrapperProps> = ({
     children,
     width,
-    bg
+    bg,
+    textColor
 } : InterestingWrapperProps) => {
     return (
-        <div className={`h-full flex justify-start items-center relative z-10 select-none text-theta-gray-2 text-xl ${width} ${bg}`}>
+        <div className={`h-full flex justify-start items-center relative z-10 select-none ${textColor ? textColor : 'text-theta-gray-2'} text-xl ${width} ${bg}`}>
             {children}
             <div className={`absolute w-2 ${bg} h-full top-0 bottom-0 -left-2`}></div>
         </div>  
@@ -64,18 +66,30 @@ const TaskComponent : FC<TaskComponentProps> = ({
     const taskBg = 'bg-theta-tasks-taskgroup' // or taskgroup-individual
 
     const [status, setStatus] = useState<string>('Idle')
+    const [statusColor, setStatusColor] = useState<string>('');
     const [productTitle, setProductTitle] = useState<string>(task.input)
 
     const startTask = async () => {
         task.start();
+        setStatusColor('text-blue-200');
         setStatus('Signing in (1)')
+
+        let res = {message: '', status: ''};
+
         while (task.status === 'Active') {
-            const res = await task.cycle();
+            setStatusColor('text-blue-100');
+            res = await task.cycle();
+            console.log(res);
             setStatus(res.message);
 
             if (res.status === "Error") {
+                setStatusColor('text-red-400');
                 await delay(7500);
             }
+        }
+
+        if (res.message === "Checked Out") {
+            setStatusColor('text-green-400')
         }
     }
 
@@ -112,6 +126,8 @@ const TaskComponent : FC<TaskComponentProps> = ({
     }
 
     const stopTask = () => {
+        setStatusColor('text-theta-gray-2');
+        setStatus("Stopped")
         task.stop()
     }
 
@@ -128,7 +144,7 @@ const TaskComponent : FC<TaskComponentProps> = ({
             <InterestingWrapperProps width={'w-3/10'} bg={taskBg}>
                 {task.proxyList.name}
             </InterestingWrapperProps>
-            <InterestingWrapperProps width={'w-4/10'} bg={taskBg}>
+            <InterestingWrapperProps width={'w-4/10'} bg={taskBg} textColor={statusColor}>
                 {status}
             </InterestingWrapperProps>
             <InterestingWrapperProps width={'w-72'} bg={taskBg}>

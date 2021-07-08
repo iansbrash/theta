@@ -260,6 +260,7 @@
     "@types/react-window": "^1.8.3",
     "axios": "^0.21.1",
     "chokidar": "^3.5.2",
+    "country-state-city": "^3.0.1",
     "electron-context-menu": "^3.1.1",
     "electron-debug": "^3.1.0",
     "electron-log": "^4.2.4",
