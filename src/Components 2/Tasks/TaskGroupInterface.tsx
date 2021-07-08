@@ -15,14 +15,13 @@ import DropdownSelectMulti from '../Component Library/DropdownSelectMulti';
 import { AmazonModes } from '../../Logic/interfaces/site_task_config/AmazonTaskConfig';
 import ProfileObject from '../../Logic/interfaces/ProfileObject';
 import ProxyList from '../../Logic/interfaces/ProxyList';
-import Account from '../../Logic/interfaces/Account';
-import testProxyList from '../../Logic/sensitive/testInterfaces/testProxyList';
-import testAccount from '../../Logic/sensitive/testInterfaces/testAccount';
-import testProfile from '../../Logic/sensitive/testInterfaces/testProfile';
+import Account, { AccountGroup } from '../../Logic/interfaces/Account';
 
 // redux
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import Site from '../../Logic/interfaces/enums/Site';
+import Size from '../../Logic/interfaces/enums/Size';
 
 
 interface TextInputProps {
@@ -169,6 +168,18 @@ const ChevronRight = () => (
     </svg>
 )
 
+export interface TaskHookProps {
+    taskConfig: {
+        identifier: any,
+        site: Site,
+        size: Size[],
+        profile: ProfileObject,
+        proxies: ProxyList,
+        input: string
+    },
+    siteConfig: any
+}
+
 interface TaskGroupInterfaceProps {
     hidden: boolean,
     taskGroupName: string
@@ -185,18 +196,17 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     const [errorDelay, setErrorDelay] = useState<number>(3000);
 
     // Add Tasks hooks
-    const [addTasksEnabled, setAddTasksEnabled] = useState<boolean>(false);
 
     const allProfiles : ProfileObject[] = useSelector((state : RootState) => state.profiles.profilesArray)
+    const allProxies : ProxyList[] = useSelector((state : RootState) => state.proxies.proxiesArray)
 
-    const [addTasksAccountGroup, setAddTasksAccountGroup] = useState([]);
-    const [addTasksAccount, setAddTasksAccount] = useState<Account[]>([]);
+    // @ts-ignore
+    const allAccounts : AccountGroup[] = useSelector((state : RootState) => state.accounts.accountsObject["Amazon"])
+    // @ts-ignore
+    const allAccountGroups : AccountGroup[] = useSelector((state : RootState) => state.accounts.accountGroupObject["Amazon"])
 
-    const [addTasksMode, setAddTasksMode] = useState<AmazonModes[]>([]);
-    const [addTasksProfiles, setAddTasksProfiles] = useState<ProfileObject[]>([]);
-    const [addTasksProxies, setAddTasksProxies] = useState<ProxyList[]>([]);
 
-    const [tasks, setTasks] = useState<string[]>([]);
+
 
     const onInputFocus = () => {
         setDowndownDown(true)
@@ -205,10 +215,47 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     const onInputBlur = () => {
         setDowndownDown(false)
     }
+    
+    // our actual tasks!    
+    const [tasks, setTasks] = useState<TaskHookProps[]>([]);
 
   
+    // Modal Hooks (Add Tasks)
+    const [addTasksEnabled, setAddTasksEnabled] = useState<boolean>(false);
+    const [addTasksProfiles, setAddTasksProfiles] = useState<ProfileObject[]>([]);
+    const [addTasksInput, setAddTasksInput] = useState<string>('');
+    const [addTasksMode, setAddTasksMode] = useState<AmazonModes[]>([]);
+    const [addTasksProxies, setAddTasksProxies] = useState<ProxyList>();
+    const [addTasksAccount, setAddTasksAccount] = useState<Account[]>([]);
+    const [addTasksAccountGroup, setAddTasksAccountGroup] = useState<AccountGroup>();
 
-    const impliedPadding = 'p-2'
+    const [taskIdentifierCount, setTaskIdentifierCount] = useState<number>(0)
+
+    // triggered from Add Task modal
+    const addTasks = () => {
+        // validate inputs first... which we'll sort out later :D
+
+        const newTask : TaskHookProps = {
+            taskConfig: {
+                identifier: taskIdentifierCount,
+                site: Site.Amazon,
+                size: [Size.OS], // completely forgot about this shit lmao will add
+
+                // @ts-ignore
+                proxies: addTasksProxies,
+                profile: addTasksProfiles[0],
+                input: addTasksInput
+            },
+            siteConfig: {
+                mode: addTasksMode,
+                account: addTasksAccount[0]
+            }
+        }
+
+        setTaskIdentifierCount(taskIdentifierCount + 1);
+
+        setTasks([...tasks, newTask]);
+    }
 
     const [currentSite, setCurrentSite] = useState<string>('');
 
@@ -217,21 +264,6 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     const [siteSelectionArray, setSiteSelectionArray] = useState<string[]>(sites);
 
 
-    const [cW, setCW ] = useState<number>(0);
-
-    useEffect(() => {
-        // @ts-ignore
-        setCW(document.getElementById('sliderDiv')?.clientWidth)
-
-        let t = []
-
-        for (let i = 0; i < 1000; i++){
-            t.push(i + '')
-        }
-
-        setTasks(t)
-    }, [])
-
 
     const handleSiteChange = (s : string) => {
         setCurrentSite(s);
@@ -239,8 +271,6 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
         onInputBlur();
     }
 
-
-    const [addTasksInput, setAddTasksInput] = useState<string>('');
 
     return (
         <ScreenWrapper hidden={hidden}>
@@ -293,12 +323,12 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                     </div>
                                     <div className="w-full h-8">
                                         <DropdownSelect 
-                                            setSelection={setAddTasksProxies}
-                                            selectionArray={['prox1', 'proxies 2', 'ISPs main', 'asasd']}
+                                            setSelection={setAddTasksAccountGroup}
+                                            selectionArray={allAccountGroups}
                                             bg={'bg-theta-sidebar'}
                                             textSize={'text-xl'}
                                             placeholder={'Select account group'}
-                                            itemToString={(a : any) => a}
+                                            itemToString={(a : AccountGroup) => a.name}
                                         />
                                     </div>
                                 </div>
@@ -308,8 +338,8 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                     </div>
                                     <div className="w-full h-8">
                                         <DropdownSelect 
-                                            setSelection={setAddTasksProxies}
-                                            selectionArray={[testAccount]}
+                                            setSelection={setAddTasksAccount}
+                                            selectionArray={allAccounts}
                                             bg={'bg-theta-sidebar'}
                                             textSize={'text-xl'}
                                             placeholder={'Select account'}
@@ -343,7 +373,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                     <div className="w-full h-8">
                                         <DropdownSelect 
                                             setSelection={setAddTasksProxies}
-                                            selectionArray={[testProxyList]}
+                                            selectionArray={allProxies}
                                             bg={'bg-theta-sidebar'}
                                             textSize={'text-xl'}
                                             placeholder={'Select proxies'}
@@ -355,7 +385,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
                             <div className="w-full flex flex-row justify-start items-center p-2 mt-4">
                                 <button className="focus:outline-none font-medium text-xl flex justify-center items-center w-auto h-10 rounded-md shadow-md bg-theta-logo px-3 text-theta-gray-2"
-                                onClick={() => null}
+                                onClick={() => addTasks()}
                                 >
                                     Add Tasks
                                 </button>
@@ -472,6 +502,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                         height={height}
                         rowRenderer={AutoResizerTaskComponent}
                         className="scrollbar-hide focus:outline-none"
+                        data={tasks}
                     >
                         
                     </List>

@@ -1,6 +1,7 @@
 import React, {
-    FC, useState
+    FC, useState, useEffect
 } from 'react';
+import { useLocation } from 'react-router-dom';
 import TaskGroupInterfaceRenderer from './TaskGroupInterfaceRenderer'
 
 const TaskGroupIcon = () => (
@@ -137,6 +138,20 @@ const TaskGroup : FC<TaskGroupProps> = ({
 
 const Tasks = () => {
 
+    const location = useLocation();
+
+    const [isVisible, setIsVisible] = useState<boolean>(false);
+
+    // listens for route changes
+    useEffect(() => {
+        if (location.pathname === "/main/tasks") {
+            setIsVisible(true)
+        }
+        else {
+            setIsVisible(false)
+        }
+    }, [location]);
+
 
     const [selectedTaskGroup, setSelectedTaskGroup] = useState<string>('');
 
@@ -151,29 +166,8 @@ const Tasks = () => {
         setTgCount(tgCount + 1)
     }
 
-    // useEffect(() => {
-    //     window.addEventListener('contextmenu', (e : any) => {
-    //         e.preventDefault();
-    //         const menu = new Menu();
-    //         // menu.append(new MenuItem(new MenuItem({label: "This menu item is always shown"})));
-    //         menu.append(new MenuItem({label: "This menu item is always shown"}));
-
-    //         if (e.target.id === "p1" || e.target.id === "p3") {
-    //           menu.append(new MenuItem({
-    //             label: "This menu is not always shown",
-    //             click: function(){
-    //               alert(`you clicked on ${e.target.id}`);
-    //             }
-    //           }));
-    //         }
-    //         menu.popup({ window: remote.getCurrentWindow() })
-    //       }, false)
-    // }, [])
-
-    
-
     return (
-        <div className="w-full h-full flex flex-row justify-start items-center">
+        <div className={`w-full h-full ${isVisible ? 'flex' : 'hidden'} flex-row justify-start items-center`}>
             {/* Task groups */}
             <div className="w-72 h-full bg-theta-tasks-taskgroup flex flex-col justify-start items-center">
                 {/* Header */}

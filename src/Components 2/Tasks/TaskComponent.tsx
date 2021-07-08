@@ -2,6 +2,9 @@ import React, {
     FC, useState, ReactNode
 } from 'react';
 import TaskClass from '../../Logic/sites/classes/TaskClass';
+import electron from 'electron'
+// const { net } = require('electron').remote;
+//   const request = net.request(requestApi);
 
 interface InterestingWrapperProps {
     children: ReactNode,
@@ -56,6 +59,8 @@ const TaskComponent : FC<TaskComponentProps> = ({
     task
 } : TaskComponentProps) => {
 
+    console.log('RENDERING A TASK!')
+
     const taskBg = 'bg-theta-tasks-taskgroup' // or taskgroup-individual
 
     const [status, setStatus] = useState<string>('Idle')
@@ -75,7 +80,31 @@ const TaskComponent : FC<TaskComponentProps> = ({
     }
 
     const deleteTask = () => {
+        // let requestApi = {
+        //     method: 'POST',
+        //     headers: {
+        //     //   'Content-Type': 'custom complex media type here',
+        //     //   'Authorization': 'Bearer ' + accessToken // if api is secured
+        //     },
+        //     protocol: 'https:',
+        //     hostname: 'amazon.com',
+        //     port: 443,
+        //     path: '/'
+        // };
 
+        // const request = electron.net.request(requestApi)
+
+        // request.on('response', (response) => {
+        //     console.log(`STATUS: ${response.statusCode}`);
+        //     // resolve(response);
+        
+        //     response.on('error', (error : any) => {
+        //       console.log(`ERROR: ${JSON.stringify(error)}`);
+        //     //   reject(error);
+        //     })
+        //   });
+        
+        // request.end(JSON.stringify(usageData));
     }
 
     const editTask = () => {

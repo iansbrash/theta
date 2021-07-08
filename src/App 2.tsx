@@ -5,7 +5,8 @@ import React, {
 import {
     HashRouter,
     Route,
-    Link
+    Link,
+    useLocation
 } from "react-router-dom";
 
 // screen components
@@ -131,6 +132,10 @@ const AppTwo = () => {
     }, [])
 
 
+
+
+
+
     return (
         <HashRouter>
             <Route path="/login">
@@ -176,6 +181,11 @@ const AppTwo = () => {
                             </div>
                         </div>
 
+                        {/* Actual Tasks */}
+                        <div className="absolute left-14 right-0 top-0 bottom-0">
+                            <Tasks />
+                        </div>
+
                         {/* Home */}
                         <Route path="/main/home" exact>
                             <Home />
@@ -183,7 +193,7 @@ const AppTwo = () => {
                         
                         {/* Tasks */}
                         <Route path="/main/tasks">
-                            <Tasks />
+                            {/* <Tasks /> */}
                         </Route>
 
                         {/* Home */}
