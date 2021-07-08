@@ -453,6 +453,8 @@ class AmazonTaskClass extends TaskClass {
 
         return await this.tryCatchWrapper(async () => {
             const res = await electron.ipcRenderer.invoke('POSTAsyncContinueAfterSelection', this.allCookies, this.storage, this.proxyList.proxies[0]);
+
+            this.storage = res.storage;
         }, "Submitting order...")
         const res = await electron.ipcRenderer.invoke('POSTAsyncContinueAfterSelection', this.allCookies, this.storage, this.proxyList.proxies[0]);
     }

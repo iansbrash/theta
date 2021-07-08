@@ -224,7 +224,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     const [addTasksEnabled, setAddTasksEnabled] = useState<boolean>(false);
     const [addTasksProfiles, setAddTasksProfiles] = useState<ProfileObject[]>([]);
     const [addTasksInput, setAddTasksInput] = useState<string>('');
-    const [addTasksMode, setAddTasksMode] = useState<AmazonModes[]>([]);
+    const [addTasksMode, setAddTasksMode] = useState<AmazonModes>();
     const [addTasksProxies, setAddTasksProxies] = useState<ProxyList>();
     const [addTasksAccount, setAddTasksAccount] = useState<Account[]>([]);
     const [addTasksAccountGroup, setAddTasksAccountGroup] = useState<AccountGroup>();
@@ -235,26 +235,62 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     const addTasks = () => {
         // validate inputs first... which we'll sort out later :D
 
-        const newTask : TaskHookProps = {
-            taskConfig: {
-                identifier: taskIdentifierCount,
-                site: Site.Amazon,
-                size: [Size.OS], // completely forgot about this shit lmao will add
-
-                // @ts-ignore
-                proxies: addTasksProxies,
-                profile: addTasksProfiles[0],
-                input: addTasksInput
-            },
-            siteConfig: {
-                mode: addTasksMode,
-                account: addTasksAccount[0]
-            }
+        try {
+            validateAddTasks();
+        }
+        catch (err) {
+            return console.error(err);
         }
 
-        setTaskIdentifierCount(taskIdentifierCount + 1);
+        let identifierStart = taskIdentifierCount;
+        let toAddTasks : TaskHookProps[] = [];
 
-        setTasks([...tasks, newTask]);
+        addTasksProfiles.forEach((profile : ProfileObject) => {
+            const newTask : TaskHookProps = {
+                taskConfig: {
+                    identifier: identifierStart,
+                    site: Site.Amazon,
+                    size: [Size.OS], // completely forgot about this shit lmao will add
+    
+                    // @ts-ignore
+                    proxies: addTasksProxies,
+                    profile: profile,
+                    input: addTasksInput
+                },
+                siteConfig: {
+                    mode: addTasksMode,
+                    account: addTasksAccount[0]
+                }
+            }
+
+            identifierStart += 1;
+            toAddTasks.push(newTask);
+
+        })
+
+        setTaskIdentifierCount(identifierStart)
+        setTasks([...tasks, ...toAddTasks]);
+    }
+
+    const validateAddTasks = () => {
+        if (addTasksInput === '') {
+            throw "Input is blank"
+        }
+        else if (addTasksAccount.length === 0 && addTasksAccountGroup === undefined) {
+            throw "No Account or Account Group selected";
+        }
+        else if (addTasksMode === undefined) {
+            throw "No mode selected"
+        }
+        else if (addTasksProfiles.length === 0) {
+            throw "No profiles selected"
+        }
+        else if (addTasksProxies === undefined) {
+            throw "No proxies selected"
+        }
+        else {
+            return;
+        }
     }
 
     const [currentSite, setCurrentSite] = useState<string>('');
@@ -337,13 +373,15 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                         Account
                                     </div>
                                     <div className="w-full h-8">
-                                        <DropdownSelect 
+                                        <DropdownSelectMulti 
                                             setSelection={setAddTasksAccount}
                                             selectionArray={allAccounts}
                                             bg={'bg-theta-sidebar'}
                                             textSize={'text-xl'}
                                             placeholder={'Select account'}
                                             itemToString={(acc : Account) => acc.username}
+                                            selection={addTasksAccount}
+                                            placeholderPlural={'accounts'}
                                         />
                                     </div>
                                 </div>
@@ -363,6 +401,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                             textSize={'text-xl'}
                                             placeholder={'Select profiles'}
                                             itemToString={(pr : ProfileObject) => pr.information.name}
+                                            placeholderPlural={'profiles'}
                                         />
                                     </div>
                                 </div>

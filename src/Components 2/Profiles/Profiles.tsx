@@ -62,15 +62,20 @@ const Profiles : FC = () => {
 
         if (!selectedProfile) return console.log("useEffect ERROR: No profiles to select.");
 
-        const {
-            email,
-            phone,
-            name
-        } = selectedProfile.information
+        (() => {
+            const {
+                email,
+                phone,
+                name
+            } = selectedProfile.information
 
-        setProfileName(name)
-        setEmail(email);
-        setPhone(phone);
+            setProfileName(name)
+            setEmail(email);
+            setPhone(phone);
+        })();
+
+
+
 
         (() => {
             const {
@@ -120,9 +125,11 @@ const Profiles : FC = () => {
             number,
             cvv,
             expiryMonth,
-            expiryYear
+            expiryYear,
+            name
         } = selectedProfile.payment;
 
+        setPaymentName(name)
         setPaymentCVV(cvv);
         setPaymentExpMonth(expiryMonth)
         setPaymentExpYear(expiryYear)

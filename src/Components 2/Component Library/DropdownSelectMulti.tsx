@@ -20,6 +20,7 @@ interface DrowndownSelectMultiProps {
     textSize?: string,
     placeholder: string,
     itemToString: (a : any) => string,
+    placeholderPlural: string
 }
 
 const DropdownSelectMulti : FC<DrowndownSelectMultiProps> = ({
@@ -30,6 +31,7 @@ const DropdownSelectMulti : FC<DrowndownSelectMultiProps> = ({
     selection,
     placeholder,
     itemToString,
+    placeholderPlural
 } : DrowndownSelectMultiProps) => {
 
     const [selectSearchInput, setSelectSearchInput] = useState<string>('');
@@ -62,6 +64,7 @@ const DropdownSelectMulti : FC<DrowndownSelectMultiProps> = ({
         if (relativeRef.current.contains(event.target)) {
             // console.log("Clicked Inside");
         } else {
+            setSelectSearchInput('')
             setDropdownDown(false)
         }
     } 
@@ -85,8 +88,6 @@ const DropdownSelectMulti : FC<DrowndownSelectMultiProps> = ({
 
     return (
         <div className="h-full w-full flex flex-col"
-        onClick={() => console.log('oinclick')}
-        onFocus={() => console.log('focus in outder div')}
         ref={relativeRef}
         >
             {/* Input part */}
@@ -99,7 +100,7 @@ const DropdownSelectMulti : FC<DrowndownSelectMultiProps> = ({
                         value={selectSearchInput}
                         onChange={(e) => setSelectSearchInput(e.target.value)}
                         onFocus={() => onInputFocus()}
-                        placeholder={placeholder}
+                        placeholder={selection.length === 0 ? placeholder : (selection.length === 1 ? itemToString(selection[0]) : `${selection.length} ${placeholderPlural} selected`)}
                         className={`rounded-r-xl h-full w-full ${bg} focus:outline-none placeholder-theta-gray-2 text-theta-gray-2 ${textSize ? textSize : 'text-2xl'}`}
                     />
                 </div>

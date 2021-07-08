@@ -43,18 +43,18 @@ const AutoResizerTaskComponent : FC<AutoResizerTaskComponentProps> = (props) => 
         input
     } = taskConfig
 
-    // const testTask : TaskClass = new AmazonTaskClass(
-    //     1, 
-    //     Site.Amazon, 
-    //     testProfile, 
-    //     [Size.OS], 
-    //     testProxyList, 
-    //     'https://www.amazon.com/Mkeke-Compatible-iPhone-11-Clear/dp/B07W4FMQ5Y/',
-    //     {
-    //         mode: AmazonModes.Normal,
-    //         account: testAccount
-    //     }
-    // )
+    const testTask : TaskClass = new AmazonTaskClass(
+        1, 
+        Site.Amazon, 
+        testProfile, 
+        [Size.OS], 
+        testProxyList, 
+        'https://www.amazon.com/Mkeke-Compatible-iPhone-11-Clear/dp/B07W4FMQ5Y/',
+        {
+            mode: AmazonModes.Normal,
+            account: testAccount
+        }
+    )
 
     const task : TaskClass = new AmazonTaskClass(
         identifier, 

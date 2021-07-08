@@ -315,16 +315,18 @@ const Checkout = async (allCookies : string[], proxy : Proxy) => {
         proxy
     )
 
+    console.log(newFinalData)
+
     if (POSTSubmitOrderResponse.headers['x-amz-checkout-page-type'] === 'CheckoutThankYou') {
         tsLogger("Successfully checked out the product")
     }
     else if (POSTSubmitOrderResponse.headers['x-amz-checkout-page-type'] === 'CheckoutError') {
         tsLogger("Error while checking out")
-        console.log(POSTSubmitOrderResponse)
+        // console.log(POSTSubmitOrderResponse)
     }
     else {
         tsLogger("Even worse error")
-        console.log(POSTSubmitOrderResponse)
+        // console.log(POSTSubmitOrderResponse)
     }
 
     return;
