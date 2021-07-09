@@ -1,7 +1,17 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'qs';
 
-const sendSuccess = async (webhook : string, productTitle : string, store : string, profileName : string, size : string, proxyListName : string, accountName : string, mode : string) => {
+const sendSuccess = async (
+    webhook : string, 
+    productTitle : string, 
+    store : string, 
+    profileName : string, 
+    size : string, 
+    proxyListName : string, 
+    accountName : string, 
+    mode : string, 
+    productImage : string
+) => {
 
     const payload = {
         "content": null,
@@ -46,11 +56,11 @@ const sendSuccess = async (webhook : string, productTitle : string, store : stri
                     "name": "Successful checkout!"
                 },
                 "footer": {
-                    "text": "Theta"
+                    "text": "Thaeta"
                 },
-                "timestamp": "2021-06-28T07:52:00.000Z",
-                    "thumbnail": {
-                    "url": "https://images-na.ssl-images-amazon.com/images/I/619BkvKW35L._SX342_.jpg"
+                "timestamp": "",//(new Date).getUTCDate(),
+                "thumbnail": {
+                    "url": productImage //"https://images-na.ssl-images-amazon.com/images/I/619BkvKW35L._SX342_.jpg"
                 }
             }
         ],
@@ -70,10 +80,11 @@ const sendSuccess = async (webhook : string, productTitle : string, store : stri
         data : data
     };
     try {
+        console.log(`'about to post to ${webhook}`)
         await axios(config)
     }
     catch (err) {
-        console.log('Error in webhook')
+        throw err
     }
 }
 

@@ -9,7 +9,8 @@ interface TextInputProps {
     bg: string,
     border?: string,
     textSize?: string,
-    offsetWidth?: string
+    offsetWidth?: string,
+    onClick?: () => void
 }
 
 const TextInput : FC<TextInputProps> = ({
@@ -20,7 +21,8 @@ const TextInput : FC<TextInputProps> = ({
     bg,
     border,
     textSize,
-    offsetWidth
+    offsetWidth,
+    onClick
 }: TextInputProps) => {
 
 
@@ -37,9 +39,11 @@ const TextInput : FC<TextInputProps> = ({
                     className={`ml-1 ${bg} rounded-lg h-full w-full bg-transparent focus:outline-none placeholder-theta-gray-7 text-theta-gray-2 ${textSize ? textSize : 'text-xl'}`}
                 />
             </div>
-            <div className="text-theta-gray-7 absolute left-1 top-0 bottom-0 flex justify-center items-center">
+            <button className="focus:outline-none text-theta-gray-7 absolute left-1 top-0 bottom-0 flex justify-center items-center"
+            onClick={() => onClick ? onClick() : null}
+            >
                 {icon}
-            </div>
+            </button>
         </div>
     ) 
 }

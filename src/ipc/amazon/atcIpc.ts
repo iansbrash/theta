@@ -45,8 +45,8 @@ const atcIpc = () => {
         // wtf
         const CSRFToken : string =  getValueByDelimiters(FindCSRFData, CSRFDelimiter, '"/>');
 
-        console.log('csrf') 
-        console.log(CSRFToken)
+        // console.log('csrf') 
+        // console.log(CSRFToken)
 
         const offerListingIDDelimiter = '<input type="hidden" id="offerListingID" name="offerListingID" value="';
         let offerListingID = '';
@@ -61,7 +61,20 @@ const atcIpc = () => {
         if (ASIN.length !== 10) {
             ASIN = getValueByDelimiters(FindCSRFData, '<input type="hidden" id="ASIN" name="ASIN" value="', '">');
         }
-        console.log(`ASIN: ${ASIN}`)
+        // console.log(`ASIN: ${ASIN}`)
+
+        const productImageIndex1 = FindCSRFData.indexOf('<div id="imgTagWrapperId"')
+
+        const productImageSubstring1 = FindCSRFData.substring(productImageIndex1)
+
+        const productImageIndex2 = productImageSubstring1.indexOf('src="')
+
+        const productImageSubstring2 = productImageSubstring1.substring(productImageIndex2 + 5)
+
+        const productImage = productImageSubstring2.substring(0, productImageSubstring2.indexOf('"'))
+
+        console.log(`productImage: ${productImage}`)
+
 
         allCookiesObject = convertCookieArrayToObject(allCookies);
 
@@ -73,7 +86,8 @@ const atcIpc = () => {
                 ASIN,
                 productTitle
             },
-            productTitle
+            productTitle,
+            productImage
         }
     })
 
@@ -121,11 +135,12 @@ const atcIpc = () => {
             if (d.indexOf('These items are currently unavailable') !== -1) {
                 timestampLogger('OOS')
                 status = 'OOS';
+                throw "Product is OOS"
             }
             else if (d.indexOf('Not added') !== -1) {
                 timestampLogger('Add to cart error')
                 status = "Error"
-                // throw "'Not added' add to cart error'";
+                throw "'Not added' add to cart error'";
             }
             else if (d.indexOf('Added to Cart') !== -1) {
                 timestampLogger('Successfully Added to Cart')
@@ -135,12 +150,10 @@ const atcIpc = () => {
                 timestampLogger('Add to cart error')
                 status = "Error"
                 // console.log(POSTAmazonATC.data)
-                // throw "Error";
+                throw "Error";
             }
     
         })();
-
-        console.log('here')
 
         return {
             status: status,

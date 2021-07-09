@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import Site from '../../Logic/interfaces/enums/Site';
 import ProfileObject from '../../Logic/interfaces/ProfileObject';
-import TaskClass from '../../Logic/sites/classes/TaskClass';
+import { TaskHookProps } from '../../Components 2/Tasks/TaskGroupInterface'
 
 type SliceState = { taskGroups : TaskGroup[] };
 
 export interface TaskGroup {
     name: string,
     site: Site,
-    tasks: TaskClass[],
+    tasks: TaskHookProps[],
     delays: {
         monitor: number,
         error: number
@@ -24,39 +24,34 @@ export const tasksSlice = createSlice({
         taskGroups: []
     } as SliceState,
     reducers: {
-        addOrUpdateProfile: {
-            reducer (state, action : PayloadAction<{profile : ProfileObject}>) { //; anotherProp: string; uuid: string
-                
+        // saveTasks: {
+        //     reducer (state, action : PayloadAction<{taskGroups : TaskGroup[]}>) { //; anotherProp: string; uuid: string
+        //         const {
+        //             taskGroups
+        //         } = action.payload;
 
+        //         state.taskGroups = taskGroups
+        //     },
+        //     prepare (taskGroups) {
+        //         return {
+        //             payload: {
+        //                 taskGroups,
+        //             }
+        //         }
+        //     }
+        // },
+        populateTasks: {
+            reducer (state, action : PayloadAction<{taskGroups : TaskGroup[]}>) { //; anotherProp: string; uuid: string
+                const {
+                    taskGroups
+                } = action.payload;   
+
+                state.taskGroups = taskGroups
             },
-            prepare (profile) {
+            prepare (taskGroups) {
                 return {
                     payload: {
-                        profile,
-                    }
-                }
-            }
-        },
-        removeProfile: {
-            reducer (state, action : PayloadAction<{profile : ProfileObject}>) { //; anotherProp: string; uuid: string
-                
-            },
-            prepare (profile) {
-                return {
-                    payload: {
-                        profile,
-                    }
-                }
-            }
-        },
-        populateProfiles: {
-            reducer (state, action : PayloadAction<{profiles : ProfileObject[]}>) { //; anotherProp: string; uuid: string
-                
-            },
-            prepare (profiles) {
-                return {
-                    payload: {
-                        profiles,
+                        taskGroups,
                     }
                 }
             }
@@ -65,6 +60,6 @@ export const tasksSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { addOrUpdateProfile, removeProfile, populateProfiles } = tasksSlice.actions
+export const { populateTasks } = tasksSlice.actions
 
 export default tasksSlice.reducer

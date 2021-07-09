@@ -481,7 +481,7 @@ const Profiles : FC = () => {
                                                 <TextInput 
                                                     input={phone}
                                                     onChange={setPhone}
-                                                    placeholder={'+13252295721'}
+                                                    placeholder={'3252295721'}
                                                     bg={'bg-theta-bg'}
                                                     border={'border-theta-sidebar'}
                                                     icon={

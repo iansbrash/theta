@@ -46,6 +46,23 @@ class AmazonTaskClass extends TaskClass {
         'POSTSubmitOrder'
     ]
 
+    normalFlowExtraData : string[][] = [
+        [],
+        [],
+        [],
+        ['productTitle', 'productThumbnail'],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+    ]
+
     nextFunctionIndex : number = 0;
 
 
@@ -67,12 +84,25 @@ class AmazonTaskClass extends TaskClass {
     async tryCatchWrapper(fn : (() => Promise<any>), successMessage : string) : Promise<cycleStatus> {
         try {
             
-            await fn();
+            const res = await fn();
 
-            return {
+            let returnCycleStatus : cycleStatus = {
                 status: "Success",
                 message: successMessage
             }
+            console.log('here 1')
+            if (res === null || res === undefined) {}
+            else if (res.extraData) {
+                // let extraData = {};
+                // Object.keys(res.extraData).forEach((data : string) => 
+                //     extraData = {...extraData, [data]: extraData[data]}
+                // )
+                returnCycleStatus.extraData = res.extraData;
+            }
+            console.log(`returnCycleStatus in tryatch`)
+            console.log(returnCycleStatus)
+
+            return returnCycleStatus
         }
         catch (err) {
             throw {
@@ -118,13 +148,24 @@ class AmazonTaskClass extends TaskClass {
                 console.log(`about to run ${this.normalFlow[this.nextFunctionIndex]}`)
                 // @ts-ignore
                 const res = await this[this.normalFlow[this.nextFunctionIndex]]();
+                console.log('here 3')
 
-                this.nextFunctionIndex += 1;
-
-                return {
+                let returnCycleStatus : cycleStatus = {
                     status: 'Success',
                     message: res.message
                 }
+
+                if (this['normalFlowExtraData'][this.nextFunctionIndex].length > 0) {
+                    let extraData = {};
+                    // @ts-ignore
+                    this['normalFlowExtraData'][this.nextFunctionIndex].forEach(data => extraData = {...extraData, [data]: res.extraData[data]} )
+
+                    returnCycleStatus.extraData = extraData;
+                }
+
+                this.nextFunctionIndex += 1;
+
+                return returnCycleStatus;
             }
             // catches thrown error from nextFunction
             catch (err) {
@@ -160,27 +201,8 @@ class AmazonTaskClass extends TaskClass {
             const res : ipcResponse = await electron.ipcRenderer.invoke('AmazonGETMainLoginPage', this.allCookies, this.proxyList.proxies[0]);
             this.allCookies = res.allCookies;
             this.storage = res.storage;
+            return;
         }, "Signing in (2)")
-
-        try {
-            const res : ipcResponse = await electron.ipcRenderer.invoke('AmazonGETMainLoginPage', this.allCookies, this.proxyList.proxies[0]);
-            this.allCookies = res.allCookies;
-            this.storage = res.storage;
-            // this.nextFunction = this.POSTMainLoginPage;
-            return {
-                status: "Success",
-
-                // aka the next action
-                message: "Signing in (2)"
-            }
-        }
-        catch (err) {
-            throw {
-                status: "Error",
-                message: err
-            }
-        }
-
     }
 
     async POSTMainLoginPage() : Promise<cycleStatus> {
@@ -198,17 +220,6 @@ class AmazonTaskClass extends TaskClass {
             }, this.proxyList.proxies[0]);
             this.allCookies = res.allCookies;
         }, 'Signing in (3)')
-
-        this.storage.sessiondId = convertCookieArrayToObject(this.allCookies)['session-id'];
-
-        const res = await electron.ipcRenderer.invoke('AmazonPOSTMainLoginPage', this.allCookies, this.storage.sessiondId, {
-            appAction: this.storage.appAction,
-            appActionToken: this.storage.appActionToken,
-            prevRID: this.storage.prevRID,
-            workflowState: this.storage.workflowState,
-            email: this.config.account.username
-        }, this.proxyList.proxies[0]);
-        this.allCookies = res.allCookies;
     }
 
     async POSTSubLoginPage() : Promise<cycleStatus> {
@@ -253,19 +264,6 @@ class AmazonTaskClass extends TaskClass {
 
     /** ATC Flow via IPC */
 
-    async GETProduct() : Promise<void> {
-
-      
-        // allCookies, allCookiesObject['session-id']
-        const res = await electron.ipcRenderer.invoke('AmazonGETProduct', this.allCookies, this.input, this.proxyList.proxies[0]);
-
-        this.allCookies = res.allCookies;
-        this.storage = {
-            ...res.storage,
-            sessionId: this.storage.sessionId,
-        }
-    }
-
     async AmazonGETProduct() : Promise<cycleStatus> {
         // allCookies, allCookiesObject['session-id']
 
@@ -277,18 +275,16 @@ class AmazonTaskClass extends TaskClass {
                 ...res.storage,
                 sessionId: this.storage.sessionId,
             }
+
+            return {
+                extraData: {
+                    productTitle: res.productTitle,
+                    productImage: res.productImage
+                }
+            }
     
             // return res.productTitle;
         }, 'Adding to cart');
-        const res = await electron.ipcRenderer.invoke('AmazonGETProduct', this.allCookies, this.input, this.proxyList.proxies[0]);
-
-        this.allCookies = res.allCookies;
-        this.storage = {
-            ...res.storage,
-            sessionId: this.storage.sessionId,
-        }
-
-        return res.productTitle;
     }
 
     async AmazonPOSTAddToCart() : Promise<cycleStatus> {

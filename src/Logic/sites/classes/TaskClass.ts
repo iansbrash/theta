@@ -12,7 +12,8 @@ export enum internalStatus {
 
 export interface cycleStatus {
     status: "Success" | "Error" | "Stopped",
-    message: string
+    message: string,
+    extraData?: any
 }
 
 abstract class TaskClass implements Task {

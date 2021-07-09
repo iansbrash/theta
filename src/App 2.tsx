@@ -16,13 +16,14 @@ import Settings from "./Components 2/Settings/Settings";
 import Tasks from "./Components 2/Tasks/Tasks";
 import Accounts from "./Components 2/Accounts/Accounts";
 import Proxies from "./Components 2/Proxies/Proxies";
-import Login from './Components/Login/Login';
+import Login from './Components 2/Login/Login';
 
 // redux
 import { useDispatch } from "react-redux";
 import { populateProfiles } from "./redux/reducers/profilesSlice";
 import { populateAccounts } from './redux/reducers/accountsSlice';
 import { populateAccountGroups } from "./redux/reducers/accountsSlice";
+import { populateSettings } from "./redux/reducers/settingsSlice";
 
 // dunno y this is here
 import TaskClass from "./Logic/sites/classes/TaskClass";
@@ -112,6 +113,8 @@ const AppTwo = () => {
     
     const dispatch = useDispatch()
 
+
+
     // runs once at the beginning of the app and loads everything into the redux store
     useEffect(() => {
         (async () => {
@@ -128,6 +131,10 @@ const AppTwo = () => {
 
             const toSetAccountGroups : object = await electron.ipcRenderer.invoke("readjson", 'accountgroups.json');
             dispatch(populateAccountGroups(toSetAccountGroups))
+
+            const toSetSettings : object = await electron.ipcRenderer.invoke("readjson", "settings.json");
+            console.log(toSetSettings)
+            dispatch(populateSettings(toSetSettings))
         })();
     }, [])
 

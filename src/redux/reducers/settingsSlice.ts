@@ -51,10 +51,29 @@ export const settingsSlice = createSlice({
                 }
             }
         },
+        populateSettings: {
+            reducer (state, action : PayloadAction<{settings : any}>) { //; anotherProp: string; uuid: string
+                const {
+                    settings,
+                } = action.payload;
+
+                console.log('settings in popset')
+                console.log(settings)
+
+                state.defaults = settings.defaults;
+            },
+            prepare (settings) {
+                return {
+                    payload: {
+                        settings,
+                    }
+                }
+            }
+        }
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { updateDefaultDelays, updateDefaultWebhooks } = settingsSlice.actions
+export const { updateDefaultDelays, updateDefaultWebhooks, populateSettings } = settingsSlice.actions
 
 export default settingsSlice.reducer

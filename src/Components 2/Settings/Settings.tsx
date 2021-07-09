@@ -7,6 +7,8 @@ import TextInput from '../Component Library/TextInput';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { updateDefaultDelays, updateDefaultWebhooks } from '../../redux/reducers/settingsSlice';
+import electron from 'electron'
+import sendSuccess from '../../Logic/webhooks/discordsuccess';
 
 const Settings = () => {
 
@@ -14,19 +16,50 @@ const Settings = () => {
     const defaultErrorDelay : number = useSelector((state : RootState)  => state.settings.defaults.delays.error)
     const defaultDiscordWebhook : string = useSelector((state : RootState)  => state.settings.defaults.webhooks.discord)
 
+    console.log(`defaultDiscordWebhook: ${defaultDiscordWebhook}`)
 
     const dispatch = useDispatch();
 
-    const dMDOnChange = (s : string) => {
+    const testSuccess = () => {
+        try {
+            sendSuccess(
+                defaultDiscordWebhook,
+                "PS6 Quantum Edition",
+                "Amazingon",
+                "Real Profile",
+                "Random",
+                "Proxies",
+                "bezos@amazon.com",
+                "Turbo",
+                "https://images-na.ssl-images-amazon.com/images/I/619BkvKW35L._SX342_.jpg"
+            )
+        }
+        catch (err) {
+            console.error("Failed")
+        }
+
+    }
+
+    const dMDOnChange = async (s : string) => {
         dispatch(updateDefaultDelays("monitor", s === '' ? 0 : parseInt(s)))
+
+        let res = await electron.ipcRenderer.invoke("readjson", "settings.json")
+        res.defaults.delays.monitor = parseInt(s)
+        electron.ipcRenderer.invoke("writejson", "settings.json", res)
     }
 
-    const dEDOnChange = (s : string) => {
+    const dEDOnChange = async (s : string) => {
         dispatch(updateDefaultDelays("error", s === '' ? 0 : parseInt(s)))
+        let res = await electron.ipcRenderer.invoke("readjson", "settings.json")
+        res.defaults.delays.error = parseInt(s)
+        electron.ipcRenderer.invoke("writejson", "settings.json", res)
     }
 
-    const discordWebhookOnChange = (s : string) => {
+    const discordWebhookOnChange = async (s : string) => {
         dispatch(updateDefaultWebhooks("discord", s))
+        let res = await electron.ipcRenderer.invoke("readjson", "settings.json")
+        res.defaults.webhooks.discord = s
+        electron.ipcRenderer.invoke("writejson", "settings.json", res)
     }
 
     return (
@@ -109,6 +142,7 @@ const Settings = () => {
                                             </svg>
                                         }
                                         offsetWidth={'w-9'}
+                                        onClick={testSuccess}
                                     />
                                 </div>
                                

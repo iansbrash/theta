@@ -1,10 +1,12 @@
 import React, {
     FC, useState, ReactNode
 } from 'react';
-import TaskClass from '../../Logic/sites/classes/TaskClass';
-import electron from 'electron'
-// const { net } = require('electron').remote;
-//   const request = net.request(requestApi);
+import TaskClass, { cycleStatus } from '../../Logic/sites/classes/TaskClass';
+import sendSuccess from '../../Logic/webhooks/discordsuccess';
+import { useSelector } from 'react-redux'
+import { RootState } from '../../redux/store';
+import AmazonTaskClass from '../../Logic/sites/Amazon/classes/AmazonTaskClass';
+import { AmazonModes } from '../../Logic/interfaces/site_task_config/AmazonTaskConfig';
 
 interface InterestingWrapperProps {
     children: ReactNode,
@@ -65,22 +67,30 @@ const TaskComponent : FC<TaskComponentProps> = ({
 
     const taskBg = 'bg-theta-tasks-taskgroup' // or taskgroup-individual
 
+    const discordWebhook = useSelector((state : RootState) => state.settings.defaults.webhooks.discord)
+
     const [status, setStatus] = useState<string>('Idle')
     const [statusColor, setStatusColor] = useState<string>('');
     const [productTitle, setProductTitle] = useState<string>(task.input)
+    const [productImage, setProductImage] = useState<string>('');
 
     const startTask = async () => {
         task.start();
         setStatusColor('text-blue-200');
         setStatus('Signing in (1)')
 
-        let res = {message: '', status: ''};
+        let res : cycleStatus = {message: 'Starting...', status: 'Success'};
 
         while (task.status === 'Active') {
             setStatusColor('text-blue-100');
             res = await task.cycle();
-            console.log(res);
+            console.error(res);
             setStatus(res.message);
+
+            if (res.extraData !== undefined) {
+                setProductTitle(res.extraData.productTitle)
+                setProductImage(res.extraData.productImage)
+            }
 
             if (res.status === "Error") {
                 setStatusColor('text-red-400');
@@ -90,6 +100,23 @@ const TaskComponent : FC<TaskComponentProps> = ({
 
         if (res.message === "Checked Out") {
             setStatusColor('text-green-400')
+            
+            try {
+                sendSuccess(
+                    discordWebhook,
+                    productTitle,
+                    "Amazon",
+                    task.profile.information.name,
+                    "Random",
+                    task.proxyList.name,
+                    "brash@usc.edu",
+                    "Normal",
+                    productImage
+                )
+            }
+            catch (err) {
+                console.error (`Couldn't send success to discord webhook`)
+            }
         }
     }
 
