@@ -117,6 +117,7 @@ const AppTwo = () => {
     
     const dispatch = useDispatch()
 
+    // custom context menu
     const [rightClickMenuActive, setRightClickMenuActive] = useState<boolean>(false);
     const [clientX, setClientX] = useState<number>(0);
     const [clientY, setClientY] = useState<number>(0);
@@ -125,27 +126,34 @@ const AppTwo = () => {
 
         console.log(e);
 
+
         setClientX(e.clientX)
         setClientY(e.clientY)
+        setRightClickMenuActive(true)
 
 
         // @ts-ignore
         let e2 : any = e.target;
-        while (e2.id !== 'root') {
-            if (e2.className.includes("taskGroup")) {
-                // alert(':)');
+        while (e2.id !== 'root' && e2.type !== 'head' && e2.type !== 'html') {
+            try {
+                if (e2.className.includes("taskGroup")) {
+                    // alert(':)');
+                    return false;
+                }
+                else {
+                    console.log(e2.parent)
+                    console.log(e2.parentNode)
+                    e2 = e2.parentNode;
+                }
+            }
+            catch (err) {
+                console.error("Error while generating context menu")
+                console.error(err)
                 break;
             }
-            else {
-                console.log(e2.parent)
-                console.log(e2.parentNode)
-                e2 = e2.parentNode;
-            }
-        }
-        // console.log(e.target.className)
 
-        // if (e.target.)
-        // alert(':)');
+        }
+        setRightClickMenuActive(false)
         return false; /* prevent context menu from popping up */
     };
     
@@ -193,6 +201,9 @@ const AppTwo = () => {
                         clientX={clientX}
                         clientY={clientY}
                         type={0}
+                        dropdownToggled={rightClickMenuActive}
+                        setDropdown={setRightClickMenuActive}
+                        typeConfig={{}}
                     />
 
                     <div className="rounded-lg relative flex flex-row h-full w-screen justify-start items-center bg-gradient-to-r from-theta-bg-start to-theta-bg">

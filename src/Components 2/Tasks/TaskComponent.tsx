@@ -95,6 +95,7 @@ const TaskComponent : FC<TaskComponentProps> = ({
             if (res.status === "Error") {
                 setStatusColor('text-red-400');
                 await delay(7500);
+                setStatus(res.message);
             }
         }
 
