@@ -18,10 +18,12 @@ import ProxyList from '../../Logic/interfaces/ProxyList';
 import Account, { AccountGroup } from '../../Logic/interfaces/Account';
 
 // redux
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 import Site from '../../Logic/interfaces/enums/Site';
 import Size from '../../Logic/interfaces/enums/Size';
+import { TaskSaveState, saveTaskGroupOnAdd } from '../../redux/reducers/tasksSlice'
+import electron from 'electron';
 
 
 interface TextInputProps {
@@ -195,8 +197,11 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     const [monitorDelay, setMonitorDelay] = useState<number>(3000);
     const [errorDelay, setErrorDelay] = useState<number>(3000);
 
-    // Add Tasks hooks
+    // activates when we exit app and need to save tasks
+    const saveState : TaskSaveState = useSelector((state : RootState) => state.tasks.savingOptions.saveState)
+    const dispatch = useDispatch(); 
 
+    // Add Tasks hooks
     const allProfiles : ProfileObject[] = useSelector((state : RootState) => state.profiles.profilesArray)
     const allProxies : ProxyList[] = useSelector((state : RootState) => state.proxies.proxiesArray)
 
@@ -205,7 +210,19 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     // @ts-ignore
     const allAccountGroups : AccountGroup[] = useSelector((state : RootState) => state.accounts.accountGroupObject["Amazon"])
 
-
+    useEffect(() => {
+        // if (saveState === TaskSaveState.Saving) {
+        //     dispatch(saveTaskGroup({
+        //         name: taskGroupName,
+        //         site: Site.Amazon,
+        //         tasks: tasks,
+        //         delays: {
+        //             monitor: 3000,
+        //             error: 3000
+        //         }
+        //     }))
+        // }
+    }, [saveState])
 
 
     const onInputFocus = () => {
@@ -218,6 +235,14 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     
     // our actual tasks!    
     const [tasks, setTasks] = useState<TaskHookProps[]>([]);
+
+    // for loading tasks
+    const [loadTasksOnStart, setLoadTasksOnStart] = useState<boolean>(false);
+
+    const taskGroupsSelector = useSelector((state :RootState) => state.tasks.taskGroups.find(tg => tg.name === taskGroupName))
+    useEffect(() => {
+        setTasks(taskGroupsSelector ? taskGroupsSelector.tasks : [])
+    }, [])
 
   
     // Modal Hooks (Add Tasks)
@@ -232,7 +257,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     const [taskIdentifierCount, setTaskIdentifierCount] = useState<number>(0)
 
     // triggered from Add Task modal
-    const addTasks = () => {
+    const addTasks = async () => {
         // validate inputs first... which we'll sort out later :D
 
         try {
@@ -270,6 +295,43 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
         setTaskIdentifierCount(identifierStart)
         setTasks([...tasks, ...toAddTasks]);
+        dispatch(saveTaskGroupOnAdd({
+            name: taskGroupName,
+            site: Site.Amazon,
+            tasks: [...tasks, ...toAddTasks],
+            delays: {
+                error: 3000,
+                monitor: 3000
+            }
+        }))
+
+        let res = await electron.ipcRenderer.invoke('readjson', 'tasks.json')
+
+        let index = res.findIndex((tg : any) => tg.name === taskGroupName)
+
+        if (index === -1) {
+            await electron.ipcRenderer.invoke('writejson', 'tasks.json', [...res, {
+                name: taskGroupName,
+                site: Site.Amazon,
+                tasks: [...tasks, ...toAddTasks],
+                delays: {
+                    error: 3000, monitor: 3000
+                }
+            }])
+        }
+        else {
+            res[index] = {
+                name: taskGroupName,
+                site: Site.Amazon,
+                tasks: [...tasks, ...toAddTasks],
+                delays: {
+                    error: 3000, monitor: 3000
+                }
+            }
+
+            await electron.ipcRenderer.invoke('writejson', 'tasks.json', res)
+        }
+
     }
 
     const validateAddTasks = () => {

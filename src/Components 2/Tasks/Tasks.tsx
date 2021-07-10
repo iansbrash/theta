@@ -1,8 +1,13 @@
 import React, {
     FC, useState, useEffect
 } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import { beginSave, TaskGroup as TaskGroupInterface, TaskSaveState } from '../../redux/reducers/tasksSlice';
+import { RootState } from '../../redux/store';
+import { TaskHookProps } from './TaskGroupInterface';
 import TaskGroupInterfaceRenderer from './TaskGroupInterfaceRenderer'
+import electron from 'electron';
 
 const TaskGroupIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
@@ -46,7 +51,6 @@ const TaskGroupIndicatorTag : FC<TaskGroupIndicatorTagProps> = ({
     )
 }
 
-
 interface LoadingIndicatorProps {
     size: number
 }
@@ -82,7 +86,7 @@ const TaskGroup : FC<TaskGroupProps> = ({
 
 
     return (
-        <div className="w-full h-auto px-2">
+        <div className="w-full h-auto px-2 taskGroup">
             <button className="w-full focus:outline-none"
             onClick={() => handleClick()}
             >
@@ -153,12 +157,89 @@ const Tasks = () => {
     }, [location]);
 
 
+    const taskGroupsSelector : TaskGroupInterface[] = useSelector((state : RootState) => state.tasks.taskGroups)
+
+    useEffect(() => {
+
+        setTaskGroups(taskGroupsSelector.map(tg => tg.name))
+        
+        if (taskGroupsSelector.length > 0) {
+            setSelectedTaskGroup(taskGroupsSelector[0].name)
+        }
+
+    }, [])
+
+
     const [selectedTaskGroup, setSelectedTaskGroup] = useState<string>('');
 
     const [tgCount, setTgCount] = useState<number>(0);
     const [taskGroups, setTaskGroups] = useState<string[]>([]);
 
+    // const dispatch = useDispatch()
+    // const saveState : TaskSaveState = useSelector((state : RootState) => state.tasks.savingOptions.saveState)
+    // @ts-ignore
+    // window._saved = false
+    // mainWindow.on('close', (e) => {
+    //     // success? quit the app
+    //     console.log('wtf')
+    //     if (saveState === TaskSaveState.Unsaved) {
+    //         console.log(1)
+    //         dispatch(beginSave(taskGroups.length))
+    //         e.preventDefault();
+    //         electron.ipcRenderer.invoke('closeApp')
+    //     }
+    //     else if (saveState === TaskSaveState.Saving) {
+    //         console.log(2)
+    //         e.preventDefault();
+    //         electron.ipcRenderer.invoke('closeApp')
+    //     }
+    //     else {
+    //         console.log(3)
+    //         electron.ipcRenderer.invoke('writejson', 'tasks.json', taskGroupsSelector)
 
+    //         // window.onbeforeunload = null;
+    //         // e.returnValue = true;
+
+    //         electron.ipcRenderer.invoke('closeApp')
+    //     }
+    //     // window.onbeforeunload = null
+    //     // e.returnValue = false
+    //     // await electron.ipcRenderer.invoke('closeApp')
+    // });
+
+    // electron.ipcRenderer.on('startSave', async (event, arg) => {
+    //     if (saveState === TaskSaveState.Unsaved) {
+    //         console.log(1)
+    //         dispatch(beginSave(taskGroups.length))
+    //         await electron.ipcRenderer.invoke('closeApp')
+    //     }
+    //     else if (saveState === TaskSaveState.Saving) {
+    //         console.log(2)
+    //         await electron.ipcRenderer.invoke('closeApp')
+    //     }
+    //     else {
+    //         console.log(3)
+    //         await electron.ipcRenderer.invoke('writejson', 'tasks.json', taskGroupsSelector)
+
+    //         // window.onbeforeunload = null;
+    //         // e.returnValue = true;
+
+    //         electron.ipcRenderer.invoke('closeApp')
+    //     }
+    //     // window.onbeforeunload = null
+    //     // e.returnValue = false
+    //     // await electron.ipcRenderer.invoke('closeApp')
+    // })
+
+    // window.onbeforeunload = e => {
+    //     console.log(e);
+    //     if(true) {
+    //         e.returnValue = true;
+    //         electron.ipcRenderer.invoke("closeApp")
+    //     }
+    //     else e.returnValue = true;
+    // };
+ 
 
     const addTaskGroup = () => {
         setTaskGroups([...taskGroups, `Task Group #${tgCount}`])
@@ -180,13 +261,21 @@ const Tasks = () => {
 
                 {/* Task Groups mapping */}
                 <div className="w-full flex flex-col justify-start items-center space-y-2">
-                    {taskGroups.map(tg => (
-                        <TaskGroup 
+                    {taskGroups.map((tg) => {
+
+                        // return React.cloneElement(tg, {
+                        //     // key: index,
+                        //     className: 'taskGroup',
+                        //     setSelectedTaskGroup: setSelectedTaskGroup,
+                        //     selectedTaskGroup: selectedTaskGroup,
+                        //     name: tg
+                        // });
+                        return <TaskGroup 
                             setSelectedTaskGroup={setSelectedTaskGroup}
                             selectedTaskGroup={selectedTaskGroup}
                             name={tg}
                         />
-                    ))}
+                    })}
 
                     {/* Add TaskGroup */}
                     <div className="w-full h-auto px-2">

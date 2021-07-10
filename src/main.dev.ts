@@ -41,10 +41,6 @@ import electron, {
 // 	]
 // })
 
-let template = [{label: 'item1'}, {label: 'item2'}]
-let contextMenu = Menu.buildFromTemplate(template)
-
-
 
 export default class AppUpdater {
   constructor() {
@@ -141,6 +137,7 @@ const createWindow = async () => {
     });
 
     electron.ipcMain.handle('closeApp', async (event, ...args) => {
+        // mainWindow?.webContents.send('startSave',123);
         mainWindow?.close();
     })
 

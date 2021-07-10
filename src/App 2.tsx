@@ -19,11 +19,13 @@ import Proxies from "./Components 2/Proxies/Proxies";
 import Login from './Components 2/Login/Login';
 
 // redux
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { populateProfiles } from "./redux/reducers/profilesSlice";
 import { populateAccounts } from './redux/reducers/accountsSlice';
 import { populateAccountGroups } from "./redux/reducers/accountsSlice";
 import { populateSettings } from "./redux/reducers/settingsSlice";
+
+import RightClickMenu from "./Components 2/Component Library/RightClickMenu";
 
 // dunno y this is here
 import TaskClass from "./Logic/sites/classes/TaskClass";
@@ -36,6 +38,8 @@ import electron from 'electron'
 import ProfileObject from "./Logic/interfaces/ProfileObject";
 import { populateProxies } from "./redux/reducers/proxiesSlice";
 import ProxyList from "./Logic/interfaces/ProxyList";
+import { beginSave, populateTasks, TaskGroup, TaskSaveState } from "./redux/reducers/tasksSlice";
+import { RootState } from "./redux/store";
 
 
 
@@ -104,14 +108,47 @@ const AppTwo = () => {
         '/settings'
     ]
 
-    const [tasks, setTasks] = useState<TaskClass[]>([]);
     const [selectedRoute, setSelectedRoute] = useState<string>('/home')
+    
 
     const exitApp = () => {
         electron.ipcRenderer.invoke('closeApp')
     }
     
     const dispatch = useDispatch()
+
+    const [rightClickMenuActive, setRightClickMenuActive] = useState<boolean>(false);
+    const [clientX, setClientX] = useState<number>(0);
+    const [clientY, setClientY] = useState<number>(0);
+
+    window.oncontextmenu = function(e) {
+
+        console.log(e);
+
+        setClientX(e.clientX)
+        setClientY(e.clientY)
+
+
+        // @ts-ignore
+        let e2 : any = e.target;
+        while (e2.id !== 'root') {
+            if (e2.className.includes("taskGroup")) {
+                // alert(':)');
+                break;
+            }
+            else {
+                console.log(e2.parent)
+                console.log(e2.parentNode)
+                e2 = e2.parentNode;
+            }
+        }
+        // console.log(e.target.className)
+
+        // if (e.target.)
+        // alert(':)');
+        return false; /* prevent context menu from popping up */
+    };
+    
 
 
 
@@ -133,8 +170,10 @@ const AppTwo = () => {
             dispatch(populateAccountGroups(toSetAccountGroups))
 
             const toSetSettings : object = await electron.ipcRenderer.invoke("readjson", "settings.json");
-            console.log(toSetSettings)
             dispatch(populateSettings(toSetSettings))
+
+            const toSetTasks : object = await electron.ipcRenderer.invoke("readjson", "tasks.json");
+            dispatch(populateTasks(toSetTasks))
         })();
     }, [])
 
@@ -150,6 +189,11 @@ const AppTwo = () => {
             </Route>
             <Route path="/main">
                 <div className="relative flex flex-col h-screen w-screen justify-start items-center">
+                    <RightClickMenu 
+                        clientX={clientX}
+                        clientY={clientY}
+                        type={0}
+                    />
 
                     <div className="rounded-lg relative flex flex-row h-full w-screen justify-start items-center bg-gradient-to-r from-theta-bg-start to-theta-bg">
                         {/* Bar */}
