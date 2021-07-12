@@ -36,7 +36,7 @@ const Login : FC = () => {
                     })
 
                     // in case we want to change session on auth... which we probably should 😂
-                    dispatch(addSession(licenseState, res.headers.session))
+                    dispatch(addSession(res.headers.session, licenseState))
                     electron.ipcRenderer.invoke('writejson', 'session.json', {session: res.headers.session, license: licenseState})
                     electron.ipcRenderer.invoke('authenticated')
                 }
@@ -72,7 +72,7 @@ const Login : FC = () => {
             })
 
             dispatch(addSession(res.headers.session, license))
-            electron.ipcRenderer.invoke('writejson', 'session.json', {session: res.headers.session, license: licenseState})
+            electron.ipcRenderer.invoke('writejson', 'session.json', {session: res.headers.session, license: license})
 
             console.log(res);
             electron.ipcRenderer.invoke('authenticated')

@@ -9,12 +9,15 @@ import { RootState } from '../../redux/store';
 import { updateDefaultDelays, updateDefaultWebhooks } from '../../redux/reducers/settingsSlice';
 import electron from 'electron'
 import sendSuccess from '../../Logic/webhooks/discordsuccess';
+import axios from 'axios';
 
 const Settings = () => {
 
     const defaultMonitorDelay : number = useSelector((state : RootState)  => state.settings.defaults.delays.monitor)
     const defaultErrorDelay : number = useSelector((state : RootState)  => state.settings.defaults.delays.error)
     const defaultDiscordWebhook : string = useSelector((state : RootState)  => state.settings.defaults.webhooks.discord)
+
+    const licenseState = useSelector((state : RootState) => state.session.license)
 
     console.log(`defaultDiscordWebhook: ${defaultDiscordWebhook}`)
 
@@ -45,25 +48,46 @@ const Settings = () => {
 
         let res = await electron.ipcRenderer.invoke("readjson", "settings.json")
         res.defaults.delays.monitor = parseInt(s)
-        electron.ipcRenderer.invoke("writejson", "settings.json", res)
+        await electron.ipcRenderer.invoke("writejson", "settings.json", res)
     }
 
     const dEDOnChange = async (s : string) => {
         dispatch(updateDefaultDelays("error", s === '' ? 0 : parseInt(s)))
         let res = await electron.ipcRenderer.invoke("readjson", "settings.json")
         res.defaults.delays.error = parseInt(s)
-        electron.ipcRenderer.invoke("writejson", "settings.json", res)
+        await electron.ipcRenderer.invoke("writejson", "settings.json", res)
     }
 
     const discordWebhookOnChange = async (s : string) => {
         dispatch(updateDefaultWebhooks("discord", s))
         let res = await electron.ipcRenderer.invoke("readjson", "settings.json")
         res.defaults.webhooks.discord = s
-        electron.ipcRenderer.invoke("writejson", "settings.json", res)
+        await electron.ipcRenderer.invoke("writejson", "settings.json", res)
     }
 
-    const deactivate = () => {
-        
+    const deactivate = async () => {
+        try {
+            console.log(`trying to reset key: ${licenseState}`)
+            const res = await axios({
+                method: 'post',
+                url: 'https://uwaecaqreh.execute-api.us-east-1.amazonaws.com/Beta/auth/reset',
+                headers: {
+                    license: licenseState
+                }
+            });
+
+            // update session.json
+            await electron.ipcRenderer.invoke("writejson", "session.json", {session: '', license: ''})
+
+            // exit app
+            electron.ipcRenderer.invoke('closeApp')
+
+        }
+
+        catch (err) {
+            console.error(err)
+        }
+
     }
 
     return (
