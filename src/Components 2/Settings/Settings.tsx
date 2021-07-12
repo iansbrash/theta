@@ -62,6 +62,10 @@ const Settings = () => {
         electron.ipcRenderer.invoke("writejson", "settings.json", res)
     }
 
+    const deactivate = () => {
+        
+    }
+
     return (
         <div className="flex flex-1 h-full">
             <div className="w-full h-full flex flex-row">
@@ -178,7 +182,7 @@ const Settings = () => {
                                         {/* Dashboard / Deactivate */}
                                         <div className="w-full flex flex-row mt-4">
                                             <div className="w-1/2 pr-4 h-10">
-                                                <div className="w-full h-full flex flex-row border-2 border-theta-logo bg-theta-settings-dashboard rounded-lg shadow-lg justify-center items-center">
+                                                <button className="focus:outline-none w-full h-full flex flex-row border-2 border-theta-logo bg-theta-settings-dashboard rounded-lg shadow-lg justify-center items-center">
                                                     <div className="text-xl font-medium text-theta-settings-dashboard-text">
                                                         Dashboard
                                                     </div>
@@ -187,10 +191,12 @@ const Settings = () => {
                                                             <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                                                         </svg>
                                                     </div>
-                                                </div>
+                                                </button>
                                             </div>
                                             <div className="w-1/2 pl-4 h-10">
-                                                <div className="w-full h-full flex flex-row border-2 border-theta-settings-deactivate-border bg-theta-settings-deactivate rounded-lg shadow-lg justify-center items-center">
+                                                <button className="focus:outline-none w-full h-full flex flex-row border-2 border-theta-settings-deactivate-border bg-theta-settings-deactivate rounded-lg shadow-lg justify-center items-center"
+                                                onClick={() => deactivate()}
+                                                >
                                                     <div className="text-xl font-medium text-theta-settings-dashboard-text">
                                                         Deactivate
                                                     </div>
@@ -199,7 +205,7 @@ const Settings = () => {
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                                         </svg>
                                                     </div>
-                                                </div>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>

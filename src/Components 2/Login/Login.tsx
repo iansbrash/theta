@@ -1,15 +1,64 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import electron from 'electron';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { addSession, removeSession } from '../../redux/reducers/sessionSlice';
+import { SessionStatus } from '../../redux/reducers/sessionSlice';
 
 const Login : FC = () => {
 
     const [status, setStatus] = useState<string>('Enter your liscense key')
     const [license, setLicense] = useState<string>('')
 
+    const licenseState = useSelector((state : RootState) => state.session.license)
+    const sessionState = useSelector((state : RootState) => state.session.session)
+    const sessionStatus = useSelector((state : RootState) => state.session.status)
+
+    const dispatch = useDispatch();
+
+    // attempt to validate auth if session is active
+    useEffect(() => {
+        (async () => {
+            console.log(`'in useEffect for authing:' ${licenseState + ', ' + sessionState}`)
+            if (sessionStatus === SessionStatus.Populated && licenseState !== '' && sessionState !== '') {
+                console.log('Session status is popualted!')
+                setStatus('Authenticating...')
+
+                try {
+                    const res = await axios({
+                        method: 'post',
+                        url: 'https://uwaecaqreh.execute-api.us-east-1.amazonaws.com/Beta/auth/validate',
+                        headers: {
+                            license: licenseState,
+                            session: sessionState
+                        }
+                    })
+
+                    // in case we want to change session on auth... which we probably should 😂
+                    dispatch(addSession(licenseState, res.headers.session))
+                    electron.ipcRenderer.invoke('writejson', 'session.json', {session: res.headers.session, license: licenseState})
+                    electron.ipcRenderer.invoke('authenticated')
+                }
+                catch (err) {
+                    if (err.response.status === 404) {
+                        setStatus('Invalid liscense key')
+                    }
+                    else if (err.response.status === 403) {
+                        setStatus('Key is already active')
+                    }
+                    else {
+                        setStatus('Unknown authentication error')
+                    }
+                }
+            }
+        })();
+
+    }, [sessionStatus])
+
     const attemptAuth = async () => {
             
-        return await electron.ipcRenderer.invoke('authenticated');
+        // return await electron.ipcRenderer.invoke('authenticated');
 
         try {
             setStatus('Authenticating...')
@@ -21,6 +70,9 @@ const Login : FC = () => {
                     license: license
                 }
             })
+
+            dispatch(addSession(res.headers.session, license))
+            electron.ipcRenderer.invoke('writejson', 'session.json', {session: res.headers.session, license: licenseState})
 
             console.log(res);
             electron.ipcRenderer.invoke('authenticated')

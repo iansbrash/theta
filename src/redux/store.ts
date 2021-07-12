@@ -5,13 +5,15 @@ import profilesSlice from './reducers/profilesSlice'
 import proxiesSlice from './reducers/proxiesSlice'
 import accountsSlice from './reducers/accountsSlice'
 import tasksSlice from './reducers/tasksSlice'
+import sessionSlice from './reducers/sessionSlice'
 
 const rootReducer = combineReducers({
     settings: settingsSlice,
     profiles: profilesSlice,
     proxies: proxiesSlice,
     accounts: accountsSlice,
-    tasks: tasksSlice
+    tasks: tasksSlice,
+    session: sessionSlice
 })
 
 const store = configureStore({

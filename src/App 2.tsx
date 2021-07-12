@@ -24,6 +24,7 @@ import { populateProfiles } from "./redux/reducers/profilesSlice";
 import { populateAccounts } from './redux/reducers/accountsSlice';
 import { populateAccountGroups } from "./redux/reducers/accountsSlice";
 import { populateSettings } from "./redux/reducers/settingsSlice";
+import { populateSession } from "./redux/reducers/sessionSlice";
 
 import RightClickMenu from "./Components 2/Component Library/RightClickMenu";
 
@@ -182,6 +183,9 @@ const AppTwo = () => {
 
             const toSetTasks : object = await electron.ipcRenderer.invoke("readjson", "tasks.json");
             dispatch(populateTasks(toSetTasks))
+
+            const toSetSession : any = await electron.ipcRenderer.invoke("readjson", "session.json");
+            dispatch(populateSession(toSetSession.session, toSetSession.license))
         })();
     }, [])
 
