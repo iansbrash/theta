@@ -35,6 +35,10 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
 
     const POSTSubData = qs.stringify(POSTConfig);
 
+    console.log(POSTSubData)
+
+    console.log(allCookies)
+
     const POSTSubLoginPageResponse = await axios({
         method: 'post',
         url: 'https://www.amazon.com/ap/signin',

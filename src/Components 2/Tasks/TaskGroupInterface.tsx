@@ -24,6 +24,8 @@ import Site from '../../Logic/interfaces/enums/Site';
 import Size from '../../Logic/interfaces/enums/Size';
 import { TaskSaveState, saveTaskGroupOnAdd } from '../../redux/reducers/tasksSlice'
 import electron from 'electron';
+import AmazonTaskClass from '../../Logic/sites/Amazon/classes/AmazonTaskClass';
+import TaskClass from '../../Logic/sites/classes/TaskClass';
 
 
 interface TextInputProps {
@@ -235,6 +237,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     
     // our actual tasks!    
     const [tasks, setTasks] = useState<TaskHookProps[]>([]);
+    const [tasks2, setTasks2] = useState<AmazonTaskClass[]>([]);
 
     // for loading tasks
     const [loadTasksOnStart, setLoadTasksOnStart] = useState<boolean>(false);
@@ -269,6 +272,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
         let identifierStart = taskIdentifierCount;
         let toAddTasks : TaskHookProps[] = [];
+        let toAddTasks2 : AmazonTaskClass[] = []
 
         addTasksProfiles.forEach((profile : ProfileObject) => {
             const newTask : TaskHookProps = {
@@ -288,6 +292,21 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                 }
             }
 
+            let newTaskClass : AmazonTaskClass = new AmazonTaskClass(
+                identifierStart,
+                Site.Amazon,
+                profile,
+                [Size.OS],
+                addTasksProxies!,
+                addTasksInput,
+                {
+                    mode: addTasksMode!,
+                    account: addTasksAccount[0]
+                }
+            )
+
+            toAddTasks2.push(newTaskClass)
+
             identifierStart += 1;
             toAddTasks.push(newTask);
 
@@ -295,6 +314,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
         setTaskIdentifierCount(identifierStart)
         setTasks([...tasks, ...toAddTasks]);
+        setTasks2([...tasks2, ...toAddTasks2])
         dispatch(saveTaskGroupOnAdd({
             name: taskGroupName,
             site: Site.Amazon,
@@ -597,13 +617,13 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                 <AutoSizer>
                 {({height, width}) => (
                     <List 
-                        rowCount={tasks.length}
+                        rowCount={tasks2.length}
                         rowHeight={52}
                         width={width}
                         height={height}
                         rowRenderer={AutoResizerTaskComponent}
                         className="scrollbar-hide focus:outline-none"
-                        data={tasks}
+                        data={tasks2}
                     >
                         
                     </List>
