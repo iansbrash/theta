@@ -174,8 +174,13 @@
                 if ("object" == typeof Reflect && "function" == typeof Reflect.metadata) return Reflect.metadata(t, e)
             }
 
+
+            // t is probably this
+            // sample funciton call:
+            // this, void 0, void 0, function () { return k.__generator(this, function (r) { return [2, {ciba: e}]})}
+            // where e = this.gesturalTelemetry.get(), e.events.push(i))
             function __awaiter(t, e, r, n) {
-                return new(r || (r = Promise))(function(o, a) {
+                return new(r || (r = Promise))(function(o, a) { // this, func (r)
                     function i(t) {
                         try {
                             c(n.next(t))
@@ -193,10 +198,16 @@
                     }
 
                     function c(t) {
+                        // o = function (R) ?
                         t.done ? o(t.value) : new r(function(e) {
+                            // e = void 0
                             e(t.value)
                         }).then(i, u)
                     }
+
+                    // c (
+                    //     this2 = this2.apply(this, void 0 || [])
+                    // ).next()
                     c((n = n.apply(t, e || [])).next())
                 })
             }
@@ -2308,7 +2319,7 @@
         exports['default'] = fe
     }), 
     
-    
+    // Defines a prototype.encode method ?
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -2332,7 +2343,10 @@
             }, r
         }();
         exports['default'] = j
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // Another encoder, we use this one in genMetadata1 I think
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var B = function() {
@@ -2347,7 +2361,10 @@
             }, A.ALPHABET = 0123456789 ABCDEF, A
         }();
         exports['default'] = B
-    }), (function(module, exports) {
+    }), 
+    
+    // Something to do with sending requests
+    (function(module, exports) {
         ! function(t) {
             "use strict";
             if (!t.fetch) {
@@ -2712,7 +2729,12 @@
         }, kt.umask = function() {
             return 0
         }
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // Man what the fuck is this
+    // Defines some encrypting shit
+    // SHA256 type beat
+    (function(module, exports, __webpack_require__) {
         (function(process, global) {
             var __WEBPACK_AMD_DEFINE_RESULT__;
             ! function() {
@@ -2894,7 +2916,10 @@
                 }).call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)))
             }()
         }.call(this, __webpack_require__(32), __webpack_require__(4)))
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // Probably irrelevant?
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var O = __webpack_require__(33),
@@ -2960,7 +2985,11 @@
                 }, e
             }();
         exports['default'] = J
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // some communication between ... things
+    // calls webpack(4) at the end
+    (function(module, exports, __webpack_require__) {
         (function(global) {
             ! function(e, t) {
                 "use strict";
@@ -3047,7 +3076,10 @@
                 }
             }("undefined" == typeof self ? "undefined" == typeof global ? this : global : self)
         }.call(this, __webpack_require__(4)))
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // global func
+    (function(module, exports, __webpack_require__) {
         (function(global) {
             var Mt = "undefined" != typeof global && global || "undefined" != typeof self && self || window,
                 Nt = Function.prototype.apply;
@@ -3075,7 +3107,10 @@
                 }, t))
             }, __webpack_require__(35), exports.setImmediate = "undefined" != typeof self && self.setImmediate || "undefined" != typeof global && global.setImmediate || this && this.setImmediate, exports.clearImmediate = "undefined" != typeof self && self.clearImmediate || "undefined" != typeof global && global.clearImmediate || this && this.clearImmediate
         }.call(this, __webpack_require__(4)))
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // global func
+    (function(module, exports, __webpack_require__) {
         (function(global, setImmediate) {
             var __WEBPACK_AMD_DEFINE_RESULT__;
             ! function(t, n, e) {
@@ -3243,10 +3278,16 @@
                 }).call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))
             }("Promise", "undefined" != typeof global ? global : this)
         }.call(this, __webpack_require__(4), __webpack_require__(36).setImmediate))
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // bundles 37 and 30
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1, __webpack_require__(37), __webpack_require__(30)
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // idk
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var k = __webpack_require__(0),
@@ -3299,7 +3340,11 @@
                 }, t
             }();
         exports['default'] = rt
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // defines getExistingItems
+    // 
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var k = __webpack_require__(0),
@@ -3366,7 +3411,11 @@
                 }, t.BUFFER_KEY = amzn: fwcim: events, t.MAX_SIZE_BYTES = 10240, t.MAX_AGE_SECONDS = 3600, t
             }();
         exports['default'] = tt
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // adds a bunch of event listeners which push objects to this.events
+    // objects look like {type, time, param1, param2, param3}
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var ce = __webpack_require__(2),
@@ -3378,9 +3427,6 @@
 
                 function e(t) {
                     var _1IIlllLL = function(_szzS$SZS) {
-                        var _OQ0Q = [.7941036943864244, 45567, 'obfuscateFwcim'];
-                        var _O0QOooOQ = obfuscateFwcim;
-                        var _1IiI1iIi = 0.7941036943864244;
                         return 45567
                     };
                     void 0 === t && (t = {
@@ -3395,22 +3441,10 @@
                 }, e.prototype.bindMouseScrollHandler = function() {
                     var _IiIl1 = ['addEventListener', 'throttler', 'create', 'sampleRateMilliseconds', 'wheel', 'scroll', 'listener'];
                     var t = this;
-                    var _LLI1i1li = function(_Oo0OQooo, _I1ILiil1, _Q00O0O0o) {
-                        var _ooO0 = [27712, .6592282458220262];
-                        var _I1lLLIlL = 27712;
-                        return 0.6592282458220262
-                    };
+
                     this.listener.addEventListener(scroll, this.throttler.create(function(i) {
                         var _OoQQo = ['getTime', 'scrollX', 'scrollY', 'push', 'events', 'SCROLL_EVENT', 'start'];
-                        var _00O0Qo0Q = function(_OoOQQO0Q, _lLLi1ILI) {
-                            var _SSz = ['bodyObfuscateId', .9057350181948347, 45110, .0018768626094676222, 'bodyCaptcha', 'obfuscate'];
-                            var _Q0oO0OOO = bodyCaptcha,
-                                _ILIiliiL = obfuscate;
-                            var _Oo0oOooO = 0.0018768626094676222;
-                            var _$Ss2szs2 = bodyObfuscateId,
-                                _0OOo0QQo = 0.9057350181948347;
-                            return 45110
-                        };
+
                         t.events.push({
                             type: e.SCROLL_EVENT,
                             time: new Date().getTime() - t.start,
@@ -3508,7 +3542,11 @@
                 }, e.DEFAULT_SAMPLE_RATE = 100, e.SCROLL_EVENT = s, e.MOUSE_WHEEL_EVENT = w, e.MOUSE_EVENT = m, e.MOUSE_MOVE_EVENT = mm, e.KEY_EVENT = k, e.TOUCH_EVENT = t, e.VISIBILITY_CHANGE_EVENT = v, e.KEY_WHITELIST = [Spacebar, Space, , ArrowUp, Up, ArrowDown, Down, ArrowLeft, Left, ArrowRight, Right, Esc, Escape, Shift, Enter, Control, Alt, Meta], e
             }();
         exports['default'] = Ue
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+
+    // idk rethe
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var k = __webpack_require__(0),
@@ -3527,23 +3565,16 @@
                         var t;
                         return k.__generator(this, function(e) {
                             var _ill1 = ['data', 2, 'key'];
-                            var _1iillLL1 = function(_liiLILIi, _00OoO00O) {
-                                var _S2S$ = [.6016652026715852, 'body', 'bodyData', 22135, 21600, 25759, .07294251541187946];
-                                var _sz2ZSz$2 = 22135,
-                                    _ZzSSS$Zs = 0.07294251541187946;
-                                var _Zz$z2z$s = 25759,
-                                    _OOOQoooQ = bodyData,
-                                    _ooQ0oQQo = 0.6016652026715852;
-                                var _2$Zs$z$$ = body;
-                                return 21600
-                            };
                             return [2, (t = {}, t[this.key] = this.data, t)]
                         })
                     })
                 }, t
             }();
         exports['default'] = vt
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // Helps generate telemetry
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var k = __webpack_require__(0),
@@ -3556,14 +3587,15 @@
                 }
                 return t.prototype.collect = function() {
                     var _lLl = ['__awaiter', 0, 33629];
-                    var _i1llIliL = 33629;
+
+
                     return k.__awaiter(this, void 0, void 0, function() {
                         var _LlL1 = [20267, '__generator'];
-                        var _QO0OO0O0 = 20267;
+
                         var e, i;
                         return k.__generator(this, function(r) {
                             var _li11 = [0, 'push', 'lastCollection', 'gesturalTelemetry', 'start', 'events', 'getTime', 'get', 2, .11425485167448568, 'length', 'IDLE_PING_EVENT_TYPE'];
-                            var _iL1LIL1l = 0.11425485167448568;
+
                             return 0 === (e = this.gesturalTelemetry.get()).events.length && (i = {
                                 type: t.IDLE_PING_EVENT_TYPE,
                                 time: new Date().getTime() - e.start,
@@ -3576,7 +3608,10 @@
                 }, t.collectorName = ges, t.IDLE_PING_EVENT_TYPE = i, t
             }();
         exports['default'] = ht
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // 
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var k = __webpack_require__(0),
@@ -3598,6 +3633,7 @@
                 var _Q0Qo = [3e3, 'customerId', 'reportToServer', 1, 5e3, 'AUTO_REPORT_INTERVAL_MS', 'INCREMENTAL_REPORT_TYPE', 'INIT_REPORT_TYPE', 'stop', 'CSM_OPTIONS', 'INCREMENTAL_REPORT_COLLECTORS', 'concat', 'href', null, 'BASE_DATA', 'a:not([href^=\"#\"])', 'globalTimingMetrics', 'create', 'CSM_KEY', 'ue', 'ue_id', 'location', 'FORM_SELECTOR', 'call', 'report', 'REPORT_THROTTLE_MS', 'default', 'doProfile', 'throttledReport', 'LINK_SELECTOR', 'prototype', 'init', 'collectIncrementalCollectors', 3e4, 'fwcimData', 'initializeIncrementalCollectors', 'selectorQuerier', 'fwcim', 'inc', '__extends', 'buffer', 'throttler', 'AUTO_REPORT_TO_SERVER_INTERVAL_MS', 'COLLECTORS', 'form', 'cap-ciba', 'firstReport', 'CSM_CHANNEL'];
 
                 function t(r, o, n, l, i, u, c) {
+
                     var a = e.call(this, n, l) || this;
                     a.selectorQuerier = r, a.throttler = o, a.buffer = i, a.ue = u, a.globalTimingMetrics = c, a.firstReport = 1;
                     var s = a;
@@ -3608,34 +3644,15 @@
                     var f = null;
                     return a.initializeIncrementalCollectors = function() {
                         var _2$2 = ['default', 'INCREMENTAL_REPORT_COLLECTORS', null, 'initializeCollectors'];
-                        var _IIlIIiIL = function(_sSsszzzz, _OQO000Q0) {
-                            var _Oo0 = ['hashData', 36541, .9044720559495198];
-                            var _lLI111i1 = 36541;
-                            var _Ii1l1IIl = 0.9044720559495198;
-                            return hashData
-                        };
+
                         null === f && (f = new se.default(a.initializeCollectors(t.INCREMENTAL_REPORT_COLLECTORS)))
                     }, a.collectIncrementalCollectors = function() {
                         var _LII = ['__awaiter', 0];
-                        var _0Q0Qo0OQ = function(_S$S$zss2, _IlLLLiLl) {
-                            var _QQQ = ['encrypt', 44311];
-                            var _llILlIIi = encrypt;
-                            return 44311
-                        };
+
                         return k.__awaiter(a, void 0, void 0, function() {
                             var _s2zS = [570, '__generator'];
-                            var _11LIL1LI = 570;
                             return k.__generator(this, function(e) {
                                 var _oQO = [2, 'collectAndEncrypt'];
-                                var _lil111Ll = function(_s$Ss$sZZ, _IL11l11L) {
-                                    var _QQoOo = [41851, 'documentHash', 27794, .6233976944694306, 'amazonData', 'amazonFwcim'];
-                                    var _oOOooOoQ = amazonFwcim,
-                                        _O00OOQoQ = 27794,
-                                        _0ooQ0QQO = amazonData;
-                                    var _$$Z2Ss$z = 41851,
-                                        _2$SzS$s2 = 0.6233976944694306;
-                                    return documentHash
-                                };
                                 return [2, this.collectAndEncrypt(f)]
                             })
                         })
@@ -3670,16 +3687,7 @@
                     }
                 }, t.prototype.report = function(e) {
                     var _Ilii = [0, '__awaiter'];
-                    var _Oo0Oo0Q0 = function(_QQOQOOQO, _IiIIlili) {
-                        var _S$ = [11424, .27579052594517184, 15383, 19743, 'hash', .3513702216030914, 15208];
-                        var _$SZ2$$Ss = 19743,
-                            _Z$2$ZZ22 = hash,
-                            _l1IiLlLI = 11424;
-                        var _111L11Il = 15208,
-                            _0ooOOQOQ = 0.3513702216030914;
-                        var _li1LL1II = 15383;
-                        return 0.27579052594517184
-                    };
+
                     return void 0 === e && (e = 0), k.__awaiter(this, void 0, void 0, function() {
                         var _o0O = ['__generator', 'dataJsonHash', 'encrypt'];
                         var _00QOoooQ = dataJsonHash,
