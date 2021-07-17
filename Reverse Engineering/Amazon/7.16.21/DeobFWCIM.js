@@ -3610,7 +3610,9 @@
         exports['default'] = ht
     }), 
     
-    // 
+    // IMPORTANT
+    // Although this has a lot of logic, I feel like they're reporting to an external server,
+    // and this is more for analytics instead of generating the metadata1
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -3831,10 +3833,16 @@
                 }], t
             }(ue['default']);
         exports['default'] = Re
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // Constants 
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1, exports.FWCIM_VERSION = '4.0.0'
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // Collects info about the scripts on the webpage and their contents
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var k = __webpack_require__(0),
@@ -3842,11 +3850,11 @@
             nt = __webpack_require__(1),
             Fe = function(e) {
                 var _S2s = ['__extends', 'prototype', 'script', null, 'apply', 'default', 'collectData', 'CRC_CALCULATOR', 'collectorName'];
-
+        
                 function t() {
-                    return _S2307 !== e && e[_S2308](this, arguments) || this
+                    return null !== e && e.apply(this, arguments) || this
                 }
-                return k[_S2301](t, e), t[_S2302].collectData = function() {
+                return k.__extends(t, e), t.prototype.collectData = function() {
                     var _00o0 = ['__awaiter', 0];
                     return k.__awaiter(this, void 0, void 0, function() {
                         var _QOOo = ['__generator', .547977832961084, 'nodeBObfuscate'];
@@ -3855,10 +3863,14 @@
                         var e, n, r, i, s, l, u, c, a, o, C;
                         return k.__generator(this, function(h) {
                             var _zSz = [/<script[\s\S]*?>[\s\S]*?<\/script>/gi, 'exec', 'substring', 1, 'match', 2, 'hashEncrypt', 'calculate', 0, 'innerHTML', 'CRC_CALCULATOR', 'length', /src="[\s\S]*?"/, .015576029677893732, 43756, 'documentElement', 5, 'getTime', 'push'];
+
+                            // matches all scripts from the entire page
+                            // loops over them
+                            // checks for match src="SHITGOESHERE" in each script
+                            // if it matches, get the first one and store as C, push substring(5, C.length - 1) to array i
+                            // if there is no match, use CRC_CALCULATE on the script we are looping over
                             for (e = new Date().getTime(), n = document.documentElement.innerHTML, r = /<script[\s\S]*?>[\s\S]*?<\/script>/gi, i = [], s = [], l = /src="[\s\S]*?"/, u = n.match(r), c = 0, a = u; c < a.length; c++)(o = a[c]).match(l) ? (C = l.exec(o) .0, i.push(C.substring(5, C.length - 1))) : s.push(t.CRC_CALCULATOR.calculate(o));
-                            var _Q0O00OOo = 43756,
-                                _1IIii1iL = 0.015576029677893732,
-                                _Z$$ssS2$ = hashEncrypt;
+
                             return [2, {
                                 scripts: {
                                     dynamicUrls: i,
@@ -3870,10 +3882,14 @@
                             }]
                         })
                     })
-                }, t.CRC_CALCULATOR = new f.default(), t.collectorName = _S2303, t
+                }, t.CRC_CALCULATOR = new f.default(), t.collectorName = script, t
             }(nt['default']);
         exports['default'] = Fe
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // Returns a [2, { performance { timing } } ] array
+    // if it doesn't exist, return [2, null] 
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var k = __webpack_require__(0),
@@ -3884,33 +3900,13 @@
                     var _22$S2SZ2 = bodyObfuscateList,
                         _QoQO0oQQ = 0.33652617158620557
                 }
-                var _LiiII1i1 = function(_LILILlil) {
-                    var _2s$ = [.41745103378396764, 43611, 'data', 37168];
-                    var _OQo0oO00 = data,
-                        _00oO00OO = 0.41745103378396764;
-                    var _ILLI1LlL = 37168;
-                    return 43611
-                };
                 return e.prototype.collect = function() {
                     var _Llli = ['__awaiter', 0];
-                    var _L1lIiiLi = function(_QoQQoQo0, _1ii1Li11) {
-                        var _0oQo = ['blobObfuscate', .41276609679632936, 'id', 18676];
-                        var _il11lLIL = 18676;
-                        var _$$zs2S$z = blobObfuscate,
-                            _2Z2ZZss$ = 0.41276609679632936;
-                        return id
-                    };
                     return k.__awaiter(this, void 0, void 0, function() {
                         var _oO0Q = ['__generator'];
                         return k.__generator(this, function(e) {
                             var _zsz = ['toJSON', 2, null, 'performance', 'timing'];
-                            var _1iLLIlLL = function(_liilI1iI) {
-                                var _Il1I = [25902, 'useragent', .20698072468139372, 37433];
-                                var _0Q0Oo0Q0 = 37433;
-                                var _iL1i1ILI = 0.20698072468139372,
-                                    _1iiLilIl = 25902;
-                                return useragent
-                            };
+
                             return window.performance && window.performance.timing && window.performance.timing.toJSON ? [2, {
                                 performance: {
                                     timing: window.performance.timing.toJSON()
@@ -3921,7 +3917,10 @@
                 }, e.collectorName = perf, e
             }();
         exports['default'] = Je
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // Returns a [2, {history: {length}}] array
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var k = __webpack_require__(0),
@@ -3929,16 +3928,11 @@
                 var _zSSS = ['h', 'collectorName', 'prototype', 'collect'];
 
                 function t() {
-                    var _$2zsZSZZ = function(_iIiIi1IL, _Zs2sZZSs) {
-                        var _ZZs = ['blob', 'dataStatementJson'];
-                        var _iilIIIl1 = blob;
-                        return dataStatementJson
-                    }
+
                 }
                 return t.prototype.collect = function() {
                     var _ZZ$ = [.21554058463228087, 0, .5378316312763443, '__awaiter'];
-                    var _OQoOQoO0 = 0.5378316312763443,
-                        _Z2$sSzS$ = 0.21554058463228087;
+
                     return k.__awaiter(this, void 0, void 0, function() {
                         var _ooQQ = ['__generator'];
                         return k.__generator(this, function(t) {
@@ -3953,7 +3947,10 @@
                 }, t.collectorName = h, t
             }();
         exports['default'] = wt
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // Returns an array object about battery i.e. [2, {}], [3, 2], and [4, {...}]
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var k = __webpack_require__(0),
@@ -3962,33 +3959,20 @@
                 var _oQQQ = ['encrypt', 'collectData', .9451832688530994, '__extends', null, 'batt', 'apply', 'collectorName', 'prototype', 'collector'];
 
                 function e() {
-                    var _0oOoQQo0 = 0.9451832688530994,
-                        _LliLI1ii = encrypt,
-                        _OO0ooQoQ = collector;
+
                     return null !== t && t.apply(this, arguments) || this
                 }
-                var _oO0oooQO = function(_S$$s$Zzz, _2S2Z$Zs2, _QQo0oQO0) {
-                    var _ooQO = ['captcha', 'hashDomExecute'];
-                    var _ooOOOOoo = captcha;
-                    return hashDomExecute
-                };
+
                 return k.__extends(e, t), e.prototype.collectData = function() {
                     var _o0OO = ['__awaiter', 0, .13257514405394288, 26363];
-                    var _liIll1iI = 26363,
-                        _OOQ0QQoO = 0.13257514405394288;
+
                     return k.__awaiter(this, void 0, void 0, function() {
                         var _l1i = [.7976964833174605, '__generator'];
                         var t, e;
                         var _OOoOoo0o = _l1DELETE;
-                        return k[_l1GET](this, function(r) {
+                        return k['__generator'](this, function(r) {
                             var _IIL1 = [0, 'call', 2, 3, 'battery', 'sent', 4, 'label', 'getBattery', 1];
-                            var _ilLiILLi = function(_szs$SzZ2, _2ZZSS2$S) {
-                                var _iiiL = [27163, .3125528965437012, .8262516866690328, 19500];
-                                var _o0o00oQQ = 0.8262516866690328,
-                                    _Zsssz$$z = 19500,
-                                    _LlILlLIL = 0.3125528965437012;
-                                return 27163
-                            };
+
                             switch (r.label) {
                                 case 0:
                                     return (t = navigator.getBattery) ? (e = {}, [4, t.call(navigator)]) : [3, 2];
@@ -4002,7 +3986,11 @@
                 }, e.collectorName = batt, e
             }(nt['default']);
         exports['default'] = pt
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // Checks if you're using selenium automation software to login?
+    // returns an [2, {automation: {wd: {...}, phantom: {...}}}] Array
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var k = __webpack_require__(0),
@@ -4021,14 +4009,6 @@
                     })
                 }, r.prototype.collectData = function() {
                     var _$zz = ['__awaiter', 0];
-                    var _o00QQQo0 = function(_S2sszSZS, _QOOoOO0Q, _l1IiII11) {
-                        var _$2$$ = ['hash', .9844161866018466, 'encryptAmazon', 'collectorStatement', 32701];
-                        var _22szz2Sz = 32701;
-                        var _OoOO0Q0o = hash,
-                            _1IlI1Li1 = 0.9844161866018466,
-                            _$2Zz$Z$s = encryptAmazon;
-                        return collectorStatement
-                    };
                     return k.__awaiter(this, void 0, void 0, function() {
                         var _Lli = ['__generator'];
                         return k.__generator(this, function(e) {
@@ -4054,7 +4034,10 @@
                 }, r.WEBDRIVER_DOCUMENT_PROPERTIES = [webdriver, __driver_evaluate, __webdriver_evaluate, __selenium_evaluate, __fxdriver_evaluate, __driver_unwrapped, __webdriver_unwrapped, __selenium_unwrapped, __fxdriver_unwrapped, __webdriver_script_fn, _Selenium_IDE_Recorder, _selenium, calledSelenium, $cdc_asdjflasutopfhvcZLmcfl_, $chrome_asyncScriptInfo, __$webdriverAsyncExecutor], r.WEBDRIVER_WINDOW_PROPERTIES = [webdriver, __webdriverFunc, domAutomation, domAutomationController, __lastWatirAlert, __lastWatirConfirm, __lastWatirPrompt, _WEBDRIVER_ELEM_CACHE], r.WEBDRIVER_NAVIGATOR_PROPERTIES = .webdriver, r.PHANTOM_WINDOW_PROPERTIES = [_phantom, callPhantom], r.collectorName = auto, r
             }(nt['default']);
         exports['default'] = We
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // Records metrics about submitting a form (probably login or continue?)
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var k = __webpack_require__(0),
@@ -4063,50 +4046,19 @@
                 var _oooO0 = ['form', 'collectorName', 'tts', 'start', 'getTime', 'bindSubmitEvent', 'collect', 'prototype'];
 
                 function t(t) {
-                    var _22zzZ$Sz = function(_22SsS$z$, _szsSS2Z2) {
-                        var _sS$ = ['idCaptcha', 'amazon', .8118104686511622, 'amazonHash', 34672, 7754];
-                        var _lliLilii = amazon,
-                            _0oQQOOQQ = amazonHash,
-                            _1I1LiIiI = 7754;
-                        var _Z$ZSszs2 = 0.8118104686511622,
-                            _O0oOoO0O = idCaptcha;
-                        return 34672
-                    };
                     this.start = new Date().getTime(), this.form = t.form, this.bindSubmitEvent()
                 }
                 return t.prototype.bindSubmitEvent = function() {
                     var _1LI = ['form', 'submit', 'default', 'addEventListener'];
-                    var _2zSSSZ2S = function(_1iii1Ili, _llLiiiii, _IllILlLi) {
-                        var _$2$ = [.7503214644476452, 23309, 'collectorNodeUseragent', 48490, 'document', 'jsonEncrypt'];
-                        var _LiIL1Lll = 23309,
-                            _oQOo00Qo = collectorNodeUseragent;
-                        var _ooOoQOO0 = document,
-                            _OOOO0QOQ = 0.7503214644476452,
-                            _s$z2zsZ2 = jsonEncrypt;
-                        return 48490
-                    };
                     var t = this;
                     new ce.default(this.form).addEventListener(submit, function() {
                         var _0Oo0 = ['timeSubmitted', 'getTime'];
-                        var _QO0Q0QQO = function(_1Lll1ILi) {
-                            var _liiL = [.8267651621911609, 'idCollector', .4332238790721612];
-                            var _2Z$zZ$$Z = 0.4332238790721612,
-                                _QoOOOQQO = 0.8267651621911609;
-                            return idCollector
-                        };
                         return t.timeSubmitted = new Date().getTime()
                     })
                 }, t.prototype.collect = function() {
                     var _ooQ0 = ['__awaiter', 0];
                     return k.__awaiter(this, void 0, void 0, function() {
                         var _O0Ooo = ['__generator'];
-                        var _ooQQOQ0O = function(_lLllLLli, _2z2S$ss2, _zsss2Z$S) {
-                            var _i1I1 = ['blobHashDom', 29537, 'encryptA', 'captchaBodyDocument'];
-                            var _2SzzssZs = 29537,
-                                _2SsszZz$ = captchaBodyDocument;
-                            var _SS2zzsZZ = blobHashDom;
-                            return encryptA
-                        };
                         return k.__generator(this, function(t) {
                             var _QOQ = ['start', 7052, 'timeSubmitted', null, 2, 0];
                             var _o0000QQOO = 7052;
@@ -4118,7 +4070,10 @@
                 }, t.collectorName = tts, t
             }();
         exports['default'] = mt
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+    
+    // 
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4127,7 +4082,6 @@
                     var _QQo0 = ['storage', 'MAX_PROOF_OF_WORK_DIFFICULTY', 'computeToken', 'FWCIM_SCRIPT_MATCHERS', 'POW_ATTEMPT_LS_KEY', 'POW_ATTEMPT_TIME_KEY', 12, 'getDifficulty', /^(https\:\/\/.+\/common\/login\/)fwcim/, 'sessionStorage', 'pageHasCaptcha', .2251335587558121, 'pow', 'getProofOfWorkScript', 't', 'd', 'collect', 300, 'MIN_PROOF_OF_WORK_DIFFICULTY', 'prototype', 'startProofOfWork', 'PROOF_OF_WORK_SCRIPT_NAME', 8, 'collectorName', 'SESSION_ID_COOKIE_NAME', 'fwcim-pow-state', 'token', 'POW_ATTEMPT_TTL_SECONDS', null, 'session-id', 'POW_ATTEMPT_DIFFICULTY_KEY', 'isCompatible', 'getSessionId', 'localStorage', 'fwcim-pow.js'];
 
                     function t(t) {
-                        var _oQOQ000o = 0.2251335587558121;
                         this.token = null, this.token = {
                             isCompatible: this.isCompatible(),
                             pageHasCaptcha: this.pageHasCaptcha()
@@ -4137,6 +4091,8 @@
                         } catch (e) {}
                         this.token.isCompatible && this.token.pageHasCaptcha && this.startProofOfWork()
                     }
+
+                    // checks if the required functions are available on the browser
                     return t.prototype.isCompatible = function() {
                         var _s$$ = ['from', 'crypto', 'Blob', 'subtle', 'function', 'querySelectorAll', 'cookie', 'webkitURL', 'length', 'Worker', 'URL'];
                         return !!(fetch && Promise && Array && function == typeof Array.from && document.cookie && document.cookie.length && function == typeof document.querySelectorAll && window.Worker && window.crypto && window.crypto.subtle && (window.URL || window.webkitURL) && window.Blob)
@@ -4145,22 +4101,10 @@
                         var _Qo0QQ0O0 = useragentAB;
                         return k.__awaiter(this, void 0, void 0, function() {
                             var _oOQ = ['__generator'];
-                            var _sZZSzs2s = function(_ZSzS$2zZ, _z$S2$$zZ) {
-                                var _LlI = ['fwcimFwcimB', .5611129227017542, .7790914545104468, 'domAmazon'];
-                                var _2zs22$sS = domAmazon,
-                                    _2Zszs2$s = 0.7790914545104468,
-                                    _l1IIIiiL = fwcimFwcimB;
-                                return 0.5611129227017542
-                            };
                             var e, o, r, i, n, s, a, _, c, u, f, l;
                             return k.__generator(this, function(T) {
                                 var _2ss = ['trys', 3, 6, 'src', 4, 1, 8, 7, 'exec', 'sent', null, 5, 'apply', 9, 2, 'label', 'webkitURL', 'script', 'createObjectURL', 'blob', 'PROOF_OF_WORK_SCRIPT_NAME', 'querySelectorAll', 'ok', 'length', 'FWCIM_SCRIPT_MATCHERS', 0, 'push', 'URL'];
-                                var _oO000oO0 = function(_s$2sszzz) {
-                                    var _llIi = [42871, 29976, .5819419076445176];
-                                    var _LLiLLLIi = 29976,
-                                        _0QQ0QoQQ = 0.5819419076445176;
-                                    return 42871
-                                };
+
                                 switch (T.label) {
                                     case 0:
                                         e = document.querySelectorAll(script), o = 0, T.label = 1;
@@ -4169,7 +4113,7 @@
                                         if (!(r = e[o].src)) return [3, 8];
                                         i = 0, n = t.FWCIM_SCRIPT_MATCHERS, T.label = 2;
                                     case 2:
-                                        return i < n.length ? (s = n[i], (a = s.exec(r)) && a.length >= 2 ? (_ = a .1 + t.PROOF_OF_WORK_SCRIPT_NAME, [4, fetch(_)]) : [3, 7]) : [3, 8];
+                                        return i < n.length ? (s = n[i], (a = s.exec(r)) && a.length >= 2 ? (_ = a[1] + t.PROOF_OF_WORK_SCRIPT_NAME, [4, fetch(_)]) : [3, 7]) : [3, 8];
                                     case 3:
                                         if (!(c = T.sent()) || !c.ok) return [3, 7];
                                         T.label = 4;
@@ -4193,19 +4137,23 @@
                         for (var t = _.default.CAPTCHA_FIELDS, e = 0; e < t.length; e++)
                             if (document.querySelectorAll(t[e]).length) return 1;
                         return 0
-                    }, t.prototype.getSessionId = function() {
-                        var _s2S = ['split', 'trim', .0008402225542065711, '=', 'cookie', null, 0, 1, 'SESSION_ID_COOKIE_NAME', ';', 'obfuscateFwcim', 2, 'length'];
-                        var _0ooO0o0O = _s2S[2],
-                            _zSZSsZz$ = _s2S[10];
-                        for (var e = _s2S[6], o = document[_s2S[4]][_s2S[0]](_s2S[9]); e < o[_s2S[12]]; e++) {
-                            var r = o[e][_s2S[0]](_s2S[3]);
-                            if (_s2S[11] === r[_s2S[12]] && r[_s2S[6]][_s2S[1]]() === t[_s2S[8]]) return r[_s2S[7]][_s2S[1]]()
+                    }, 
+                    
+                    // very self explanatory lmao
+                    t.prototype.getSessionId = function() {
+                        var _s2S = ['split', 'trim', .0008402225542065711, '=', 'cookie', null, 0, 1, 'SESSION_ID_COOKIE_NAME', 'FUCKKKK', 'obfuscateFwcim', 2, 'length'];
+                        for (var e = 0, o = document.cookie.split(';'); e < o.length; e++) {
+                            var r = o[e].split('=');
+                            if (2 === r.length && r .0.trim() === t.SESSION_ID_COOKIE_NAME) return r .1.trim()
                         }
-                        return _s2S[5]
+                        return null
                     }, t.prototype.getDifficulty = function() {
                         var _LlII = ['random', 'MIN_PROOF_OF_WORK_DIFFICULTY', 'floor', 'MAX_PROOF_OF_WORK_DIFFICULTY'];
                         return Math.floor(Math.random() * (t.MAX_PROOF_OF_WORK_DIFFICULTY - t.MIN_PROOF_OF_WORK_DIFFICULTY)) + t.MIN_PROOF_OF_WORK_DIFFICULTY
-                    }, t.prototype.startProofOfWork = function() {
+                    }, 
+                    
+                    // does a lot of random bullshit work then sets it in storage along with sessionId
+                    t.prototype.startProofOfWork = function() {
                         var _1Ll = ['__awaiter', 0];
                         return k.__awaiter(this, void 0, void 0, function() {
                             var _OQOQ = ['__generator', .33651278330018597, 'elUseragentFwcim'];
@@ -4214,31 +4162,13 @@
                             var e, o, r, i, n, s, a, _;
                             return k.__generator(this, function(c) {
                                 var _LlL = ['computeToken', 'getTime', 'difficulty', 1e3, 'iv', 'getSessionId', 'number', 'label', 'max', 'min', 'getProofOfWorkScript', 0, 'getDifficulty', 'sent', 4, 'setItem', 'parse', 1, 'getItem', 2, 'POW_ATTEMPT_TIME_KEY', 'storage', 'stringify', 'MIN_PROOF_OF_WORK_DIFFICULTY', '__assign', 'POW_ATTEMPT_TTL_SECONDS', 'POW_ATTEMPT_DIFFICULTY_KEY', 'POW_ATTEMPT_LS_KEY', 'token'];
-                                var _zz2S$sZs = function(_0OQ0Q0oO, _LL1Iilll) {
-                                    var _OoQ0 = [10212, 'listAmazon'];
-                                    var _SszzsS$S = 10212;
-                                    return listAmazon
-                                };
+
                                 switch (c.label) {
                                     case 0:
                                         return [4, this.getProofOfWorkScript()];
                                     case 1:
                                         if (o = c.sent()) {
-                                            var _o000QQoo = function(_$zzZ$S$s) {
-                                                var _Zsz = ['jsonDocument', 15261, 7466, 3945];
-                                                var _ZzssSZZ2 = 15261,
-                                                    _iiiIllLi = 7466;
-                                                var _ZZzz$Szs = 3945;
-                                                return jsonDocument
-                                            };
                                             if (r = new Date().getTime(), i = this.getDifficulty(), this.storage) try {
-                                                var _0QooooOO = function(_QoO0OOo0, _$s22z$Sz, _$sSszZSZ) {
-                                                    var _L1i = [41458, 13757, 'dataBlob', 'amazonHashDocument'];
-                                                    var _LILLiLLI = _L1OPTIONS,
-                                                        _0OOoO0OQ = _L1DELETE;
-                                                    var _ILilLLi1 = _L1GET;
-                                                    return _L1HEAD
-                                                };
                                                 (n = this.storage.getItem(t.POW_ATTEMPT_LS_KEY)) && (s = JSON.parse(n), a = s[t.POW_ATTEMPT_DIFFICULTY_KEY], _ = s[t.POW_ATTEMPT_TIME_KEY], number == typeof a && number == typeof _ && r - _ < 1000 * t.POW_ATTEMPT_TTL_SECONDS && (i = Math.max(t.MIN_PROOF_OF_WORK_DIFFICULTY, Math.min(i, a - 1)))), this.storage.setItem(t.POW_ATTEMPT_LS_KEY, JSON.stringify(((e = {})[t.POW_ATTEMPT_DIFFICULTY_KEY] = i, e[t.POW_ATTEMPT_TIME_KEY] = r, e)))
                                             } catch (u) {}
                                             this.token = k.__assign({}, this.token, {
@@ -4247,7 +4177,7 @@
                                                 iv: this.getSessionId()
                                             }), this.computeToken(o, this.token.iv, this.token.difficulty)
                                         }
-                                        return .2
+                                        return 2
                                 }
                             })
                         })
@@ -4259,29 +4189,15 @@
                             iv: e
                         }), this.worker.onmessage = function(t) {
                             var _oQoo = [44144, 'getTime', 'difficulty', 'token', 'toString', .9982871556958155, 'end', 'from', 'time', 'error', 'start', 'iv', 'data'];
-                            var _Z2sSs$Zs = function(_I1iLl1Il) {
-                                var _Ii1 = [.4272162451871768, 'captcha', .74342071413995, 'documentDom'];
-                                var _$sSSZZs$ = 0.74342071413995,
-                                    _IlilII1I = 0.4272162451871768,
-                                    _ZSZSzs2S = documentDom;
-                                return captcha
-                            };
+
                             try {
                                 r.token.end = new Date().getTime(), r.token.time = r.token.end - r.token.start, r.token.token = Array.from(t.data.token), r.token.difficulty = t.data.difficulty, r.token.iv = t.data.iv
                             } catch (e) {
-                                var _$Z$$s22s = 0.9982871556958155,
-                                    _L1IiLllI = 44144;
                                 r.token.error = e.toString()
                             }
                         }
                     }, t.prototype.collect = function() {
                         var _00O0O = ['__awaiter', 0];
-                        var _L1lLILil = function(_L1iLilI1) {
-                            var _sz$ = ['document', 'dom', 'captchaNode'];
-                            var _QoQ00oOo = captchaNode,
-                                _zSzzSsSZ = document;
-                            return dom
-                        };
                         return k.__awaiter(this, void 0, void 0, function() {
                             var _l1L = ['__generator'];
                             return k.__generator(this, function(t) {
@@ -4294,7 +4210,10 @@
                     }, t.MIN_PROOF_OF_WORK_DIFFICULTY = 8, t.MAX_PROOF_OF_WORK_DIFFICULTY = 12, t.PROOF_OF_WORK_SCRIPT_NAME = fwcim - pow.js, t.FWCIM_SCRIPT_MATCHERS = . / ^ (https\: \/\/.+\/common\/login\/)fwcim/, t.SESSION_ID_COOKIE_NAME = session - id, t.POW_ATTEMPT_LS_KEY = fwcim - pow - state, t.POW_ATTEMPT_DIFFICULTY_KEY = d, t.POW_ATTEMPT_TIME_KEY = t, t.POW_ATTEMPT_TTL_SECONDS = 300, t.collectorName = pow, t
                     }();
                     exports['default'] = _t
-                }), (function(module, exports, __webpack_require__) {
+                }), 
+               
+        // returns a 'formMethod' generator 
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4307,15 +4226,11 @@
                             o = t.call(this) || this;
                         return o.formMethod = (r.method || get).toLocaleLowerCase(), o
                     }
-                    var _QoQO00Q0 = 3038,
-                        _1LL1l11L = 0.19570408635485892;
                     return k.__extends(e, t), e.prototype.collectData = function() {
                         var _iIL = ['__awaiter', 0];
                         return k.__awaiter(this, void 0, void 0, function() {
                             var _0Qo = ['amazonIdB', '__generator', 857, 'listBody'];
-                            var _Qo00oOQ0 = listBody,
-                                _$zSzSSSZ = 857,
-                                _OOQ0QoOQ = amazonIdB;
+
                             return k.__generator(this, function(t) {
                                 var _Ll = [2, 'formMethod'];
                                 return [2, {
@@ -4330,7 +4245,10 @@
                     }, e
                 }(nt['default']);
             exports['default'] = ut
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // Adds telemetry collectors to inputs (i.e. ap_username, ap_password)
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4345,19 +4263,11 @@
                             _sSsszZz2 = 38182;
                         this.telemetryCollectors = [], this.form = e.form, this.bindInputTelemetry(e.cycleBuffer)
                     }
+
+                    // adds event listeners for telemetry on all INPUT elements?
                     return e.prototype.bindInputTelemetry = function(t) {
                         var _0oO = ['join', 'telemetryCollectors', 'length', 'default', 0, 'form', 'INPUT_SELECTORS', 'name', ',', 'FORM_ID_ALIASES', 'string', 'push', 1, 'querySelectorAll', 'id'];
                         void 0 === t && (t = -1);
-                        var _1lIlI1ii = function(_i11illLi) {
-                            var _I1i = ['b', .9544458124358792, 'json', 21476, 7954, 'data', 'useragentDocument'];
-                            var _o0o0000Q = _I1HEAD,
-                                _QooOQoo0 = _I1PUT,
-                                _II1llIiI = _I1OPTIONS;
-                            var _O0Q0Qoo0 = useragentDocument,
-                                _0QQQOQQO = _I1GET,
-                                _iII11iii = _I1DELETE;
-                            return _I1POST
-                        };
                         for (var r = new c.default(this.form).querySelectorAll(e.INPUT_SELECTORS.join(, )), l = 0; l < r.length; l++) {
                             var i = r[l],
                                 o = i,
@@ -4404,7 +4314,10 @@
                     }, e.collectorName = input, e
                 }();
             exports['default'] = Oe
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // Screen collector
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4413,23 +4326,10 @@
                     var _11li = ['collectorName', 'collectData', '__extends', 'elNode', 'prototype', 'screen', 36625, null, 'apply'];
 
                     function n() {
-                        var _IL111lIl = 36625,
-                            _sSz$Zzzs = elNode;
                         return null !== e && e.apply(this, arguments) || this
                     }
-                    var _sZzs22sz = function(_L1LILIii, _1II1lI1I) {
-                        var _Oo0Q = [.6567703198962846, 'obfuscateStatement', 14963, .7488600682794015, 'collectorJson', 46429];
-                        var _iIliiliL = 46429,
-                            _IlIlII1i = collectorJson;
-                        var _1LlilLiI = 0.7488600682794015,
-                            _LlLlI11I = 0.6567703198962846,
-                            _1iI1ili1 = 14963;
-                        return obfuscateStatement
-                    };
                     return k.__extends(n, e), n.prototype.collectData = function() {
                         var _sSS = ['__awaiter', 0, 'documentExecute', 'collectorHash'];
-                        var _1IiLILlI = collectorHash,
-                            _szz2zZ2S = documentExecute;
                         return k.__awaiter(this, void 0, void 0, function() {
                             var _Zz2 = ['__generator'];
                             var e, n;
@@ -4443,7 +4343,10 @@
                     }, n.collectorName = screen, n
                 }(nt['default']);
             exports['default'] = $e
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // [2, {flashVesion: e, plugins: n}] return collector
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4459,16 +4362,6 @@
                         return k.__awaiter(this, void 0, void 0, function() {
                             var _0oOo = ['__generator'];
                             var e, n, t, r, i, o;
-                            var _LILI1lIl = function(_zsS2z$$2) {
-                                var _szZs = ['list', 19980, .05625581252726519, .1979117959087966, 18352, 7619, 'captchaAmazonCollector'];
-                                var _llLLIL11 = 18352,
-                                    _SZ$sZZs2 = 0.1979117959087966,
-                                    _QQOOOO0O = 7619;
-                                var _oo0QQOOO = list;
-                                var _oQooO0oQ = captchaAmazonCollector,
-                                    _2z$$Z$2S = 19980;
-                                return 0.05625581252726519
-                            };
                             return k.__generator(this, function(a) {
                                 var _0O0o = ['replace', 'navigator', '.', /Shockwave Flash/, ' ', 'version', /[^0-9]/g, 'match', 1, 'length', /([0-9.]+)\s+r([0-9.]+)/, 'item', 'name', 'description', 2, 'plugins', 'push', null, 0];
                                 for (e = null, n = [], t = 0; t < window.navigator.plugins.length; t++) r = window.navigator.plugins.item(t), i = r.name + +r.description.replace(/[^0-9]/g, ''), n.push({
@@ -4485,7 +4378,10 @@
                     }, n.collectorName = navigator, n
                 }(nt['default']);
             exports['default'] = Ze
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // Plugin collector again. Or validator
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4494,29 +4390,13 @@
 
                     function e(e) {
                         var t = e.container;
-                        var _Lii1iiIL = function(_i1l1illi, _zzS2ZSSs) {
-                            var _llIl = ['fwcimBody', 13738, 'statement'];
-                            var _oQoOQ0oQ = statement,
-                                _SZ$SS$SZ = fwcimBody;
-                            return 13738
-                        };
                         this.container = t, this.setupVBScript()
                     }
-                    var _illl1l1L = function(_1I1lIiIL, _lLLliL1l, _OoO0oooQ) {
-                        var _OOQOo = [.5240572547662539, 'executeId', 44991, 'a', 47449, 13811, 'jsonObfuscate'];
-                        var _Q0O0000O = jsonObfuscate,
-                            _iIllIll1 = 47449,
-                            _1L1I1iiL = 0.5240572547662539;
-                        var _2zZsz$Z$ = executeId,
-                            _SSz$z$sZ = 13811,
-                            _illILiiL = 44991;
-                        return a
-                    };
                     return e.prototype.setupVBScript = function() {
                         var _Szs = ['script', 'text', 'The container was not found.', 'createElement', 'text/vbscript', 'container', 'appendChild', 'type', 'VB_SCRIPT'];
                         if (!this.container) throw new Error(The container was not found.);
                         var t = document.createElement(script);
-                        t.type = text / vbscript, t.text = e.VB_SCRIPT, this.container.appendChild(t)
+                        t.type = 'text / vbscript', t.text = e.VB_SCRIPT, this.container.appendChild(t)
                     }, e.prototype.checkActiveXPlugin = function(e, t) {
                         var _o000O = [124, 0, null, 47762, 1, .618872369580385, ' : '];
                         var n = 1;
@@ -4572,7 +4452,12 @@
                     End Function, e.collectorName = ax - plugin, e
                 }();
             exports['default'] = Ye
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // idk
+        // has 'this.prepareBrowserCapabilitesElement'
+        // and lots of shit about 'components'
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4605,8 +4490,6 @@
                                         var _Llil = [.5422168741217597, .05589587345726832, 'push', 'isComponentInstalled', 'ComponentID', '|', ' ', 'COMPONENTS', 'getComponentVersion'];
                                         var t = C.COMPONENTS[B];
                                         if (A.isComponentInstalled && A.isComponentInstalled(t, ComponentID)) {
-                                            var _OOoOoOoQ = 0.5422168741217597,
-                                                _z2S$Z2zS = 0.05589587345726832;
                                             var n = A.getComponentVersion(t, ComponentID);
                                             e.push({
                                                 name: B,
@@ -4614,18 +4497,12 @@
                                                 str: | +B + +n
                                             })
                                         }
-                                        var _1II11L1i = function(_sSZz$2$S, _S$szSzzS) {
-                                            var _1lLI = [13133, .4138875082641156, .6283515054399997];
-                                            var _szss2ZzZ = 0.6283515054399997,
-                                                _OoQ00OQO = 13133;
-                                            return 0.4138875082641156
-                                        };
                                         return e
                                     }, [])
                                 }]
                             })
                         })
-                    }, C.collectorName = as - plugin, C.COMPONENTS = {
+                    }, C.collectorName = 'as - plugin', C.COMPONENTS = {
                         AB: {
                             7790769 C - 0471 - 11 D2 - AF11 - 00 C04FA35D02
                         },
@@ -4710,24 +4587,20 @@
                     }, C
                 }();
             exports['default'] = CC
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // Checks if using windows and if using internet explorer lol
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var nn = function() {
                 var _00Q = ['ie', 'windows'];
 
                 function n() {
-                    var _1LiIlL1L = function(_2S$Z$2zS, _$SSs2z$$) {
-                        var _LIl = ['dataIdStatement', .20148185134274166, 20755];
-                        var _IlillIl1 = 0.20148185134274166,
-                            _oQOOo0QO = 20755;
-                        return dataIdStatement
-                    }
                 }
                 return n.ie = function() {
                     var _llL = ['navigator', 'dataJsonAmazon', /MSIE [0-9.]+/i, 11892, 'userAgent', 'match'];
-                    var _s22Szsz$ = dataJsonAmazon,
-                        _LiiiILii = 11892;
+
                     return !!window.navigator.userAgent.match(/MSIE [0-9.]+/i)
                 }, n.windows = function() {
                     var _liLL = [/Windows/i, 'match', 'navigator', 'userAgent'];
@@ -4735,7 +4608,10 @@
                 }, n
             }();
             exports['default'] = nn
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // Adds listeners for captcha (shouldnt be a problem for us) for focus and click, etc
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4751,8 +4627,7 @@
                     }
                     return k.__extends(t, e), t.prototype.bindCaptcha = function() {
                         var _QOOQ = ['captchaRefreshLinks', 'element', 32538, 'addEventListener', 'forEach', 'documentObfuscateDom', 'default', 'focus'];
-                        var _OoQQOQQ0 = documentObfuscateDom,
-                            _2SZss$$s = 32538;
+
                         var e = this;
                         new ce.default(this.element).addEventListener(focus, function(t) {
                             var _OoO = ['getTime', 39166, 'firstFocusTime'];
@@ -4767,12 +4642,7 @@
                         })
                     }, t.prototype.keyPressIntervals = function() {
                         var _S2z = [1, 'keyCycles', 'length', 'firstFocusTime', 0, 'get', 'filter', 'push', 'startEventTime'];
-                        var _o0oo0ooO = function(_1ILLliIl, _zszZ$$s$, _2Zz$sSSs) {
-                            var _1lIi = [.8841560081239477, 2764, .6616891963297806];
-                            var _IliLLIlI = 2764;
-                            var _l1Lll1li = 0.6616891963297806;
-                            return 0.8841560081239477
-                        };
+
                         for (var e = this, t = this.keyCycles.get().filter(function(t) {
                                 var _IIi = ['startEventTime', 'firstFocusTime'];
                                 return t.startEventTime > e.firstFocusTime
@@ -4794,7 +4664,10 @@
                     }, t
                 }(Le['default']);
             exports['default'] = Xe
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // More captcha telemetry
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4807,14 +4680,7 @@
 
                     function e(t) {
                         for (var r = new c.default(t.form), l = [], o = r.querySelectorAll(t.captchaRefreshLinksSelector), u = 0; u < o.length; u++) l.push(o[u]);
-                        var _Z22S$$$$ = function(_llLi111i, _s2SZ$2s2) {
-                            var _ZSSS = [.5865552982341986, .3799346228996423, 44033, .9373072566845349, 31849];
-                            var _ooQOQQ0o = 0.9373072566845349,
-                                _ZSs$$2S2 = 44033;
-                            var _0oQOOO00 = 31849,
-                                _0QOQQQoo = 0.3799346228996423;
-                            return 0.5865552982341986
-                        };
+                
                         var n = r.querySelector(t.captchaFieldsSelector);
                         null != n && (this.telemetryCollector = new Ce.default({
                             key: e.KEY,
@@ -4827,15 +4693,6 @@
                     }
                     return e.prototype.collect = function() {
                         var _Sz$z = ['__awaiter', 0];
-                        var _o0QOooQQ = function(_ILILLIll, _ILiiii1I) {
-                            var _o0o0 = [30345, .39794198135671155, 'collectorCaptcha', 32083, .039100743040508146, 'bA'];
-                            var _1LLl1ILL = collectorCaptcha,
-                                _S2Zs2Szs = 30345;
-                            var _QOQO0QQ0 = 32083;
-                            var _lLiIiliL = 0.039100743040508146,
-                                _$Z$2SzsZ = bA;
-                            return 0.39794198135671155
-                        };
                         return k.__awaiter(this, void 0, void 0, function() {
                             var _2ZS = ['domDom', '__generator', 'nodeA'];
                             var _2zss2Z2z = nodeA,
@@ -4848,7 +4705,10 @@
                     }, e.KEY = captcha, e.collectorName = captchainput, e
                 }();
             exports['default'] = Ke
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // idk 
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4856,31 +4716,18 @@
                 nt = __webpack_require__(1),
                 Qe = function(e) {
                     var _11l = ['timeoutMs', .9779950943228277, 'scheduleCaching', .20928173844533116, .530390357799517, '__extends', 'call', 'prototype', 13469];
-                    var _iIiL111I = 0.530390357799517,
-                        _II1IiL1I = 0.20928173844533116,
-                        _Ll1i1Ll1 = 13469;
 
                     function t(t) {
                         var i = e.call(this) || this;
-                        var _L1LiLIlL = 0.9779950943228277;
                         return i.timeoutMs = t, i.scheduleCaching(), i
                     }
                     return k.__extends(t, e), t.prototype.scheduleCaching = function() {
                         var _Ili1 = ['timeoutMs', 'default', 'requestIdleCallback', 'function'];
                         var e = this,
                             t = window;
-                        var _o0OQQQo0 = function(_o0O0QoOo, _O00OQOOO, _i1IIlLIi) {
-                            var _SSS = ['captchaIdA', 'obfuscate', .2707526004330323, 42574];
-                            var _OOoQQooQ = 42574,
-                                _OQoo0OQO = 0.2707526004330323;
-                            var _zsZ$2ZSZ = captchaIdA;
-                            return obfuscate
-                        };
 
                         function == typeof t.requestIdleCallback ? t.requestIdleCallback(function() {
                             var _lLI = ['collect', 3556, .23099501695856128];
-                            var _I1LliILi = 3556,
-                                _l11IlI1L = 0.23099501695856128;
                             e.collect()
                         }, {
                             timeout: this.timeoutMs
@@ -4891,7 +4738,11 @@
                     }, t
                 }(nt['default']);
             exports['default'] = Qe
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // IMPORTANT
+        // Draws rectangles, shapes, etc using canvas and records data
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4917,14 +4768,7 @@
                             var t, a, l, i, r, o, n, c;
                             return k.__generator(this, function(s) {
                                 var _OoQo = [40, 7, 60, 70, 5, 'PI', 'no', 'function', 'toString', 'getImageData', 50, 'textBaseline', 1e300, 'createLinearGradient', 'multiply', 'height', 86, '~', 121, 10, 'font', '11pt Arial', 'white', 'canvas', 'rgb(255,255,0)', 35, 1, 45, 'fillText', 'yes', 'length', '#f60', 'blue', 'fillStyle', '#808080', 'calculate', 26, 'sin', 'rgba(102, 204, 0, 0.2)', 2, 'quadraticCurveTo', 6, 'toDataURL', 'join', 12, 101, 'rgb(0,255,255)', 'rgb(255,0,255)', 'strokeText', 'addColorStop', 76, 'beginPath', 'CANVAS_HEIGHT', 25, 'input[type=email]', 'globalCompositeOperation', 'cos', 'red', 'value', 'display', '8pt Arial', 0, 'createHistogram', 'tan', 'width', 'Cwm fjordbank glyphs vext quiz,', 'fill', 'moveTo', '2d', '10pt dfgstg', 4, 'querySelectorAll', 110, null, 'CANVAS_WIDTH', 'rect', 'difference', 'arc', 'style', 56, .5, 'closePath', 'data', 'stroke', 'evenodd', 'push', 30, 96, 125, 'alphabetic', 20, 'Not Available', '#069', 'toUpperCase', 'canvas fp:', 'formSelectorQuerier', 'isPointInPath', 'form', 'inline', 78, 'CRC_CALCULATOR', 41, 95, 80, 15, 'getContext', 'fillRect', 62];
-                                var _LlliLii1 = function(_1LlIIIii, _sS2z$S2Z) {
-                                    var _Ooo = [.2474401280659535, 'jsonB', 'el', 'blobAmazon', .642137460845694];
-                                    var _OOo0OOOo = el,
-                                        _11LILlLl = 0.642137460845694;
-                                    var _QQQQoooQ = jsonB,
-                                        _z$2ZZZzz = 0.2474401280659535;
-                                    return blobAmazon
-                                };
+                       
                                 return this.canvas && function == typeof this.canvas.getContext && this.canvas.getContext(2 d) ? (t = [], this.canvas.width = e.CANVAS_WIDTH, this.canvas.height = e.CANVAS_HEIGHT, this.canvas.style.display = inline, (a = this.canvas.getContext(2 d)).rect(0, 0, 10, 10), a.rect(2, 2, 6, 6), t.push(0 == a.isPointInPath(5, 5, evenodd) ? yes : no), a.textBaseline = alphabetic, a.fillStyle = #f60, a.fillRect(125, 1, 62, 20), a.fillStyle = #069,a.font= 8 pt Arial, a.fillText(Cwm fjordbank glyphs vext quiz, , 2, 15), a.fillStyle = rgba(102, 204, 0, 0.2), a.font = 11 pt Arial, a.fillText(Cwm fjordbank glyphs vext quiz, , 4, 45), a.globalCompositeOperation = multiply, a.fillStyle = rgb(255, 0, 255), a.beginPath(), a.arc(20, 20, 20, 0, 2 * Math.PI, 1), a.closePath(), a.fill(), a.fillStyle = rgb(0, 255, 255), a.beginPath(), a.arc(50, 20, 20, 0, 2 * Math.PI, 1), a.closePath(), a.fill(), a.fillStyle = rgb(255, 255, 0), a.beginPath(), a.arc(35, 40, 20, 0, 2 * Math.PI, 1), a.closePath(), a.fill(), a.fillStyle = rgb(255, 0, 255), a.arc(20, 25, 10, 0, 2 * Math.PI, 1), a.arc(20, 25, 20, 0, 2 * Math.PI, 1), a.fill(evenodd), (l = a.createLinearGradient(40, 50, 60, 78)).addColorStop(0, blue), l.addColorStop(0.5, red), l.addColorStop(1, white), a.fillStyle = l, a.beginPath(), a.arc(70, 50, 10, 0, 2 * Math.PI, 1), a.closePath(), a.fill(), a.font = 10 pt dfgstg, a.strokeText(Math.tan(-1e+300).toString(), 4, 30), a.fillText(Math.cos(-1e+300).toString(), 4, 40), a.fillText(Math.sin(-1e+300).toString(), 4, 50), a.beginPath(), a.moveTo(25, 0), a.quadraticCurveTo(1, 1, 1, 5), a.quadraticCurveTo(1, 76, 26, 10), a.quadraticCurveTo(26, 96, 6, 12), a.quadraticCurveTo(60, 96, 41, 10), a.quadraticCurveTo(121, 86, 101, 7), a.quadraticCurveTo(121, 1, 56, 1), a.stroke(), a.globalCompositeOperation = difference, a.fillStyle = rgb(255, 0, 255), a.beginPath(), a.arc(80, 20, 20, 0, 2 * Math.PI, 1), a.closePath(), a.fill(), a.fillStyle = rgb(0, 255, 255), a.beginPath(), a.arc(110, 20, 20, 0, 2 * Math.PI, 1), a.closePath(), a.fill(), a.fillStyle = rgb(255, 255, 0), a.beginPath(), a.arc(95, 40, 20, 0, 2 * Math.PI, 1), a.closePath(), a.fill(), a.fillStyle = rgb(255, 0, 255), t.push(canvas fp: +this.canvas.toDataURL()), i = e.CRC_CALCULATOR.calculate(t.join(~)), r = null, this.form && (o = this.formSelectorQuerier.querySelectorAll(input[type = email])).length > 0 && (n = o .0, c = (n.value || Not Available).toUpperCase(), a.fillStyle = #808080,a.font= 8 pt Arial, a.fillText(c, 2, 30), r = e.CRC_CALCULATOR.calculate(this.canvas.toDataURL())), [2, {
                                     canvas: {
                                         hash: i,
@@ -4937,7 +4781,10 @@
                     }, e.CANVAS_COLLECTOR_PROACTIVE_CACHE_TIMEOUT = 5000, e.CRC_CALCULATOR = new f.default(), e.CANVAS_WIDTH = 150, e.CANVAS_HEIGHT = 60, e.collectorName = canvas, e
                 }(lt['default']);
             exports['default'] = ct
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // obfuscate return URL
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4956,7 +4803,6 @@
                     var _Ll1 = ['prototype', 'default', 17515, 'shouldObfuscate', 'obfuscate', 'apply', 'obfuscateReturnUrl', 'returnUrlObfsucator', null, '__extends'];
 
                     function t() {
-                        var _OOO000Qo = 17515;
                         var t = null !== e && e.apply(this, arguments) || this;
                         return t.returnUrlObfsucator = new Ot.default(), t
                     }
@@ -4982,7 +4828,10 @@
                     }, t
                 }(aa['default']);
             exports['default'] = Yt
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // Gets raw hostname and pathname
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var tr = function() {
@@ -5012,12 +4861,7 @@
                                 y = g.indexOf( = ),
                                 v = y < 0 ? decodeURIComponent(g) : decodeURIComponent(g.substring(0, y)),
                                 c = y < 0 ? null : decodeURIComponent(g.substring(y + 1));
-                            var _lLIiL1ii = function(_sZ2sssS$, _0O0ooOOO, _2Zz22SZZ) {
-                                var _z$z = [1897, .2751580368848532, .1896144145485683];
-                                var _L1lIIIil = 0.2751580368848532,
-                                    _OQOOO00o = 0.1896144145485683;
-                                return 1897
-                            };
+                           
                             this.parameters.push({
                                 key: v,
                                 value: c
@@ -5037,8 +4881,6 @@
                         })
                     }, t.prototype.getParameter = function(t) {
                         var _iiL = ['elStatement', 'parameters', null, 36923, 0, 'length', 'key', 'value'];
-                        var _LIiIL1ii = 36923,
-                            _OOoQOOoQ = elStatement;
                         if (this.parameters)
                             for (var e = 0; e < this.parameters.length; e++) {
                                 var r = this.parameters[e];
@@ -5053,9 +4895,7 @@
                         return 0
                     }, t.prototype.getRawHostname = function() {
                         var _0OQ0 = [.7824468379131628, .6343649864958794, 'rawHostname', 'statement'];
-                        var _ZZsZzS2z = statement,
-                            _oQ00ooQo = 0.7824468379131628,
-                            _$2s$2Z$s = 0.6343649864958794;
+                        
                         return this.rawHostname
                     }, t.prototype.getPathname = function() {
                         var _Z2z = ['pathname', '/'];
@@ -5064,7 +4904,10 @@
                     }, t
                 }();
                 exports['default'] = tr
-            }), (function(module, exports, __webpack_require__) {
+            }), 
+        
+        // Some bundled obfuscation
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var Ot = __webpack_require__(21),
@@ -5073,23 +4916,20 @@
                     var _Q0QQ = [.2606751401845502, 10934, 'OBFUSCATORS', 'obfuscate', 'default', .01171037807436659, 7723, 20589];
 
                     function e() {
-                        var _QOo0o00o = 10934,
-                            _ZzZs$zsZ = 0.01171037807436659,
-                            _s$S$zSZZ = 20589
                     }
-                    var _ZSZz2Szs = 7723,
-                        _0OoO0QQO = 0.2606751401845502;
                     return e.obfuscate = function(e) {
                         var _zZZ = ['reduce', 'trim', 'OBFUSCATORS'];
                         return e && '' !== e.trim() ? this.OBFUSCATORS.reduce(function(e, t) {
                             var _sZ$Z = ['fwcimBlob', 'obfuscate'];
-                            var _1liL1ILl = fwcimBlob;
                             return t.obfuscate(e)
                         }, e) : e
                     }, e.OBFUSCATORS = [new Ot.default(), new Rt.default()], e
                 }();
             exports['default'] = St
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // idk this lowkey prolly impt tho
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var _ = __webpack_require__(27),
@@ -5107,104 +4947,46 @@
                 }
                 return e.prototype.profile = function(r) {
                     var _o0 = ['.fwcim-form', 'AUTO_BIND_FORM_IDS', 'join', 'form[method=\"POST\"][action^=\"/ap\"]', '#', '\"]', 'push', ', ', 3090, 'length', 'form[name=\"', 'profileForm', 0, 'hash'];
-                    var _iiii1il1 = _o0[13],
-                        _OQOQ0QOo = _o0[8];
-                    if (r) this[_o0[11]](_o0[10] + r + _o0[5]);
+                    var _iiii1il1 = hash,
+                        _OQOQ0QOo = 3090;
+                    if (r) this.profileForm(form[ name = "+r+" ]);
                     else {
-                        for (var t = [_o0[0]], o = _o0[12]; o < e[_o0[1]][_o0[9]]; o++) {
-                            var i = e[_o0[1]][o];
-                            t[_o0[6]](_o0[4] + i, _o0[10] + i + _o0[5])
+                        for (var t = ..fwcim - form, o = 0; o < e.AUTO_BIND_FORM_IDS.length; o++) {
+                            var i = e.AUTO_BIND_FORM_IDS[o];
+                            t.push(# + i, form[name = "+i+" ])
                         }
-                        var _$Z22SS2z = function(_L1LLIIii, _QooQoOOQ) {
-                            var _22 = ['aObfuscate', 'elA', 24971, 'documentJson', 39531, 'el', 'amazonEl', .9789676662520581];
-                            var _oO0000OO = 39531,
-                                _0OoOO0Oo = el,
-                                _oOQO0o0O = aObfuscate;
-                            var _0QQ0Q0o0 = amazonEl,
-                                _iili1lLl = elA;
-                            var _S2z$z$ss = documentJson,
-                                _oOQoQo0o = 0.9789676662520581;
-                            return 24971
-                        };
-                        t[_o0[6]](_o0[3]), this[_o0[11]](t[_o0[2]](_o0[7]))
+                        t.push(form[method = "POST"][action ^= "/ap"]), this.profileForm(t.join(, ))
                     }
                 }, e.prototype.profileForm = function(r) {
                     var _II = ['setAttribute', 'default', 'selectorQuerier', 'FWCIM_ID_PROPERTY', 'profile', 'profilers', 'getAttribute', 'length', 0, 'encryptor', 'querySelectorAll', 'generateRandomIdentifier', 'objectEncoder'];
                     for (var t = this.selectorQuerier.querySelectorAll(r), o = 0; o < t.length; o++) {
                         var i = t[o],
                             n = i.getAttribute(e.FWCIM_ID_PROPERTY);
-                        var _$22SZ2$S = function(_0QQo0ooO, _szzS2zSS, _0OOQOooo) {
-                            var _ss = [33215, 'node', 'list', 'fwcimAmazonUseragent', 'data', 23738, .9806392126876027];
-                            var _00OQQ0Q0 = fwcimAmazonUseragent,
-                                _z2Z$sS2S = 0.9806392126876027,
-                                _ZZ2Z$Ss$ = 33215;
-                            var _Zzs$sS2Z = 23738,
-                                _Q0QQoOoO = list;
-                            var _Z2S$2zsZ = node;
-                            return data
-                        };
                         if (!n) {
                             n = this.generateRandomIdentifier(), i.setAttribute(e.FWCIM_ID_PROPERTY, n);
                             var f = new _.default(i, this.objectEncoder, this.encryptor);
-                            var _zZZzZ$SS = function(_sSS$z2sz, _oo0Q0oOO) {
-                                var _Z$ = ['listEl', 33856, .7593995165758751, .526682262197218, 4664, .5447052594105062];
-                                var _S22SsZSz = 0.526682262197218;
-                                var _0O0O0Qo0 = 4664;
-                                var _i1Ii1Lil = listEl,
-                                    _z$s$Z$ZS = 33856,
-                                    _OOooo0oO = 0.5447052594105062;
-                                return 0.7593995165758751
-                            };
                             this.profilers[n] = f, f.profile()
                         }
                     }
                 }, e.prototype.stopProfileForm = function(r) {
                     var _i1l = ['length', 'getAttribute', 'profilers', 'querySelectorAll', 0, 'selectorQuerier', 'stop', 'FWCIM_ID_PROPERTY'];
-                    var _OO0Q0O0O = function(_1ILiliL1) {
-                        var _0QO = [12345, 'listStatementEl', 'domCollector', 'statement', .7729309367529256, 40309];
-                        var _22Zs2S2z = 0.7729309367529256,
-                            _LI11LLii = statement;
-                        var _LilIiLLI = listStatementEl,
-                            _lL1LL1II = 40309,
-                            _il1iLIIl = domCollector;
-                        return 12345
-                    };
+                   
                     for (var t = this.selectorQuerier.querySelectorAll(r), o = 0; o < t.length; o++) {
                         var i = t[o].getAttribute(e.FWCIM_ID_PROPERTY);
-                        var _S2SZssZS = function(_1ii1iII1, _2sS$Z2Sz, _llL11Lll) {
-                            var _Il1 = ['encrypt', 'bodyAmazon', 'captchaA'];
-                            var _oQOOOOOQ = bodyAmazon;
-                            var _OoooOoQQ = captchaA;
-                            return encrypt
-                        };
+                        
                         i && this.profilers[i] && this.profilers[i].stop()
                     }
                 }, e.prototype.report = function(r, t) {
                     var _s$ = ['length', 'collect', 'trim', 'You must specify a callback function.', 'getAttribute', 'A form with that selector could not be found.', 'The form has not been profiled yet.', 'profilers', 'catch', 'then', 'function', 'string', 'querySelectorAll', 'selectorQuerier', 1, 'FWCIM_ID_PROPERTY', 0];
-                    if (function != typeof t) throw new Error(You must specify a callback
-                        function.);
-                    var _ZsZsSssZ = function(_1i11iI11, _O000QO0Q, _Qooo00QQ) {
-                        var _OOQ = ['statementBlob', 'hashListDocument', .2158996481809239, 2407];
-                        var _$2ZS$zz2 = 2407,
-                            _Li1Lil1L = 0.2158996481809239;
-                        var _zsSZZ$Ss = statementBlob;
-                        return hashListDocument
-                    };
+                    if (function != typeof t) throw new Error('You must specify a callback function.');
+                    
                     var o = this.selectorQuerier.querySelectorAll(r);
                     if (o.length < 1) t(new Error(A form with that selector could not be found.));
                     else {
                         var i = o .0.getAttribute(e.FWCIM_ID_PROPERTY);
                         string == typeof i && '' !== i.trim() && this.profilers[i] !== undefined ? this.profilers[i].collect().then(function(e) {
                             var _OoQ = [null];
-                            var _ZZSssSzS = function(_iIIL1i1I, _00oOOOOQ) {
-                                var _Q0 = ['statementEncrypt', 'elFwcim', .308523916058987, 32342, 'encryptElJson', .12742853105040508];
-                                var _1il11lLl = 32342,
-                                    _$Z$z$zzZ = 0.12742853105040508;
-                                var _QOOO00o0 = statementEncrypt,
-                                    _oQQQOOQO = elFwcim;
-                                var _lLLI11IL = 0.308523916058987;
-                                return encryptElJson
-                            };
+                            
                             return t(null, e)
                         }).catch(function(e) {
                             var _I1 = [];
@@ -5213,38 +4995,14 @@
                     }
                 }, e.prototype.useMercury = function(e) {
                     var _Q0O = [];
-                    var _$szZSS2s = function(_1IliliIi, _ZZ2SZzSS, _1lI1IlLi) {
-                        var _sS = [14792, 'nodeCollectorId', 20634, .6231278705615599];
-                        var _lI1III1L = 0.6231278705615599,
-                            _QQQooOQo = 14792,
-                            _1L1I11ll = nodeCollectorId;
-                        return 20634
-                    }
                 }, e.prototype.profilePage = function(r) {
                     var _1lI = ['LOCAL_STORAGE_TEST_KEY', 'removeItem', 0, 'throttler', .8929603955272183, 'sessionStorage', 'encryptor', 'default', 'ue', 'globalReportInit', null, 'collectorAmazonUseragent', 'objectEncoder', 'test', 'setItem', 'selectorQuerier', 'profile', 'globalProfiler', 'getTime', 'localStorage'];
-                    var _oOOoQ0Q0 = function(_LIliiIil) {
-                        var _Z2 = ['obfuscate', 'collectorEncryptObfuscate', .43992272085602835, 'useragentAmazon'];
-                        var _oO0OoQ0O = 0.43992272085602835,
-                            _2sssszSS = obfuscate;
-                        var _LilIi1ii = useragentAmazon;
-                        return collectorEncryptObfuscate
-                    };
+                    
                     if (void 0 === r && (r = {}), this.globalProfiler === undefined) {
-                        var _QQQOQoOQ = function(_OQQ0O00O) {
-                            var _i11 = [.30678350300308543, .7168588225852617, 'captchaFwcimData', 'idObfuscate', .5393552015243648, .9077948961109787, 6662];
-                            var _2S2ZsSZS = captchaFwcimData,
-                                _z$2szZ2s = 0.5393552015243648,
-                                _oOOOO0Q0 = idObfuscate;
-                            var _IllILi1L = 0.9077948961109787,
-                                _OoQoO0QO = 0.30678350300308543,
-                                _lL1I1liL = 6662;
-                            return 0.7168588225852617
-                        };
+                        
                         r.globalReportInit = new Date().getTime();
                         var t = null;
                         try {
-                            var _ZZzs$Zsz = 0.8929603955272183,
-                                _$$sZ$ZSs = collectorAmazonUseragent;
                             (t = window.sessionStorage || window.localStorage).setItem(e.LOCAL_STORAGE_TEST_KEY, test), t.removeItem(e.LOCAL_STORAGE_TEST_KEY)
                         } catch (i) {
                             var _11i1iI1l = function(_0o0QQoo0) {
@@ -5260,16 +5018,16 @@
                     }
                 }, e.prototype.generateRandomIdentifier = function(r) {
                     var _IlL = [.8086347581114612, 'charAt', 'random', 46539, 'floor', 'aUseragentData', 0, 'ALPHABET', 'length', 8];
-                    var _i1LIlLIi = aUseragentData,
-                        _ZzSZZz$2 = 0.8086347581114612,
-                        _OOQQOOQ0 = 46539;
                     void 0 === r && (r = 8);
                     for (var t = '', o = 0; o < r; o++) t += e.ALPHABET.charAt(Math.floor(Math.random() * e.ALPHABET.length));
                     return t
                 }, e.FWCIM_ID_PROPERTY = data - fwcim - id, e.LOCAL_STORAGE_TEST_KEY = fwcim - ls - test, e.ALPHABET = ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789, e.AUTO_BIND_FORM_IDS = [signin, sign - in , sign_in, signInForm, signInLeftForm, signInRightForm, signInMainForm, newAccountForm, forgotPasswordForm, changeAccountInformationForm], e
             }();
             exports['default'] = P
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // IMPORTANT: Returns the identifier we see at the beginning of the metadata
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var D = function() {
@@ -5287,7 +5045,10 @@
                 }, e
             }();
             exports['default'] = D
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // Definitely impt, we see doEncrypt implemented here
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -5306,9 +5067,6 @@
                             var _$zZS2S$z = 'documentDom';
                             return k.__generator(this, function(e) {
                                 var _IL = ['provide', 'doEncrypt', 'material', 38648, 2, 'keyProvider', 34550, 'identifier', 'encode', ':', .9701127942948127, 'base64Encoder'];
-                                var _$s2zSzSs = 0.9701127942948127,
-                                    _S$S$zzsz = 34550,
-                                    _1iiliiLl = 38648;
                                 return [2, (t = this['keyProvider'].provide())['identifier'] + ':' + this['base64Encoder'].encode(this['doEncrypt'](r, t.material))]
                             })
                         })
@@ -5325,7 +5083,10 @@
                     }, r
                 }();
             exports['default'] = z
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // IMPORTANT
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var S = function() {
@@ -5334,12 +5095,7 @@
                 function r() {}
                 return r.prototype.encode = function(r) {
                     var _lI = ['stringify', 'encodeWithPolyfill'];
-                    var _oQoo0oOQ = function(_s$zZzz2z, _z$S2$SSS, _0Q0OOQQ0) {
-                        var _Li = ['amazonFwcimDom', 21341, .42026757906178136];
-                        var _2ZsZS$$2 = 21341,
-                            _ZszszZS2 = 0.42026757906178136;
-                        return amazonFwcimDom
-                    };
+                    
                     return JSON && JSON.stringify ? JSON.stringify(r) : this.encodeWithPolyfill(r)
                 }, r.prototype.encodeWithPolyfill = function(r) {
                     var _OQQ = ['\":', 'object', '[', 'true', 'join', 'isNumberNaN', ']', 'isArray', '\"', 'null', 'boolean', 'Undefined values cannot be stringified.', ',', 'document', null, 'jsonEscape', '}', 'push', 'hasOwnProperty', 'false', 'number', 'encodeWithPolyfill', '{'];
@@ -5353,16 +5109,7 @@
                             for (var n in r) r[n] !== undefined ? t.push(this.encodeWithPolyfill(r[n])) : t.push(null);
                             return [+t.join(, ) + ]
                         }
-                        var _LiILilil = function(_$S2$$ZS$, _L1ILii1l, _i1lI1LLl) {
-                            var _O00 = [7761, .378245176931546, 'aObfuscate', .7380306839851056, .4532453021325289, .32999847754170597, 30054];
-                            var _oOoO00Qo = 0.378245176931546,
-                                _lIi11I1l = 0.4532453021325289;
-                            var _lLLlLllI = 0.7380306839851056,
-                                _z2zZ2ZzS = 30054;
-                            var _22$Sszzz = aObfuscate,
-                                _LilliIL1 = 7761;
-                            return 0.32999847754170597
-                        };
+                       
                         for (var e in t = [], r) r.hasOwnProperty(e) && r[e] !== undefined && t.push("+this.jsonEscape(e)+": +this.encodeWithPolyfill(r[e]));
                         return {
                             +t.join(, ) +
@@ -5380,14 +5127,7 @@
                     var _O0O = ['replace', /[\\"\u0000-\u001F\u2028\u2029]/g, 'toString'];
                     return t.toString().replace(/[\\"\u0000-\u001F\u2028\u2029]/g, function(t) {
                         var _Qo = ['toString', 65536, 'charCodeAt', 0, 'substring', '\\u', 16, 'hasOwnProperty', 1, 'ESCAPED_CHARACTERS'];
-                        var _oO0QQoQQ = function(_0OooooOO, _ILiliILl) {
-                            var _2Z = [.2633159993469656, 28699, 'aNode', 'documentIdNode', 'executeStatement'];
-                            var _iLilLLL1 = executeStatement,
-                                _2SZ$2Z2$ = aNode;
-                            var _OOQQQOoo = 0.2633159993469656,
-                                _o0QOoOQQ = 28699;
-                            return documentIdNode
-                        };
+                        
                         return r.ESCAPED_CHARACTERS.hasOwnProperty(t) ? r.ESCAPED_CHARACTERS[t] : \u + (t.charCodeAt(0) + 65536).toString(16).substring(1)
                     })
                 }, r.ESCAPED_CHARACTERS = {
@@ -5396,15 +5136,7 @@
                     return e.prototype.encode = function(t) {
                         var _l1 = ['CRC_JSON_SEPARATOR', 'calculate', 'crc32', 'encode', 'utf8Encoder', 'jsonEncoder', 'hexEncoder'];
                         var c = this.utf8Encoder.encode(this.jsonEncoder.encode(t));
-                        var _QoQQQ00O = function(_ssSSsz2$, _S$s$s$Ss, _iL1I1Lll) {
-                            var _0O = ['data', 'id', 'fwcimBody', 'node', .30262990957244296, 'nodeA'];
-                            var _lll1IIi1 = 0.30262990957244296,
-                                _oO000o00 = fwcimBody,
-                                _S2$SsZzZ = node;
-                            var _IiIL1i1I = nodeA,
-                                _llIlll1l = id;
-                            return data
-                        };
+                        
                         return this.hexEncoder.encode(this.crc32.calculate(c)) + e.CRC_JSON_SEPARATOR + c
                     },
                     e.CRC_JSON_SEPARATOR = #,
@@ -5425,7 +5157,10 @@
                     }
                 }), e.webpackPolyfill = 1), e
             }
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        // IMPORTANT: Loads Webpack, initialized a bunch of shit 
+        (function(module, exports, __webpack_require__) {
             (function(module, global) {
                 var __WEBPACK_AMD_DEFINE_RESULT__;
                 ! function(e) {
@@ -5472,24 +5207,10 @@
                     var _QQ = ['prototype', 'encode'];
 
                     function e() {
-                        var _0OOoO0Q0 = function(_OOQo0QQQ, _Sszzsz$S) {
-                            var _s2 = [.6979865127592542, 13919, .7272096959770589];
-                            var _1LLiiIIl = 0.7272096959770589,
-                                _OQOQ0o0o = 0.6979865127592542;
-                            return 13919
-                        }
                     }
                     return e.prototype.encode = function(e) {
                         var _$$ = ['encode'];
-                        var _ooQ0oQQ0 = function(_iiI1Ll1i) {
-                            var _O0 = [25167, .3385665667913833, 21073, 'listData', .6410829630923338, 9827];
-                            var _lLlIiiIl = 21073,
-                                _O0OO000o = 0.6410829630923338,
-                                _1LIILLIL = 9827;
-                            var _QQ0QOoQo = 0.3385665667913833,
-                                _0OQQ0O0Q = 25167;
-                            return listData
-                        };
+                        
                         return b.encode(e)
                     }, e
                 }();

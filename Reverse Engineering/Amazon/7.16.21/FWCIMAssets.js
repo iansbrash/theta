@@ -4041,7 +4041,7 @@
             exports['__esModule'] = 1;
             var k = __webpack_require__(0),
                 f = __webpack_require__(5),
-                nt = __webpack_require__(1),
+                nt = __webpack_require__(1), ///<script[\s\S]*?>[\s\S]*?<\/script>/gi
                 Fe = function(e) {
                     var _S2s = ['__extends', 'prototype', 'script', null, 'apply', 'default', 'collectData', 'CRC_CALCULATOR', 'collectorName'];
 
@@ -4056,7 +4056,7 @@
                                 _lILiiIIL = _QOOo[2];
                             var e, n, r, i, s, l, u, c, a, o, C;
                             return k[_QOOo[0]](this, function(h) {
-                                var _zSz = [/<script[\s\S]*?>[\s\S]*?<\/script>/gi, 'exec', 'substring', 1, 'match', 2, 'hashEncrypt', 'calculate', 0, 'innerHTML', 'CRC_CALCULATOR', 'length', /src="[\s\S]*?"/, .015576029677893732, 43756, 'documentElement', 5, 'getTime', 'push'];
+                                var _zSz = ['BIGTENMP', 'exec', 'substring', 1, 'match', 2, 'hashEncrypt', 'calculate', 0, 'innerHTML', 'CRC_CALCULATOR', 'length', /src="[\s\S]*?"/, .015576029677893732, 43756, 'documentElement', 5, 'getTime', 'push'];
                                 for (e = new Date()[_zSz[17]](), n = document[_zSz[15]][_zSz[9]], r = _zSz[0], i = [], s = [], l = _zSz[12], u = n[_zSz[4]](r), c = _zSz[8], a = u; c < a[_zSz[11]]; c++)(o = a[c])[_zSz[4]](l) ? (C = l[_zSz[1]](o)[_zSz[8]], i[_zSz[18]](C[_zSz[2]](_zSz[16], C[_zSz[11]] - _zSz[3]))) : s[_zSz[18]](t[_zSz[10]][_zSz[7]](o));
                                 var _Q0O00OOo = _zSz[14],
                                     _1IIii1iL = _zSz[13],
