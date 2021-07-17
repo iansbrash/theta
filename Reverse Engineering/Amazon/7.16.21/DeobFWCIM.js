@@ -56,7 +56,10 @@
         };
         __webpack_require__.p = "";
         return __webpack_require__(__webpack_require__.s = 76)
-})([(function(module, __webpack_exports__, __webpack_require__) {
+})([ 
+    
+    // WEBPACK 0
+    (function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
             __webpack_require__.r(__webpack_exports__);
             __webpack_require__.d(__webpack_exports__, "__extends", function() {
@@ -212,9 +215,11 @@
                 })
             }
 
+
             function __generator(t, e) {
                 var r, n, o, a, i = {
                     label: 0,
+                    // sent = function()
                     sent: function() {
                         if (1 & o[0]) throw o[1];
                         return o[1]
@@ -436,7 +441,7 @@
             }
         }), 
         
-        // is this wp 1?
+        // WEBPACK 1
         (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
@@ -484,6 +489,7 @@
         }), 
         
         // Adds event listeners for something and checks if adding event listeners is possible
+        // WEBPACK 2
         (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
@@ -491,26 +497,17 @@
                 var _SZZ = ['prototype', 36929, 20847, 'addEventListener', 'removeEventListener', 'element'];
 
                 function e(e) {
-                    var _OO0QoQoQ = 36929,
-                        _0oQoOo0o = 20847;
                     this.element = e
                 }
                 return e.prototype.addEventListener = function(e, t) {
                     var _1iL = [27034, .10196672731935208, 'The event listener could not be bound because the browser does not support any event listener methods.', 'element', 'on', .39199112528716484, .9019910627980827, 'attachEvent', 'function', 'node', 'addEventListener'];
-                    var _1iLI1iLL = node,
-                        _sSss$Zzz = 0.39199112528716484,
-                        _iLiiIiIL = 0.10196672731935208;
                     if (function == typeof this.element.addEventListener) this.element.addEventListener(e, t);
                     else {
-                        var _$$sZ22Zz = 27034,
-                            _sS$$z$s$ = 0.9019910627980827;
-                        if (function != typeof this.element.attachEvent) throw new Error(The event listener could not be bound because the browser does not support any event listener methods.);
+                        if (function != typeof this.element.attachEvent) throw new Error('The event listener could not be bound because the browser does not support any event listener methods.');
                         this.element.attachEvent(on + e, t)
                     }
                 }, e.prototype.removeEventListener = function(e, t) {
                     var _s2zSS = ['The event listener could not be unbound because the browser does not support any event listener methods.', .9438581006473441, 'removeEventListener', .03970586899742368, 'detachEvent', 'on', 'function', 'element'];
-                    var _QQQO0oQQ = 0.9438581006473441,
-                        _1lIiIILi = 0.03970586899742368;
                     if (function == typeof this.element.removeEventListener) this.element.removeEventListener(e, t);
                     else {
                         if (function != typeof this.element.detachEvent) throw new Error(The event listener could not be unbound because the browser does not support any event listener methods.);
@@ -522,6 +519,7 @@
         }), 
         
         // Adds and removes elements based on generateRandomId
+        // WEBPACK 3
         (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
@@ -532,13 +530,7 @@
                     void 0 === e && (e = document), this.context = e,
                         function != typeof e.querySelectorAll ? this.qsa = this.polyfillQuerySelectorAll(e) : this.qsa = function(t) {
                             var _1il = ['querySelectorAll'];
-                            var _Li1Llll1 = function(_ooQQQQoQ, _lIIl1LlL, _Ss2ZssSs) {
-                                var _Zz = [.7815351866847384, 'execute', 46311, .34946800392627186];
-                                var _00OOOQ00 = 0.34946800392627186;
-                                var _ilIlIllI = 0.7815351866847384,
-                                    _1l1lIL1I = execute;
-                                return 46311
-                            };
+                            
                             return e.querySelectorAll(t)
                         }
                 }
@@ -558,25 +550,13 @@
                             s = [];
                         i.documentElement.firstChild.appendChild(u), i._qsa = [];
                         var a = r.split(, );
-                        var _o0ooQO0Q = function(_l11IIi1L, _$zSz2sZz) {
-                            var _zs = ['encrypt', .6202351975560696, 'list', 6744];
-                            var _OOQ00oQo = list,
-                                _Sss$z2$$ = encrypt;
-                            var _2z$ZSzSS = 6744;
-                            return 0.6202351975560696
-                        };
                         if (n)
                             for (var c = 0; c < a.length; c++) a[c] = # + n + +a[c].trim();
                         for (u.styleSheet.cssText = a.join(, ) + {
                                 x - qsa: expression(document._qsa && document._qsa.push(this))
                             }, window.scrollBy(0, 0), u.parentNode.removeChild(u); i._qsa.length;) {
                             var d = i._qsa.shift();
-                            var _Qo0ooQo0 = function(_QQQ0Qo00) {
-                                var _Q0OO = [34202, 12426, 'collectorCaptchaEncrypt'];
-                                var _i1i1L1li = collectorCaptchaEncrypt;
-                                var _1il1iiIl = 34202;
-                                return 12426
-                            };
+                            
                             d.style.removeAttribute(x - qsa), s.push(d)
                         }
                         return i._qsa = null, o && (l.id = null), s
@@ -609,47 +589,28 @@
         
         // contains 'buildCrcTable,' similar to the shit we saw on the chinese website
         // returns r, which contains buildCrcTable() and calculate()
+        // WEBPACK 4
         (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var L = function() {
                 var _2s = ['buildCrcTable', 3988292384, 'IEEE_POLYNOMIAL', 'prototype', 'calculate'];
 
-
                 // useless?
                 function r() {
-                    var _ilLlliIi = function(_I1IIlLIL, _LliilLIi) {
-                        var _Zs = [17300, .6956557348143309];
-                        var _QQOOQOoQ = 17300;
-                        return 0.6956557348143309
-                    }
+                    
                 }
-                
-                var _Ll1IliL1 = function(_oo0oo0QQ) {
-                    var _iI = [.3923809569477188, 'useragent', .4255876122204134, 15986, 46790, 16942, 'obfuscateExecute'];
-                    var _QQ00OQ0O = obfuscateExecute,
-                        _Ll1IL1II = 15986,
-                        _Llli1IiI = 16942;
-                    var _IILlLL1l = 46790;
-                    var _OoOQQOoQ = 0.3923809569477188,
-                        _O0OoOoQO = useragent;
-                    return 0.4255876122204134
-                };
-
                 // cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and
                 // storage devices to detect accidental changes to raw data
                 return r.prototype.buildCrcTable = function() {
                     var _OOQQ = ['IEEE_POLYNOMIAL', 'crcTable', 8, 26930, 0, 1, 'dataExecuteDom', 256, 'blobBody'];
                     this.crcTable = [];
                     for (var t = 0; t < 256; t++) {
-                        var _ooQooOQO = dataExecuteDom,
-                            _OOQ0QQOO = 26930,
-                            _$s2SZ$2S = blobBody;
                         for (var e = t, c = 0; c < 8; c++) 1 == (1 & e) ? e = e >>> 1 ^ r.IEEE_POLYNOMIAL : e >>>= 1;
                         this.crcTable[t] = e
                     }
                 },
-                // I feel like this returns a constant, besides IEEE_POLYNOMIAL which probably changes based on metrics 
+                // I feel like this returns a constant
                 r.prototype.calculate = function(r) {
                     var _ooo = [0, 'length', 255, 'buildCrcTable', 4011, 8, 'crcTable', 4294967295, 'charCodeAt'];
                     var _liIII1lL = 4011;
@@ -669,6 +630,7 @@
         
         // Seems to collect telemetry based on..
         // touchCycles, keyCycles, mouseCycles
+        // WEBPACK 5
         (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
@@ -717,6 +679,7 @@
         
         // Uses Date.getTime()
         // Exports a create() method
+        // WEBPACK 6
         (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
@@ -724,18 +687,11 @@
                 var _Sz$ = ['prototype', .3083370887995638, 'create', .5066963025903892];
 
                 function t() {
-                    var _0ooooQ00 = 0.3083370887995638,
-                        _2ZS$$z$S = 0.5066963025903892
                 }
                 return t.prototype.create = function(t, e) {
                     var _ZS = [0];
                     var r = 0;
-                    var _QOoo0oQo = function(_OoQoOoO0) {
-                        var _iL = [12914, 36655, 'fwcimCaptcha'];
-                        var _Z2$$SSZs = 36655;
-                        var _o0Q0oooQ = fwcimCaptcha;
-                        return 12914
-                    };
+                   
                     return function() {
                         var _LL = ['getTime', 'apply'];
                         var n = new Date().getTime();
@@ -747,6 +703,7 @@
         }), 
         
         // has a collect() method
+        // WEBPACK 7
         (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
@@ -762,13 +719,7 @@
                         return k.__awaiter(this, void 0, void 0, function() {
                             var _IILL = ['__generator'];
                             var e, t, r, s, n, c, i, o, a, u, l, _;
-                            var _1L1iL1ll = function(_1iLLILii, _ii1lIilL) {
-                                var _0Qo0 = [.6531808986779866, 'captcha', 'blobIdB', 8866];
-                                var _oQQOQOO0 = blobIdB,
-                                    _0oQ0oQOQ = 0.6531808986779866;
-                                var _1I1iIlI1 = 8866;
-                                return captcha
-                            };
+                            
                             return k.__generator(this, function(g) {
                                 var _oOoQ = ['constructor', 'errors', 5, 2, 'collect', '__assign', 'trys', 'push', 'object', 6, 'metrics', 'length', 'label', 'collectors', 'sent', 1, 0, 'message', 'getTime', 4, 3, 'collectorName'];
                                 switch (g.label) {
@@ -805,6 +756,7 @@
         }), 
         
         // requires a lot of webpack exports... probably does a lot of important computation
+        // WEBPACK 8
         (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
@@ -822,33 +774,17 @@
                 we = __webpack_require__(45),
                 qe = function() {
                     var _1lLl = ['initializeCompoundCollector', null, 'collectAndEncrypt', 'COLLECTORS', 'collect', 'profile', 'encryptor', 'encoder', 'prototype', 'initializeCollectors', 'initializationErrors', 'documentUseragentJson'];
-                    var _Z$sZ$ZZz = documentUseragentJson;
 
                     function e(e, t) {
                         var r = this;
                         this.encoder = e, this.encryptor = t, this.initializationErrors = [];
                         var o = null;
-                        var _11l1iI1i = function(_lLlILii1, _QoOoQOOo) {
-                            var _2S = [.9586703209847587, .35952646829011736];
-                            var _ZssszZsz = 0.9586703209847587;
-                            return 0.35952646829011736
-                        };
                         this.initializeCollectors = function(e) {
                             var _o00O = ['push', .38041071848627905, 0, 'bList', 'collect', 'initializationErrors', 'bExecute', 'length', 'function', 'message', 'list'];
                             for (var t = [], o = 0, n = e; o < n.length; o++) {
                                 var i = n[o];
-                                var _LLi1LIIi = 0.38041071848627905,
-                                    _lII1lILl = bExecute;
+
                                 try {
-                                    var _iI1LiIil = function(_O0QQoo0Q) {
-                                        var _l1l = [18385, 10621, 42627, .7683118178864983, 'encryptBlob', 'dataListEncrypt'];
-                                        var _0QoQoQ0Q = 10621,
-                                            _$S2ZsZsZ = dataListEncrypt,
-                                            _l1LlLL1L = 0.7683118178864983;
-                                        var _$ZZ22Sss = encryptBlob,
-                                            _lL1LIlII = 18385;
-                                        return 42627
-                                    };
 
                                     function == typeof i.collect ? t.push(i) : t.push(i(r))
                                 } catch (l) {
@@ -857,13 +793,11 @@
                                     })
                                 }
                             }
-                            var _0O0ooQQo = list,
-                                _lliLL1il = bList;
+                            
                             return t
                         }, this.initializeCompoundCollector = function() {
                             var _0oQ = ['jsonStatement', 'default', null, 'COLLECTORS', 'initializeCollectors', 'constructor', 'executeBody'];
-                            var _Q0QOO0OO = executeBody,
-                                _i1L1ilIL = jsonStatement;
+
                             var e = r.constructor;
                             null === o && (o = new se.default(r.initializeCollectors(e.COLLECTORS)))
                         }, 
@@ -892,20 +826,13 @@
                         // seems like it becomes new se.default(r.initializeCollectors(e.COLLECTORS)))
                         this.collect = function() {
                             var _LiL = ['__awaiter', 0, 'obfuscateBlob'];
-                            var _oo0oOQOO = obfuscateBlob;
                             return k.__awaiter(r, void 0, void 0, function() {
                                 var _LI1 = [.43180024881033585, '__generator', 'nodeBody'];
-                                var _1IiLLiIL = nodeBody,
-                                    _LLI1lLiI = 0.43180024881033585;
                                 return k.__generator(this, function(e) {
                                     var _ZSs = [2, 'collectAndEncrypt'];
-                                    var _$SS$z2$S = function(_sSzZ2zzZ, _IlLI1Ii1) {
-                                        var _I1I = [26952, 5513, 'hashExecute'];
-                                        var _$2sZsSZZ = 5513,
-                                            _llLllILl = hashExecute;
-                                        return 26952
-                                    };
+                                   
                                     // o is initialized as null
+                                    // o = new se.default() (WP 9)
                                     return [2, this.collectAndEncrypt(o)]
                                 })
                             })
@@ -933,9 +860,6 @@
                     }, 
                     function() {
                         var _0QQ = [10, 'default', 'interaction', .6195950599702029, 1579, 17146];
-                        var _SSsz2zs$ = 0.6195950599702029,
-                            _00Q0QQOO = 1579,
-                            _2zSs$Zs$ = 17146;
                 
                         // Ce = __webpack_require__(6), 
                         return new Ce.default({
@@ -1005,6 +929,7 @@
         }), 
         
         // Gets date, time, etc and turns it into part of the things to encrypt. Definitely important
+        // WEBPACK 9
         (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
@@ -1020,9 +945,7 @@
                         var _ii1 = ['__awaiter', 0];
                         return k.__awaiter(this, void 0, void 0, function() {
                             var _SsS = ['__generator', 782, .8961056588366909, 25270];
-                            var _$$2ZzSZS = 782,
-                                _ILLiilLL = 0.8961056588366909,
-                                _i11i1I11 = 25270;
+
                             var e, t, r;
                             return k.__generator(this, function(n) {
                                 var _ooOQ = [0, 'replace', 'function', 2, 'getTime', 36e5, 'getFullYear', null, 'toGMTString', / (GMT|UTC)/, 10];
@@ -1036,7 +959,7 @@
             exports['default'] = Ge
         }), 
         
-        // 
+        // WEBPACK 10
         (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
@@ -1045,12 +968,7 @@
                     var _0QOo = ['collect', 'key', 'prototype'];
 
                     function t(t) {
-                        var _0o0QOQQQ = function(_LI1LiILi, _$SZ2z2Z$) {
-                            var _oQOQ = [.8437605935498025, .9332184365407299, .9676003404344387];
-                            var _sss$zs2s = 0.9332184365407299;
-                            var _ILli1ili = 0.9676003404344387;
-                            return 0.8437605935498025
-                        };
+                        
                         this.key = t.key
                     }
                     return t.prototype.collect = function() {
@@ -1060,15 +978,7 @@
                             var t;
                             return k.__generator(this, function(e) {
                                 var _Sz$zs = ['key', 'getTime', 2];
-                                var _ZZZZssZs = function(_oQoo0Q0Q) {
-                                    var _l1II = ['idObfuscate', 44854, 30158, 'id', 'el', .49589400471860756];
-                                    var _o0OQQoOo = 30158;
-                                    var _1illILlI = id,
-                                        _iiliLLLL = el;
-                                    var _Oooooo0o = 0.49589400471860756,
-                                        _sS$$z$Zz = 44854;
-                                    return idObfuscate
-                                };
+                                
                                 return [2, (t = {}, t[this.key] = new Date().getTime(), t)]
                             })
                         })
@@ -1077,7 +987,7 @@
             exports['default'] = ft
         }), 
         
-        // 
+        // WEBPACK 11
         (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
@@ -1094,13 +1004,7 @@
                                 _iLiilIII = aObfuscateA;
                             this.storage = null === t ? t : window.localStorage
                         } catch (e) {
-                            var _0QOQ0Ooo = function(_1LIi1I11, _0OQQQQQ0, _$szSzSsz) {
-                                var _zS = [15599, 'encrypt', 'document', 2921];
-                                var _li1I1iLI = 2921;
-                                var _o0O00OOQ = 15599,
-                                    _O0Q00Q0Q = encrypt;
-                                return document
-                            }
+                            
                         }
                     }
 
@@ -1154,23 +1058,8 @@
                     
                     t.prototype.collect = function() {
                         var _s2zS$ = ['__awaiter', 0];
-                        var _OQ0QQO00 = function(_ii1ilI1l) {
-                            var _Lll = [5717, .45094102902179944, 'amazonEncrypt'];
-                            var _ss$s2zS2 = amazonEncrypt,
-                                _lLlLil11 = 5717;
-                            return 0.45094102902179944
-                        };
                         return k.__awaiter(this, void 0, void 0, function() {
                             var _OoQQ = ['__generator'];
-                            var _iLiL1i1L = function(_II1lilil, _0QOoQQQ0, _s$sZzS$$) {
-                                var _LI1I = [.546584911681887, .7491117622337518, .9502177303670838, .48283201365434936, .08440177993953557, 'encryptExecuteCaptcha'];
-                                var _z2Ssz2ss = 0.48283201365434936,
-                                    _$zzzZ$zz = 0.08440177993953557,
-                                    _sZs2sSss = 0.7491117622337518;
-                                var _LLlllI1i = 0.9502177303670838,
-                                    _iiil1IlI = encryptExecuteCaptcha;
-                                return 0.546584911681887
-                            };
                             var e;
                             return k.__generator(this, function(r) {
                                 var _ZZzz = ['removeItem', 'setItem', 'generateIdentifier', 'STORAGE_KEY', null, 'getItem', 'validateIdentifier', 'storage', 2];
@@ -1189,6 +1078,7 @@
         }), 
         
         // Very similar to some other exports, sets this.key to t.key, this.time to current time
+        // WEBPACK 12
         (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
@@ -1231,6 +1121,7 @@
         }), 
         
         // Collects plugins? PluginCollector?
+        // WEBPACK 13
         (function(module, exports, __webpack_require__) {
                 "use strict";
                 exports.__esModule = 1;
@@ -1327,7 +1218,8 @@
     }), 
     
     // Works together with cycleEvents ?
-    (function(module, exports, __webpack_require__) {
+        // WEBPACK 14
+        (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var k = __webpack_require__(0),
@@ -1360,15 +1252,7 @@
 
                     // ce = __webpack_require__(2),
                     var n = new ce.default(this.element);
-                    var _Ss2zS2sZ = function(_zzZS$22z, _QO0OQ00Q) {
-                        var _0OQO0 = ['encryptId', 'amazonData', 19639, 'amazon', 'aData', 28923];
-                        var _sS2$Szss = amazonData,
-                            _11IiLLii = aData;
-                        var _0Qo0QOQo = amazon,
-                            _1IILLLI1I = 28923;
-                        var _s2sZss$S = 19639;
-                        return encryptId
-                    };
+                    
                     n.addEventListener(this.startEvent, function(n) {
                         var _ZZ$2 = ['hasOwnProperty', 'getTime', 'extractWhich'];
 
@@ -1434,7 +1318,8 @@
     }),
     
     // Definitely collects a ton of info about clicks, pastes, cuts, keydown, etc
-    (function(module, exports, __webpack_require__) {
+        // WEBPACK 15
+        (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var ce = __webpack_require__(2),
@@ -1588,7 +1473,7 @@
         exports['default'] = Be
     }), 
     
-    // 
+    // WEBPACK 16
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -1676,6 +1561,7 @@
     }), 
     
     // some logic that helps with adding event listeners
+    // WEBPACK 17
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -1743,6 +1629,7 @@
     }), 
     
     // Executes Zt.default(e) (wp 65)
+    // WEBPACK 18
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -1755,13 +1642,10 @@
                     _OOQoO00O = captcha;
                 return e.prototype.buildURL = function(e) {
                     var _Il1L = ['FWCIMAssets', '\"): ', 'message', 'execute', null, 'default', 'ueLogError', 'WARN', .31695467348606576, 'Invalid url (\"', 16992];
-                    var _s2$SzZ2s = 0.31695467348606576;
                     try {
                         // wp 65
                         return new Zt.default(e)
                     } catch (r) {
-                        var _ZZ2Z2$z$ = execute,
-                            _lii1IiiL = 16992;
                         var t = window.ueLogError;
                         return t && t(r, {
                             logLevel: WARN,
@@ -1775,6 +1659,7 @@
     }), 
     
     // Gets... rawHostname??
+    // WEBPACK 19
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -1791,12 +1676,7 @@
                 function t() {
                     return null !== a && a.apply(this, arguments) || this
                 }
-                var _z$s$2szs = function(_$SSsszzz, _oQQQoOoo, _oQ0OQOOo) {
-                    var _ssS = ['dom', 'amazon', 'encryptHash'];
-                    var _z$zs$sss = amazon;
-                    var _IiI1iI1i = encryptHash;
-                    return dom
-                };
+                
                 return k.__extends(t, a), t.prototype.obfuscate = function(a) {
                     var _ssZ = ['getRawHostname', 'elJsonUseragent', 'buildURL'];
                     var _LllLILil = elJsonUseragent;
@@ -1809,6 +1689,7 @@
     
     // IMPORTANT
     // returns a {referrer, userAgent, webDriver, location} object
+    // WEBPACK 20
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -1852,6 +1733,7 @@
     }), 
     
     // returns sin, cos, and tan values of a constant -1e+300 from Math
+    // WEBPACK 21
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -1898,6 +1780,7 @@
     
     // Gets information about gpu
     // gpu: {model, vendor, extensions}
+    // WEBPACK 22
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -1908,29 +1791,13 @@
 
                 function t() {
                     var t = e.call(this) || this;
-                    var _sSzzzzSS = function(_iLi11lL1) {
-                        var _ZS$$ = [17626, 'documentBlob', 'jsonA', .8984797996338618, 32838, 44124];
-                        var _iiiIiLil = documentBlob,
-                            _$$ssZ$S2 = 0.8984797996338618;
-                        var _ooOOOOo0 = 44124,
-                            _Z2ZZzZZS = jsonA,
-                            _Iil1iLiI = 17626;
-                        return 32838
-                    };
+                    
                     return t.canvas = document.createElement(canvas), t
                 }
-                var _11L1IL1l = function(_S2SZz$z2) {
-                    var _0QQO = [48463, .04680777790720625, 30286, 'dom', 'fwcimAEncrypt'];
-                    var _1LL1ILii = 0.04680777790720625,
-                        _Ii1LLLi1 = dom,
-                        _S$Zsss2S = 48463;
-                    var _O0Q0oOOO = fwcimAEncrypt;
-                    return 30286
-                };
+                
                 return k.__extends(t, e), t.prototype.collectData = function() {
                     var _0Oo = [0, .5846161911285588, 14658, '__awaiter'];
-                    var _Z2S2$sS$ = 0.5846161911285588,
-                        _LlilL1L1 = 14658;
+
                     return k.__awaiter(this, void 0, void 0, function() {
                         var _IllI = ['__generator'];
                         var e, r;
@@ -1968,6 +1835,7 @@
     
     // returns a [2, {dnt}] array
     // dnt is either 'yes' or 'not'
+    // WEBPACK 23
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -2028,6 +1896,7 @@
     }), 
     
     // returns  {css, js, elasped} which tests browsers capabilities in those fields
+    // WEBPACK 24
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -2103,6 +1972,7 @@
     }), 
     
     // Seems to populate the metadata1 field and start generating values?
+    // WEBPACK 25
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -2134,12 +2004,7 @@
                     var n = e.call(this, o, l) || this;
                     n.form = r;
                     var i = new c.default(n.form).querySelector(input[name = "+t.FORM_INPUT_NAME+"]);
-                    var _oO00QO0Q = function(_QO0ooO0O, _0oQoQQO0) {
-                        var _0Q0Q = [19631, 'blobEncrypt', 'useragentB'];
-                        var _liII1Li1 = blobEncrypt;
-                        var _0oOo00Q0 = useragentB;
-                        return 19631
-                    };
+                    
                     return n.input = i || n.createMetadataInput(), n
                 }
                 return k.__extends(t, e), t.prototype.createMetadataInput = function() {
@@ -2149,9 +2014,6 @@
                 }, t.prototype.doProfile = function() {
                     var _Ss = ['setupPeriodicReportingCallback', 'addEventListener', 'default', 'hashIdCollector', 17509, 'submit', 4717, 'form'];
                     var e = this;
-                    var _1l1IiI1I = 4717,
-                        _LlLl1llL = hashIdCollector,
-                        _ii1LI1L1 = 17509;
                     new ce.default(this.form).addEventListener(submit, function(t) {
                         var _L1 = ['report'];
                         e.report()
@@ -2160,53 +2022,38 @@
                     var _lL = [null, 47347, 'MAXIMUM_REPORT_INTERVAL_MS', 'MINIMUM_REPORT_INTERVAL_MS', 'default', 'clear', 'collectorBlobFwcim', 'periodicReportingIdleCallback'];
                     this.periodicReportingIdleCallback && (this.periodicReportingIdleCallback.clear(), this.periodicReportingIdleCallback = null);
                     var e = this;
-                    var _lLliLi1i = 47347,
-                        _QoQ0oQ0O = collectorBlobFwcim;
                     this.periodicReportingIdleCallback = new ae.default(function() {
                         var _szZ = ['report', 'setupPeriodicReportingCallback'];
                         e.report(), e.setupPeriodicReportingCallback()
                     }, t.MAXIMUM_REPORT_INTERVAL_MS, t.MINIMUM_REPORT_INTERVAL_MS)
                 }, t.prototype.report = function() {
                     var _oQo = [0, 'documentList', '__awaiter'];
-                    var _sZz2sZS2 = documentList;
                     return k.__awaiter(this, void 0, void 0, function() {
                         var _zz = ['amazon', '__generator', 36067];
                         var e;
-                        var _00OO0QQo = 36067,
-                            _SSZ$z2$s = amazon;
                         return k.__generator(this, function(t) {
                             var _l1I = [4, 'label', 'input', 'bCollectorEncrypt', 'sent', 'value', 2, 'collect', 1, 'bDom', 0];
-                            var _22S$S22s = bCollectorEncrypt,
-                                _O0QoooOo = bDom;
                             switch (t.label) {
                                 case 0:
                                     return [4, this.collect()];
                                 case 1:
-                                    return e = t.sent(), this.input.value = e, .2
+                                    return e = t.sent(), this.input.value = e, 2
                             }
                         })
                     })
                 }, t.prototype.stop = function() {
                     var _oooO = ['submit', null, .6573891421898308, 'periodicReportingIdleCallback', 'form', 'clear', 'removeEventListener', 'default', 'captcha'];
                     var e = this;
-                    var _Q0oOOo0Q = 0.6573891421898308,
-                        _$$SZZ2zS = captcha;
                     this.periodicReportingIdleCallback && (this.periodicReportingIdleCallback.clear(), this.periodicReportingIdleCallback = null), new ce.default(this.form).removeEventListener(submit, function(t) {
                         var _lII = ['report'];
-                        var _liillLii = function(_iI1I1iII, _Qo0oOooo) {
-                            var _$2s = [.3322008232520606, 'collectorA'];
-                            var _QQQ0Q0oO = 0.3322008232520606;
-                            return collectorA
-                        };
+                       
                         e.report()
                     })
-                }, t.FORM_INPUT_NAME = metadata1, t.FORM_INPUT_TYPE = hidden, t.MINIMUM_REPORT_INTERVAL_MS = 1000, t.MAXIMUM_REPORT_INTERVAL_MS = 2500, t.CAPTCHA_FIELDS = [#ap_captcha_guess, #auth - captcha - guess, .fwcim - captcha - guess], t.CAPTCHA_REFRESH_LINKS = [.fwcim - captcha - refresh, #ap_captcha_refresh_link, #auth - captcha - refresh - link, #auth - refresh - audio, #auth -
+                }, t.FORM_INPUT_NAME = 'metadata1', t.FORM_INPUT_TYPE = 'hidden', t.MINIMUM_REPORT_INTERVAL_MS = 1000, t.MAXIMUM_REPORT_INTERVAL_MS = 2500, t.CAPTCHA_FIELDS = ['#ap_captcha_guess', '#auth - captcha - guess', '.fwcim - captcha - guess'], t.CAPTCHA_REFRESH_LINKS = ['.fwcim - captcha - refresh', '#ap_captcha_refresh_link', '#auth - captcha - refresh - link', '#auth - refresh - audio', #auth -
                     switch -captcha - to - audio, #auth -
                     switch -captcha - to - image
                 ], t.COLLECTORS = ue.default.COLLECTORS.concat([function() {
                     var _$$S2 = ['start', 'default', 'aAmazonCollector', 'elAmazon'];
-                    var _Qo0QQ0oO = aAmazonCollector,
-                        _Q0000Qo0 = elAmazon;
                     return new te.default({
                         key: start
                     })
@@ -2218,52 +2065,28 @@
                     return new Z.default()
                 }, function() {
                     var _Q0oo = ['default'];
-                    var _1l1iiLil = function(_00OoQQOo, _IlliII1i) {
-                        var _0oo = [.5792234088371626, 'obfuscateId', 41086, 'list'];
-                        var _lllLLLil = list,
-                            _ZS$Sz$Ss = 41086,
-                            _000OO0O0 = 0.5792234088371626;
-                        return obfuscateId
-                    };
+                    
                     return new re.default()
                 }, function() {
                     var _Q0Q = [20818, .8167523941838732, 'default', 23602];
-                    var _I1Ill1L1 = 0.8167523941838732,
-                        _0QOoQO0O = 23602,
-                        _SSz2Z$Ss = 20818;
+                    
                     return new W.default()
                 }, function() {
                     var _ZzZ = ['default'];
-                    var _zzZzs2zz = function(_SssszZsz) {
-                        var _s$S = [.4208999417934318, 'amazonData', 18721, 23649, 10427, 8923];
-                        var _S$2Zs2SS = 8923,
-                            _LlI1lLII = 10427,
-                            _ooOOQ0Oo = 0.4208999417934318;
-                        var _Ill1LiiL = 18721,
-                            _Ii1Ll1LI = 23649;
-                        return amazonData
-                    };
+                   
                     return new N.default()
                 }, function() {
                     var _oO = [5373, 'default'];
-                    var _i1LIiIl1 = 5373;
                     return new V.default()
                 }, function() {
                     var _oOO = ['default'];
-                    var _i1LLI1IL = function(_OOQOo000, _s$$$$ZSz, _0OQ0o00o) {
-                        var _2zS = [.9029407308206137, 'encryptDom', 22488, 'idA'];
-                        var _i111II1L = 22488;
-                        var _iI1lilLI = idA;
-                        var _SsZzszSZ = encryptDom;
-                        return 0.9029407308206137
-                    };
+                    
                     return new U.default()
                 }, function() {
                     var _SZ$ = ['default'];
                     return new K.default()
                 }, function(e) {
                     var _QQoO = ['form', 'elAmazon', 'default'];
-                    var _LIlIlLli = elAmazon;
                     return new ne.default({
                         form: e.form
                     })
@@ -2275,12 +2098,7 @@
                     })
                 }, function(e) {
                     var _Ii = ['default', 'form'];
-                    var _OOoooO00 = function(_0O0OQoO0, _oOQoQQoQ) {
-                        var _I1l1 = [.8585830074924519, .6674225755619421, .8000112754632462];
-                        var _1iIilIl1 = 0.6674225755619421;
-                        var _11L1ilII = 0.8000112754632462;
-                        return 0.8585830074924519
-                    };
+                    
                     return new X.default({
                         form: e.form
                     })
@@ -2293,9 +2111,6 @@
                     })
                 }, function() {
                     var _$z = ['default', 'encryptData', 'domEl', .23257532224108868];
-                    var _l1lLIiIi = encryptData,
-                        _oQOQOoQQ = domEl,
-                        _lli11I11 = 0.23257532224108868;
                     return new oe.default()
                 }, function(e) {
                     var _0o0 = ['form', 'default'];
@@ -2305,12 +2120,7 @@
                     })
                 }, function() {
                     var _0o0Q = ['default', 'end'];
-                    var _2zz$$z$s = function(_ililL11I, _0oOQQOOo) {
-                        var _iLi = [4403, .3659778350145688, 'fwcimNode'];
-                        var _QoOQQOoO = fwcimNode,
-                            _iiiL1iil = 4403;
-                        return 0.3659778350145688
-                    };
+                    
                     return new le.default({
                         key: end
                     })
@@ -2320,6 +2130,7 @@
     }), 
     
     // Defines a prototype.encode method ?
+    // WEBPACK 26
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -2335,8 +2146,6 @@
                 }
                 var _OoQQO0oO = function(_0oQ0oOoo) {
                     var _0OQ = [24034, 'blobFwcim', .6971470223337328];
-                    var _s222ZZzs = 0.6971470223337328;
-                    var _11ilLilI = 24034;
                     return blobFwcim
                 };
                 return o.join('')
@@ -2346,6 +2155,7 @@
     }), 
     
     // Another encoder, we use this one in genMetadata1 I think
+    // WEBPACK 27
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -2355,8 +2165,6 @@
             function A() {}
             return A.prototype.encode = function(t) {
                 var _ssz = [28, 15, 16, 12, 24, 20, 'join', 'ALPHABET', 9330, 4, 'charAt', 'b', 8];
-                var _Ll1iI1II = 9330,
-                    _OQQOQoQ0 = b;
                 return [A.ALPHABET.charAt(t >>> 28 & 15), A.ALPHABET.charAt(t >>> 24 & 15), A.ALPHABET.charAt(t >>> 20 & 15), A.ALPHABET.charAt(t >>> 16 & 15), A.ALPHABET.charAt(t >>> 12 & 15), A.ALPHABET.charAt(t >>> 8 & 15), A.ALPHABET.charAt(t >>> 4 & 15), A.ALPHABET.charAt(15 & t)].join('')
             }, A.ALPHABET = 0123456789 ABCDEF, A
         }();
@@ -2603,7 +2411,10 @@
                 e || (e = {}), this.type = "default", this.status = e.status === undefined ? 200 : e.status, this.ok = this.status >= 200 && this.status < 300, this.statusText = "statusText" in e ? e.statusText : "OK", this.headers = new u(e.headers), this.url = e.url || "", this._initBody(t)
             }
         }("undefined" != typeof self ? self : this)
-    }), (function(module, exports, __webpack_require__) {
+    }), 
+
+    // WEBPACK 28
+    (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
         var H = function() {
@@ -2734,6 +2545,7 @@
     // Man what the fuck is this
     // Defines some encrypting shit
     // SHA256 type beat
+    // WEBPACK 29
     (function(module, exports, __webpack_require__) {
         (function(process, global) {
             var __WEBPACK_AMD_DEFINE_RESULT__;
@@ -2919,6 +2731,7 @@
     }), 
     
     // Probably irrelevant?
+    // WEBPACK 30
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -2989,6 +2802,7 @@
     
     // some communication between ... things
     // calls webpack(4) at the end
+    // WEBPACK 31
     (function(module, exports, __webpack_require__) {
         (function(global) {
             ! function(e, t) {
@@ -3079,6 +2893,7 @@
     }), 
     
     // global func
+    // WEBPACK 32
     (function(module, exports, __webpack_require__) {
         (function(global) {
             var Mt = "undefined" != typeof global && global || "undefined" != typeof self && self || window,
@@ -3110,6 +2925,7 @@
     }), 
     
     // global func
+    // WEBPACK 33
     (function(module, exports, __webpack_require__) {
         (function(global, setImmediate) {
             var __WEBPACK_AMD_DEFINE_RESULT__;
@@ -3281,12 +3097,14 @@
     }), 
     
     // bundles 37 and 30
+    // WEBPACK 34
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1, __webpack_require__(37), __webpack_require__(30)
     }), 
     
     // idk
+    // WEBPACK 35
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -3303,16 +3121,7 @@
                     };
                     this.buffer = []
                 }
-                var _s22zS2$Z = function(_Zs$2$SSs) {
-                    var _O000 = [10485, .8611568612173788, .4142115968393105, 'listCaptcha', 'jsonElBlob', .4895376942907985, 'encryptList'];
-                    var _Ll1LLIL1 = 0.4895376942907985,
-                        _lLilL1ll = encryptList,
-                        _00Q0oQ0Q = jsonElBlob;
-                    var _OOQooooo = 0.8611568612173788,
-                        _$s$s2SS2 = 10485;
-                    var _sSzSZsZS = listCaptcha;
-                    return 0.4142115968393105
-                };
+                
                 return t.prototype.add = function(t) {
                     var _2zZ = ['__awaiter', 0];
                     var _222$2z2z = function(_11IIl1il) {
@@ -3344,6 +3153,7 @@
     
     // defines getExistingItems
     // 
+    // WEBPACK 36
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -3352,16 +3162,7 @@
                 var _ZsZ = ['getExistingItems', 'amzn:fwcim:events', 3600, 'prototype', 'BUFFER_KEY', 10240, 'MAX_AGE_SECONDS', 'get', 'add', 'storage', 'MAX_SIZE_BYTES'];
 
                 function t(t) {
-                    var _lIiL1lii = function(_ILLlI1iI, _$Zsss$2$) {
-                        var _Z$2 = ['useragentHashCaptcha', 'bStatementEncrypt', 'fwcimDocument', .43421310731075313, 'encrypt', 'jsonStatement', .05263837183041087];
-                        var _oO0000OQ = bStatementEncrypt,
-                            _0oo00o00 = encrypt;
-                        var _0oOOQOoO = jsonStatement,
-                            _szsZSZZz = useragentHashCaptcha;
-                        var _lllILiiL = 0.05263837183041087,
-                            _IIlIII1I = 0.43421310731075313;
-                        return fwcimDocument
-                    };
+                    
                     this.storage = t
                 }
                 return t.prototype.getExistingItems = function() {
@@ -3415,6 +3216,7 @@
     
     // adds a bunch of event listeners which push objects to this.events
     // objects look like {type, time, param1, param2, param3}
+    // WEBPACK 37
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -3546,6 +3348,7 @@
     
 
     // idk rethe
+    // WEBPACK 38
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -3574,6 +3377,7 @@
     }), 
     
     // Helps generate telemetry
+    // WEBPACK 39
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -3613,6 +3417,7 @@
     // IMPORTANT
     // Although this has a lot of logic, I feel like they're reporting to an external server,
     // and this is more for analytics instead of generating the metadata1
+    // WEBPACK 40
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -3692,8 +3497,6 @@
 
                     return void 0 === e && (e = 0), k.__awaiter(this, void 0, void 0, function() {
                         var _o0O = ['__generator', 'dataJsonHash', 'encrypt'];
-                        var _00QOoooQ = dataJsonHash,
-                            _0OOQOQ0o = encrypt;
                         var r, o, n;
                         return k.__generator(this, function(l) {
                             var _2sZ = ['__assign', 'reportToServer', 'getTime', 'INIT_REPORT_TYPE', 1, 'trys', 'BASE_DATA', 'push', null, 2, 3, 4, 'amazonJson', 'collect', 'firstReport', 5, 'INCREMENTAL_REPORT_TYPE', 'add', 'label', 8, 'sent', 0, 'collectIncrementalCollectors', 7, 'buffer', 6, .27813551372325174];
@@ -3755,17 +3558,10 @@
                     var e = this.throttledReport;
                     this.selectorQuerier.querySelectorAll(t.LINK_SELECTOR).forEach(function(t) {
                         var _OO0 = [.5599328398120684, 'mouseover', 'removeEventListener', 'collectorDocument', 'default'];
-                        var _ss$SZ$22 = collectorDocument,
-                            _SzzSSzz$ = 0.5599328398120684;
                         return new ce.default(t).removeEventListener(mouseover, e)
                     }), this.selectorQuerier.querySelectorAll(t.FORM_SELECTOR).forEach(function(t) {
                         var _QoQ = ['removeEventListener', 'submit', 'default'];
-                        var _ss$2Z2z2 = function(_QoQOQoo0) {
-                            var _1lL = [44861, .590402449695054, 'collectorDocumentList'];
-                            var _ooQ0OQOo = 0.590402449695054,
-                                _Z2Z$22sZ = collectorDocumentList;
-                            return 44861
-                        };
+                        
                         return new ce.default(t).removeEventListener(submit, e)
                     })
                 }, t.CSM_CHANNEL = cap - ciba, t.CSM_KEY = fwcim, t.LINK_SELECTOR = a: not([href ^= "#"]), t.FORM_SELECTOR = form, t.INIT_REPORT_TYPE = init, t.INCREMENTAL_REPORT_TYPE = inc, t.REPORT_THROTTLE_MS = 3000, t.AUTO_REPORT_INTERVAL_MS = 5000, t.AUTO_REPORT_TO_SERVER_INTERVAL_MS = 30000, t.BASE_DATA = {
@@ -3775,24 +3571,18 @@
                     c: window.fwcimData ? window.fwcimData.customerId : null
                 }, t.CSM_OPTIONS = {}, t.COLLECTORS = ue.default.COLLECTORS.concat([function() {
                     var _liL = ['body', 'default', 'captchaA'];
-                    var _0OQOoOoO = captchaA,
-                        _1i1lILii = body;
                     return new N.default()
                 }, function() {
                     var _oOo = [.4977345179839159, 'default'];
-                    var _1ilI1lLi = 0.4977345179839159;
                     return new V.default()
                 }, function() {
                     var _$zs = ['default'];
                     return new U.default()
                 }, function() {
                     var _OOQO = [806, 'default'];
-                    var _22$z$sZs = 806;
                     return new K.default()
                 }, function() {
                     var _QQoOQ = ['default', .2634809076172824, 'captchaObfuscate'];
-                    var _$$zsZs2Z = 0.2634809076172824,
-                        _LILli1LL = captchaObfuscate;
                     return new Z.default()
                 }, function() {
                     var _22$ = ['default'];
@@ -3802,33 +3592,17 @@
                     return new ie.default()
                 }, function() {
                     var _sz2 = ['default'];
-                    var _$z$Z$z2s = function(_2z$2$SSz, _ili1iiII, _sS$Sz$$S) {
-                        var _ooQ = [.8881322831108922, 29858, .04124663819594199, 15421, .945295971077321, .8109847636673488, .2781995787158009];
-                        var _OOOOQ00O = 0.04124663819594199;
-                        var _OQ0oQ00o = 0.945295971077321,
-                            _lLllIL1L = 29858,
-                            _oOQOoQ0Q = 0.8109847636673488;
-                        var _0oOQo0oO = 0.2781995787158009,
-                            _I1ilIill = 0.8881322831108922;
-                        return 15421
-                    };
+                  
                     return new W.default()
                 }, function(e) {
                     var _Zs2 = ['latencyMetrics', 'default', 'globalTimingMetrics', 28594, 'fwcim', 31491];
-                    var _Z2zZZSS$ = 31491,
-                        _0o0QQoQQ = fwcim,
-                        _i1Li1IL1 = 28594;
                     return new Te.default({
                         key: latencyMetrics,
                         data: e.globalTimingMetrics
                     })
                 }]), t.INCREMENTAL_REPORT_COLLECTORS = [function() {
                     var _IlLL = ['default'];
-                    var _1lI1Iiil = function(_Sz2z2ssZ, _O0OoQQOQ) {
-                        var _L1l = [33212, 28287];
-                        var _LLIL1lll = 33212;
-                        return 28287
-                    };
+                   
                     return new _e[_IlLL[0]](new Ee[_IlLL[0]]())
                 }], t
             }(ue['default']);
@@ -3836,12 +3610,14 @@
     }), 
     
     // Constants 
+    // WEBPACK 41
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1, exports.FWCIM_VERSION = '4.0.0'
     }), 
     
     // Collects info about the scripts on the webpage and their contents
+    // WEBPACK 42
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -3889,6 +3665,7 @@
     
     // Returns a [2, { performance { timing } } ] array
     // if it doesn't exist, return [2, null] 
+    // WEBPACK 43
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -3920,6 +3697,7 @@
     }), 
     
     // Returns a [2, {history: {length}}] array
+    // WEBPACK 44
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -3950,6 +3728,7 @@
     }), 
     
     // Returns an array object about battery i.e. [2, {}], [3, 2], and [4, {...}]
+    // WEBPACK 45
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -3990,6 +3769,7 @@
     
     // Checks if you're using selenium automation software to login?
     // returns an [2, {automation: {wd: {...}, phantom: {...}}}] Array
+    // WEBPACK 46
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -4037,6 +3817,7 @@
     }), 
     
     // Records metrics about submitting a form (probably login or continue?)
+    // WEBPACK 47
     (function(module, exports, __webpack_require__) {
         "use strict";
         exports.__esModule = 1;
@@ -4073,6 +3854,7 @@
     }), 
     
     // 
+    // WEBPACK 48
     (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
@@ -4088,7 +3870,8 @@
                         };
                         try {
                             this.storage = t || window.sessionStorage || window.localStorage
-                        } catch (e) {}
+                        } catch (e) {
+                        }
                         this.token.isCompatible && this.token.pageHasCaptcha && this.startProofOfWork()
                     }
 
@@ -4213,7 +3996,8 @@
                 }), 
                
         // returns a 'formMethod' generator 
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 49
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4248,7 +4032,8 @@
         }), 
         
         // Adds telemetry collectors to inputs (i.e. ap_username, ap_password)
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 50
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4317,7 +4102,8 @@
         }), 
         
         // Screen collector
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 51
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4346,7 +4132,8 @@
         }), 
         
         // [2, {flashVesion: e, plugins: n}] return collector
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 52
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4381,7 +4168,8 @@
         }), 
         
         // Plugin collector again. Or validator
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 53
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4457,7 +4245,8 @@
         // idk
         // has 'this.prepareBrowserCapabilitesElement'
         // and lots of shit about 'components'
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 54
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4590,7 +4379,8 @@
         }), 
         
         // Checks if using windows and if using internet explorer lol
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 55
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var nn = function() {
@@ -4611,7 +4401,8 @@
         }), 
         
         // Adds listeners for captcha (shouldnt be a problem for us) for focus and click, etc
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 56
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4667,7 +4458,8 @@
         }), 
         
         // More captcha telemetry
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 57
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4708,7 +4500,8 @@
         }), 
         
         // idk 
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 58
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4742,7 +4535,8 @@
         
         // IMPORTANT
         // Draws rectangles, shapes, etc using canvas and records data
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 59
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4784,7 +4578,8 @@
         }), 
         
         // obfuscate return URL
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 60
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -4831,7 +4626,8 @@
         }), 
         
         // Gets raw hostname and pathname
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 61
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var tr = function() {
@@ -4907,7 +4703,8 @@
             }), 
         
         // Some bundled obfuscation
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 62
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var Ot = __webpack_require__(21),
@@ -4929,7 +4726,8 @@
         }), 
         
         // idk this lowkey prolly impt tho
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 63
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var _ = __webpack_require__(27),
@@ -5003,14 +4801,10 @@
                         r.globalReportInit = new Date().getTime();
                         var t = null;
                         try {
+                            console.log('treeee')
                             (t = window.sessionStorage || window.localStorage).setItem(e.LOCAL_STORAGE_TEST_KEY, test), t.removeItem(e.LOCAL_STORAGE_TEST_KEY)
                         } catch (i) {
-                            var _11i1iI1l = function(_0o0QQoo0) {
-                                var _SZ = ['bCollector', 2193, 'aDom'];
-                                var _S2222SZ$ = 2193,
-                                    _0OoOOQQQ = aDom;
-                                return bCollector
-                            };
+                            
                             t = null
                         }
                         var o = t ? new A.default(t) : new F.default();
@@ -5027,7 +4821,8 @@
         }), 
         
         // IMPORTANT: Returns the identifier we see at the beginning of the metadata
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 64
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var D = function() {
@@ -5048,7 +4843,8 @@
         }), 
         
         // Definitely impt, we see doEncrypt implemented here
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 65
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var k = __webpack_require__(0),
@@ -5064,18 +4860,18 @@
                         return k.__awaiter(this, void 0, void 0, function() {
                             var _1i = ['documentDom', '__generator'];
                             var t;
-                            var _$zZS2S$z = 'documentDom';
                             return k.__generator(this, function(e) {
                                 var _IL = ['provide', 'doEncrypt', 'material', 38648, 2, 'keyProvider', 34550, 'identifier', 'encode', ':', .9701127942948127, 'base64Encoder'];
                                 return [2, (t = this['keyProvider'].provide())['identifier'] + ':' + this['base64Encoder'].encode(this['doEncrypt'](r, t.material))]
                             })
                         })
-                    }, r.prototype.doEncrypt = function(r, t) {
+                    }, 
+                    
+                    // called on 
+                    r.prototype.doEncrypt = function(r, t) {
                         var _I1l = [.6070017048415675, 4, 2, 'fromCharCode', 3, 6, 0, 'length', 1, 8, 16, 'charCodeAt', 5, 24, 52, 'ceil', 'bEl', 'floor', 255, 'join', 2654435769];
                         if (0 === r[_I1l.length]) return '';
                         for (var e = Math.ceil(r.length / 4), o = [], i = 0; i < e; i++) o[i] = (255 & r.charCodeAt(4 * i)) + ((255 & r.charCodeAt(4 * i + 1)) << 8) + ((255 & r.charCodeAt(4 * i + 2)) << 16) + ((255 & r.charCodeAt(4 * i + 3)) << 24);
-                        var _ZzSZ$S$z = 0.6070017048415675,
-                            _s$Szz22S = bEl;
                         for (var n = Math.floor(6 + 52 / e), a = o .0, c = o[e - 1], d = 0; n-- > 0;)
                             for (var h = (d += 2654435769) >>> 2 & 3, u = 0; u < e; u++) a = o[(u + 1) % e], c = o[u] += (c >>> 5 ^ a << 2) + (a >>> 3 ^ c << 4) ^ (d ^ a) + (t[3 & u ^ h] ^ c);
                         for (var f = [], s = 0; s < e; s++) f[s] = String.fromCharCode(255 & o[s], o[s] >>> 8 & 255, o[s] >>> 16 & 255, o[s] >>> 24 & 255);
@@ -5086,7 +4882,8 @@
         }), 
         
         // IMPORTANT
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 66
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var S = function() {
@@ -5160,7 +4957,8 @@
         }), 
         
         // IMPORTANT: Loads Webpack, initialized a bunch of shit 
-        (function(module, exports, __webpack_require__) {
+    // WEBPACK 67
+    (function(module, exports, __webpack_require__) {
             (function(module, global) {
                 var __WEBPACK_AMD_DEFINE_RESULT__;
                 ! function(e) {
@@ -5199,7 +4997,10 @@
                     }
                 }(this)
             }.call(this, __webpack_require__(72)(module), __webpack_require__(4)))
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+    // WEBPACK 68
+        (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var b = __webpack_require__(73),
@@ -5215,7 +5016,11 @@
                     }, e
                 }();
             exports['default'] = M
-        }), (function(module, exports, __webpack_require__) {
+        }), 
+        
+        
+    // WEBPACK 69
+    (function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = 1;
             var e = __webpack_require__(74),
@@ -5289,7 +5094,11 @@
                     };
                 'loading' === document.readyState ? document.addEventListener('DOMContentLoaded', E) : E()
             }
-        }), (function(module, exports, __webpack_require__) {
+        }),
+        
+        
+    // WEBPACK 70
+    (function(module, exports, __webpack_require__) {
             __webpack_require__(30);
             module.exports = __webpack_require__(75)
         })])
