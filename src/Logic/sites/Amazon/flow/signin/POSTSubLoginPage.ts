@@ -5,11 +5,12 @@ import {
     joinCookies
 } from '../../../../requestFunctions'
 import requestRetryWrapper from '../../../../requestRetryWrapper';
-import justinIsCracked from '../../logic/genMetadata2';
 import { Proxy } from '../../../../interfaces/ProxyList';
 import HttpsProxyAgent from 'https-proxy-agent'
+import api from '../../../../api';
+import store from '../../../../../redux/store';
 
-const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data : LoginQuerys, proxy : Proxy) : Promise<AxiosResponse> => {
+const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data : LoginQuerys, proxy : Proxy, license : string, session : string) : Promise<AxiosResponse> => {
 
     const {
         appActionToken,
@@ -20,8 +21,30 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
         password
     } = data;
 
+    // store.subscribe(() => {
+    //     // When state will be updated(in this case, when items will be fetched), this is how we can get updated state.                    
+    //      let session= store.getState().session;
+    //     console.log(session)
+    // })
 
-    const metaCracked = justinIsCracked()
+
+    console.log('about to get metadata using these credentials')
+    console.log(`license: ${license}`)
+    console.log(`session: ${session}`)
+    console.log(`api: ${api}/sites/amazon/data`)
+    let metaCracked = await axios({
+        method: 'get',
+        url: `${api}/sites/amazon/data`,
+        headers: {
+            license,
+            session
+        }
+    }) //justinIsCracked()
+
+    metaCracked = metaCracked.data.body;
+
+    console.log(`metadata1: ${metaCracked}`)
+    console.log(metaCracked)
 
     const POSTConfig = {
         appActionToken: appActionToken, 

@@ -1,8 +1,8 @@
 import electron from 'electron';
 import SignIn from '../../Logic/sites/Amazon/flow/signin/signin';
-import { GETMainLoginPageRetry } from '../../Logic/sites/Amazon/flow/signin/GETMainLoginPage';
-import { POSTMainLoginPageRetry } from '../../Logic/sites/Amazon/flow/signin/POSTMainLoginPage';
-import { POSTSubLoginPageRetry } from '../../Logic/sites/Amazon/flow/signin/POSTSubLoginPage';
+import GETMainLoginPage from '../../Logic/sites/Amazon/flow/signin/GETMainLoginPage';
+import POSTMainLoginPage from '../../Logic/sites/Amazon/flow/signin/POSTMainLoginPage';
+import POSTSubLoginPage from '../../Logic/sites/Amazon/flow/signin/POSTSubLoginPage';
 import { AxiosResponse } from 'axios';
 import {
     accumulateCookies,
@@ -31,7 +31,7 @@ const signinIpc = () => {
         let allCookies = args[0];
         let proxy = args[1];
 
-        const MainLoginPageRetryResponse : AxiosResponse = await GETMainLoginPageRetry(allCookies, proxy);
+        const MainLoginPageRetryResponse : AxiosResponse = await GETMainLoginPage(allCookies, proxy);
 
         allCookies = accumulateCookies(allCookies,
             returnParsedCookies(MainLoginPageRetryResponse.headers['set-cookie'])
@@ -77,7 +77,7 @@ const signinIpc = () => {
 
     
         // res is cookies
-        const POSTMainLoginPageResponse = await POSTMainLoginPageRetry(allCookies, sessionId, {
+        const POSTMainLoginPageResponse = await POSTMainLoginPage(allCookies, sessionId, {
             appAction,
             appActionToken,
             prevRID,
@@ -109,6 +109,8 @@ const signinIpc = () => {
         const sessionId = args[1];
         const props = args[2];
         const proxy = args[3];
+        const license = args[4];
+        const session = args[5];
 
         const {
             appAction,
@@ -119,14 +121,14 @@ const signinIpc = () => {
             password
         } = props;
     
-        const POSTSubLoginPageRetryResponse = await POSTSubLoginPageRetry(allCookies, sessionId, {
+        const POSTSubLoginPageRetryResponse = await POSTSubLoginPage(allCookies, sessionId, {
             appActionToken,
             appAction,
             prevRID,
             workflowState,
             email,
             password
-        }, proxy)
+        }, proxy, license, session)
 
         allCookies = accumulateCookies(
             allCookies,

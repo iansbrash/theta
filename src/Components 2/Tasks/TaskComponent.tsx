@@ -56,11 +56,15 @@ const EditIcon = () => (
 const delay = (ms : number) => new Promise(res => setTimeout(res, ms));
 
 interface TaskComponentProps {
-    task: TaskClass
+    task: TaskClass,
+    tasks: TaskClass[],
+    setTasks: (t : any[]) => void
 }
 
 const TaskComponent : FC<TaskComponentProps> = ({
-    task
+    task,
+    tasks,
+    setTasks
 } : TaskComponentProps) => {
 
     console.log('RENDERING A TASK!')
@@ -122,6 +126,10 @@ const TaskComponent : FC<TaskComponentProps> = ({
     }
 
     const deleteTask = () => {
+
+        stopTask();
+
+        setTasks(tasks.filter(t => t.identifier !== task.identifier));
         // let requestApi = {
         //     method: 'POST',
         //     headers: {
@@ -167,7 +175,8 @@ const TaskComponent : FC<TaskComponentProps> = ({
                 </div>
             </div>
             <InterestingWrapperProps width={'w-3/10'} bg={taskBg}>
-                {task.profile.information.name}
+                {/* {task.profile.information.name} */}
+                {task.identifier}
             </InterestingWrapperProps>
             <InterestingWrapperProps width={'w-3/10'} bg={taskBg}>
                 {task.proxyList.name}

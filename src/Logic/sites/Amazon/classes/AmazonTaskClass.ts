@@ -232,7 +232,7 @@ class AmazonTaskClass extends TaskClass {
                 workflowState: this.storage.workflowState,
                 email: this.config.account.username,
                 password: this.config.account.password
-            } , this.proxyList.proxies[0]);
+            } , this.proxyList.proxies[0], this.license, this.session);
     
             this.allCookies = res.allCookies;
         }, 'Getting product') 

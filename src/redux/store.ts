@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, createStore } from '@reduxjs/toolkit'
 import { combineReducers } from 'redux'
 import settingsSlice from './reducers/settingsSlice'
 import profilesSlice from './reducers/profilesSlice'
@@ -16,9 +16,11 @@ const rootReducer = combineReducers({
     session: sessionSlice
 })
 
-const store = configureStore({
-    reducer: rootReducer,
-})
+// const store = configureStore({
+//     reducer: rootReducer,
+// })
+
+const store = createStore(rootReducer, undefined)
 
 export default store;
 

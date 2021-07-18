@@ -4,6 +4,7 @@ import Size from "../../interfaces/enums/Size";
 import ProfileObject from "../../interfaces/ProfileObject";
 import ProxyList from "../../interfaces/ProxyList";
 import Task from "../../interfaces/Task";
+import store from "../../../redux/store";
 
 export enum internalStatus {
     "Idle",
@@ -23,6 +24,8 @@ abstract class TaskClass implements Task {
     size;
     proxyList;
     status : string;
+    session : string;
+    license: string;
 
     
 
@@ -49,6 +52,9 @@ abstract class TaskClass implements Task {
         this.input = input;
 
         this.internalStatus = internalStatus.Idle
+
+        this.license = store.getState().session.license
+        this.session = store.getState().session.session
     }
 
     abstract start(): void;

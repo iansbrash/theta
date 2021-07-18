@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 export enum SessionStatus {
     Populated,
@@ -25,6 +25,10 @@ export const sessionSlice = createSlice({
 
                 state.session = session;
                 state.license = license;
+                // axios.defaults.headers.license = license;
+                // axios.defaults.headers['session'] = session;
+                // axios.defaults.headers.common['license'] = license;
+                // axios.defaults.headers.common['session'] = session;
             },
             prepare (session, license) {
                 return {

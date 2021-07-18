@@ -26,6 +26,7 @@ import { TaskSaveState, saveTaskGroupOnAdd } from '../../redux/reducers/tasksSli
 import electron from 'electron';
 import AmazonTaskClass from '../../Logic/sites/Amazon/classes/AmazonTaskClass';
 import TaskClass from '../../Logic/sites/classes/TaskClass';
+import store from '../../redux/store'
 
 
 interface TextInputProps {
@@ -389,6 +390,10 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
         onInputBlur();
     }
 
+    const stopAllTasks = () => {
+        console.log(store.getState())
+    }
+
 
     return (
         <ScreenWrapper hidden={hidden}>
@@ -624,6 +629,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                         rowRenderer={AutoResizerTaskComponent}
                         className="scrollbar-hide focus:outline-none"
                         data={tasks2}
+                        data2={setTasks2}
                     >
                         
                     </List>
@@ -663,7 +669,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
                         </svg>
                     </button>
-                    <button className="transition transform duration-250 ease-in-out hover:scale-110 focus:outline-none rounded-full bg-theta-sidebar-dark shadow-lg text-theta-tasks-taskcomponent-stop flex flex-row justify-center items-center">
+                    <button className="transition transform duration-250 ease-in-out hover:scale-110 focus:outline-none rounded-full bg-theta-sidebar-dark shadow-lg text-theta-tasks-taskcomponent-stop flex flex-row justify-center items-center"
+                    onClick={() => stopAllTasks()}
+                    >
                         <div className="ml-4 mr-2 text-theta-gray-2 font-medium text-2xl">
                             Stop
                         </div>
