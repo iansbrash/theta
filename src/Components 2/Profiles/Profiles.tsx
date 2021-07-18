@@ -35,8 +35,8 @@ const Profiles : FC = () => {
     const [shipLname, setShipLname] = useState<string>('');
     const [shipAddr1, setShipAddr1] = useState<string>('');
     const [shipAddr2, setShipAddr2] = useState<string>('');
-    const [shipCountry, setShipCountry] = useState<ICountry>();
-    const [shipState, setShipState] = useState<IState>();
+    const [shipCountry, setShipCountry] = useState<string>('');
+    const [shipState, setShipState] = useState<string>('');
     const [shipZip, setShipZip] = useState<string>('');
     const [shipCity, setShipCity] = useState<string>('');
 
@@ -45,8 +45,8 @@ const Profiles : FC = () => {
     const [billLname, setBillLname] = useState<string>('');
     const [billAddr1, setBillAddr1] = useState<string>('');
     const [billAddr2, setBillAddr2] = useState<string>('');
-    const [billCountry, setBillCountry] = useState<ICountry>();
-    const [billState, setBillState] = useState<IState>();
+    const [billCountry, setBillCountry] = useState<string>('');
+    const [billState, setBillState] = useState<string>('');
     const [billZip, setBillZip] = useState<string>('');
     const [billCity, setBillCity] = useState<string>('');
 
@@ -95,10 +95,10 @@ const Profiles : FC = () => {
             setShipLname(lastName);
             setShipAddr1(address1);
             setShipAddr2(address2)
-            setShipCountry(Country.getCountryByCode(country));
+            setShipCountry(country);
             setShipCity(city);
             setShipZip(zip);
-            setShipState(State.getStateByCode(state));
+            setShipState(state);
         })();
 
         (() => {
@@ -117,10 +117,10 @@ const Profiles : FC = () => {
             setBillLname(lastName);
             setBillAddr1(address1);
             setBillAddr2(address2)
-            setBillCountry(Country.getCountryByCode(country));
+            setBillCountry(country);
             setBillCity(city);
             setBillZip(zip);
-            setBillState(State.getStateByCode(state));
+            setBillState(state);
         })();
 
         const {
@@ -172,7 +172,11 @@ const Profiles : FC = () => {
             paymentNumber,
             paymentExpMonth,
             paymentExpYear,
-            paymentCVV
+            paymentCVV,
+            shipCountry,
+            shipState,
+            billCountry,
+            billState,    
         ]
 
         for (const i in cantBeEmptyString) {
@@ -180,20 +184,6 @@ const Profiles : FC = () => {
                 return SanitizationStatus.BlankError;
             }
         }
-
-        const cantBeUndefined : any[] = [
-            shipCountry,
-            shipState,
-            billCountry,
-            billState,      
-        ]
-
-        for (const i in cantBeUndefined) {
-            if (cantBeEmptyString[i] === undefined) {
-                return SanitizationStatus.UndefinedError;
-            }
-        }
-
         return SanitizationStatus.Success;
     }
 
@@ -220,14 +210,7 @@ const Profiles : FC = () => {
             setPaymentNumber,
             setPaymentExpMonth,
             setPaymentExpYear,
-            setPaymentCVV
-        ]
-
-        for (let i in toEmpty) {
-            toEmpty[i]('');
-        }
-
-        const toUndefined : any[] = [
+            setPaymentCVV,
             setBillCountry,
             setBillState,
             setShipCountry,
@@ -235,7 +218,7 @@ const Profiles : FC = () => {
         ]
 
         for (let i in toEmpty) {
-            toUndefined[i]();
+            (toEmpty[i])('');
         }
     }
 
@@ -244,6 +227,11 @@ const Profiles : FC = () => {
         const res : SanitizationStatus = ensureSanitizedProfile();
 
         if (res !== SanitizationStatus.Success) return console.log(`ERROR ${SanitizationStatus[res]}: Profile is not sanitized correctly.`);
+
+        // ensure no duplicate profile names
+        if (loadedProfiles.findIndex(pr => pr.information.name === profileName) !== -1) {
+            return console.error(`ERROR: Profile name ${profileName} already exists!`)
+        }
 
         const newProfile : ProfileObject = {
             information: {
@@ -258,9 +246,9 @@ const Profiles : FC = () => {
                 address2: shipAddr2,
 
                 // @ts-ignore
-                country: shipCountry.isoCode,
+                country: shipCountry,
                 // @ts-ignore
-                state: shipState.isoCode,
+                state: shipState,
                 zip: shipZip,
                 city: shipCity
             },
@@ -270,9 +258,9 @@ const Profiles : FC = () => {
                 address1: billAddr1,
                 address2: billAddr2,
                 // @ts-ignore
-                country: billCountry.isoCode,
+                country: billCountry,
                 // @ts-ignore
-                state: billState.isoCode,
+                state: billState,
                 zip: billZip,
                 city: billCity
             },
@@ -606,6 +594,7 @@ const Profiles : FC = () => {
                                                     maxRowsBeforeOverflow={5}
                                                     border={'border-theta-sidebar'}
                                                     noShadow={true}
+                                                    transformBack={true}
                                                 />
                                             </div>
                                         </div>
@@ -616,10 +605,10 @@ const Profiles : FC = () => {
                                             <div className="w-full h-10">
                                                 <DropdownSelect 
                                                     setSelection={setShipState}
-                                                    selectionArray={shipCountry ? State.getStatesOfCountry(shipCountry.isoCode) : []}
+                                                    selectionArray={shipCountry === '' ? [] : State.getStatesOfCountry(Country.getAllCountries().find(cr => cr.name === shipCountry)!.isoCode)}
                                                     bg={'bg-theta-bg'}
                                                     textSize={'text-2xl'}
-                                                    placeholder={'Select country'}
+                                                    placeholder={'Select state'}
                                                     itemToString={(s : IState) => s.name}
                                                     maxRowsBeforeOverflow={5}
                                                     border={'border-theta-sidebar'}
@@ -659,7 +648,7 @@ const Profiles : FC = () => {
                                                 <TextInput 
                                                     input={shipZip}
                                                     onChange={setShipZip}
-                                                    placeholder={'California'}
+                                                    placeholder={'90007'}
                                                     bg={'bg-theta-bg'}
                                                     border={'border-theta-sidebar'}
                                                     icon={
@@ -787,6 +776,7 @@ const Profiles : FC = () => {
                                                     maxRowsBeforeOverflow={5}
                                                     border={'border-theta-sidebar'}
                                                     noShadow={true}
+                                                    transformBack={true}
                                                 />
                                             </div>
                                         </div>
@@ -797,10 +787,10 @@ const Profiles : FC = () => {
                                             <div className="w-full h-10">
                                                 <DropdownSelect 
                                                     setSelection={setBillState}
-                                                    selectionArray={billCountry ? State.getStatesOfCountry(billCountry.isoCode) : []}
+                                                    selectionArray={billCountry === '' ? [] : State.getStatesOfCountry(Country.getAllCountries().find(cr => cr.name === billCountry)!.isoCode)}
                                                     bg={'bg-theta-bg'}
                                                     textSize={'text-2xl'}
-                                                    placeholder={'Select country'}
+                                                    placeholder={'Select state'}
                                                     itemToString={(s : IState) => s.name}
                                                     maxRowsBeforeOverflow={5}
                                                     border={'border-theta-sidebar'}
@@ -840,7 +830,7 @@ const Profiles : FC = () => {
                                                 <TextInput 
                                                     input={billZip}
                                                     onChange={setBillZip}
-                                                    placeholder={'California'}
+                                                    placeholder={'90007'}
                                                     bg={'bg-theta-bg'}
                                                     border={'border-theta-sidebar'}
                                                     icon={

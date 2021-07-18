@@ -4,7 +4,6 @@ const calculate = (r) => {
     var t, e = 0;
     e ^= 4294967295;
     for (var c = 0; c < r.length; c++) t = 255 & (e ^ r.charCodeAt(c)), e = e >>> 8 ^ crcTable[t];
-    // console.log(`calculate: ${4294967295 ^ e}`)
     return 4294967295 ^ e
 } 
 

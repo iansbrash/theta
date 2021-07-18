@@ -21,7 +21,8 @@ interface DrowndownSelectProps {
     offsetWidth?: string,
     maxRowsBeforeOverflow?: number,
     border?: string,
-    noShadow?: boolean
+    noShadow?: boolean,
+    transformBack?: boolean
 }
 
 const DropdownSelect : FC<DrowndownSelectProps> = ({
@@ -34,7 +35,8 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
     offsetWidth,
     maxRowsBeforeOverflow,
     border,
-    noShadow
+    noShadow,
+    transformBack
 } : DrowndownSelectProps) => {
 
     const [selectSearchInput, setSelectSearchInput] = useState<string>('');
@@ -44,7 +46,7 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
 
 
     const handleSiteChange = (a : any) => {
-        setSelection(a);
+        setSelection(transformBack ? itemToString(a) : a);
         setSelectSearchInput(itemToString(a));
         onInputBlur();
     }
