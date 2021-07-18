@@ -611,15 +611,16 @@
                     }
                 },
                 // I feel like this returns a constant
+                // this is the crc calculator
                 r.prototype.calculate = function(r) {
                     var _ooo = [0, 'length', 255, 'buildCrcTable', 4011, 8, 'crcTable', 4294967295, 'charCodeAt'];
-                    var _liIII1lL = 4011;
 
                     // uses crcTable
                     this.crcTable || this.buildCrcTable();
                     var t, e = 0;
                     e ^= 4294967295;
                     for (var c = 0; c < r.length; c++) t = 255 & (e ^ r.charCodeAt(c)), e = e >>> 8 ^ this.crcTable[t];
+                    console.log(`calculate: ${4294967295 ^ e}`)
                     return 4294967295 ^ e
                 }, 
                 // Nevermind
@@ -848,12 +849,7 @@
                     e.COLLECTORS = [
                     function() {
                         var _o0Oo = ['default', 'start'];
-                        var _$sZSZ$$z = function(_z$ZzZS2z, _ii1LIiiI) {
-                            var _o0O0 = [.5348635386087484, 'executeBlobId', .8934156851333157];
-                            var _1iILI1l1 = executeBlobId,
-                                _11i1l1i1 = 0.8934156851333157;
-                            return 0.5348635386087484
-                        };
+                        
                         return new te[_o0Oo[0]]({
                             key: _o0Oo[1]
                         })
@@ -888,21 +884,12 @@
                     }, 
                     function() {
                         var _i1I = ['default', .08460272465517504, .803221730117323];
-                        var _oQo0o00o = 0.08460272465517504,
-                            _li1IlliI = 0.803221730117323;
                         //he = __webpack_require__(49),
                         return new he.default()
                     }, 
                     function() {
                         var _oo0o = ['default'];
-                        var _SZ$S2Z2$ = function(_0oQOo0Qo, _Il11l11i, _SSZ$$$2s) {
-                            var _il1 = [38904, 'bJson', 'json', 'documentBodyObfuscate', 'aId'];
-                            var _iIil1lll = json,
-                                _1il1liii = aId;
-                            var _s$2$$$$s = documentBodyObfuscate,
-                                _lilL1ilI = bJson;
-                            return 38904
-                        };
+                        
                         ye = __webpack_require__(47),
                         return new ye.default()
                     }, 
@@ -994,9 +981,7 @@
             var k = __webpack_require__(0),
                 dt = function() {
                     var _iLl = ['prototype', 'storage', 'collect', null, 'lsubid', 'collectorName', 34022, 'amznfbgid', 'localStorage', 'hash', 'domBody', 'STORAGE_KEY', 'aObfuscateA', 'generateIdentifier', 'id', 'validateIdentifier'];
-                    var _Lli11lI1 = domBody,
-                        _z2ssZSZs = hash,
-                        _sSsz$$SS = 34022;
+             
 
                     function t(t) {
                         try {
@@ -1014,8 +999,6 @@
                         var t = 4022871197;
 
                         function e(e) {
-                            var _iL1iI1ii = 0.6762375199396113,
-                                _O0OQ0oOO = 0.49233513279824925;
                             e = typeof e === undefined || null === e ? '' : e.toString();
                             for (var r = 0; r < e.length; r++) {
                                 var n = 0.02519603282416938 * (t += e.charCodeAt(r));
@@ -1032,23 +1015,12 @@
                             // Takes the entire HTML of the page and does something with it
                             // and userAgent and time
                         for (var u in a) a.hasOwnProperty(u) && ((r -= e(a[u])) < 0 && (r += 1), (n -= e(a[u])) < 0 && (n += 1), (i -= e(a[u])) < 0 && (i += 1));
-                        var _1i1LliIL = function(_OooO0OQ0, _zZ$Zz22S) {
-                            var _zzS = ['collectorObfuscateStatement', 16793, .520609776597065, .9440373875850037, .5392963073230932, .14251735622429318, 'json', 'jsonNode'];
-                            var _1il1iL11 = 0.9440373875850037,
-                                _iL1IIIi1 = collectorObfuscateStatement;
-                            var _Sz$Z22$2 = jsonNode,
-                                _SZZ$$s$s = 0.14251735622429318,
-                                _iiLIlLLL = json;
-                            var _1L1LIIII = 0.520609776597065,
-                                _iLLi1iII = 16793;
-                            return 0.5392963073230932
-                        };
 
                         function s(t) {
                             return (0000000000 + (4294967296 * (e = 2091639 * r + 2.3283064365386963e-10 * o, r = n, n = i, i = e - (o = 0 | e))).toString()).slice(-t);
                             var e
                         }
-                        return X + s(2) + - +s(7) + - +s(7) +: +Math.floor(new Date().getTime() / 1000)
+                        return X + s(2) + '-' +s(7) + '-' +s(7) +':' +Math.floor(new Date().getTime() / 1000)
                     }, 
                     // We should check what this Regex matches to
                     t.prototype.validateIdentifier = function(t) {
@@ -1234,8 +1206,6 @@
                 var _OQ0QQ = ['button', 'prototype', 'startEvent', 'which', 'reset', 'get', 'extractWhich', 43652, '__assign', 'UNIDENTIFIED', 'callback', 'endEvent', 'bind', 'a', 'WHICH_PROPERTIES', 'buffer', 'key', 'Unidentified', 'element'];
 
                 function e(e) {
-                    var _$2$S2$zs = 43652,
-                        _2$S22s$2 = a;
                     var t = k.__assign({}, Et, e),
                         n = t.element,
                         r = t.buffer,
@@ -1281,36 +1251,15 @@
                         var r = e.WHICH_PROPERTIES[n];
                         if (t[r] !== undefined && t[r] !== e.UNIDENTIFIED) return t[r]
                     }
-                    var _oooOO0o0 = function(_szSsZ$ZZ, _00OQOoO0) {
-                        var _O00Q = [35299, 32816, 'domList', 'el', 'domBody'];
-                        var _Ss$s$SS$ = domList,
-                            _LlIII11I = domBody;
-                        var _ZzSsz2sS = el,
-                            _llilLl1L = 32816;
-                        return 35299
-                    };
+                    
                     return e.UNIDENTIFIED
                 }, e.prototype.get = function() {
                     var _OQQQQ = ['eventCycles'];
-                    var _Zzz$SSzz = function(_22SzZ$Z$) {
-                        var _l1li = [.9324182423457923, .6703025234704476, .7137114823795561, 42189];
-                        var _ss2$S$2Z = 42189;
-                        var _0o0Q0OQo = 0.7137114823795561,
-                            _Qo00oo00 = 0.9324182423457923;
-                        return 0.6703025234704476
-                    };
+                    
                     return this.eventCycles
                 }, e.prototype.reset = function() {
                     var _i1LI = [0, 'eventCycles', 'splice'];
-                    var _Q00OoO0o = function(_2S$z$S$s, _$sS$$2$2) {
-                        var _SSs = ['collector', 23228, 842, .26079087894947817, .797647826982953, .23945798154425013];
-                        var _lIILlL1I = 0.797647826982953;
-                        var _QOQOO00Q = 0.23945798154425013,
-                            _SZS$szSz = collector;
-                        var _ll111L1L = 23228,
-                            _OQQQO0oO = 0.26079087894947817;
-                        return 842
-                    };
+                    
                     this.eventCycles.splice(0)
                 }, e.WHICH_PROPERTIES = [key, which, button], e.UNIDENTIFIED = Unidentified, e
             }();
@@ -2144,10 +2093,7 @@
                     var e = r.charCodeAt(t);
                     e < 128 ? o.push(String.fromCharCode(e)) : e >= 128 && e < 2048 ? (o.push(String.fromCharCode(e >> 6 | 192)), o.push(String.fromCharCode(63 & e | 128))) : (o.push(String.fromCharCode(e >> 12 | 224)), o.push(String.fromCharCode(e >> 6 & 63 | 128)), o.push(String.fromCharCode(63 & e | 128)))
                 }
-                var _OoQQO0oO = function(_0oQ0oOoo) {
-                    var _0OQ = [24034, 'blobFwcim', .6971470223337328];
-                    return blobFwcim
-                };
+                
                 return o.join('')
             }, r
         }();
@@ -4870,7 +4816,7 @@
                     // called on 
                     r.prototype.doEncrypt = function(r, t) {
                         var _I1l = [.6070017048415675, 4, 2, 'fromCharCode', 3, 6, 0, 'length', 1, 8, 16, 'charCodeAt', 5, 24, 52, 'ceil', 'bEl', 'floor', 255, 'join', 2654435769];
-                        if (0 === r[_I1l.length]) return '';
+                        if (0 === r['length']) return '';
                         for (var e = Math.ceil(r.length / 4), o = [], i = 0; i < e; i++) o[i] = (255 & r.charCodeAt(4 * i)) + ((255 & r.charCodeAt(4 * i + 1)) << 8) + ((255 & r.charCodeAt(4 * i + 2)) << 16) + ((255 & r.charCodeAt(4 * i + 3)) << 24);
                         for (var n = Math.floor(6 + 52 / e), a = o .0, c = o[e - 1], d = 0; n-- > 0;)
                             for (var h = (d += 2654435769) >>> 2 & 3, u = 0; u < e; u++) a = o[(u + 1) % e], c = o[u] += (c >>> 5 ^ a << 2) + (a >>> 3 ^ c << 4) ^ (d ^ a) + (t[3 & u ^ h] ^ c);
@@ -4930,9 +4876,16 @@
                 }, r.ESCAPED_CHARACTERS = {
                     '\"': \ ",'\\':\\,'\x08':\b,'\x0a':\n,'\x0c':\f,'\x0d':\r,'\x09':\t},r}();exports['default']=S}),(function(module,exports,__webpack_require__){"
                     use strict ";exports.__esModule=1;var R=function(){var _ss2=['prototype','hexEncoder','#','encode','crc32','utf8Encoder','jsonEncoder','CRC_JSON_SEPARATOR'];function e(e,t,c,n){var _Z2ZZsz$Z=function(_Qo0oOO0Q,_QOO00QOQ,_SSz$ssZ$){var _11=['useragent',20799,'a'];var _$$$sS$S2=20799,_IL111lLi=a;return useragent};this.jsonEncoder=e,this.utf8Encoder=t,this.hexEncoder=c,this.crc32=n}
+                    
+
+                    // IMPORTANT
                     return e.prototype.encode = function(t) {
                         var _l1 = ['CRC_JSON_SEPARATOR', 'calculate', 'crc32', 'encode', 'utf8Encoder', 'jsonEncoder', 'hexEncoder'];
+                        
+                        // t is the huge metrics object (i.e. {auth, automation, battery, etc})
+                        // c is the encoded version
                         var c = this.utf8Encoder.encode(this.jsonEncoder.encode(t));
+    
                         
                         return this.hexEncoder.encode(this.crc32.calculate(c)) + e.CRC_JSON_SEPARATOR + c
                     },

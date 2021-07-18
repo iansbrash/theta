@@ -5,7 +5,7 @@ import {
     joinCookies
 } from '../../../../requestFunctions'
 import requestRetryWrapper from '../../../../requestRetryWrapper';
-import justinIsCracked from '../../logic/genMetadata';
+import justinIsCracked from '../../logic/genMetadata2';
 import { Proxy } from '../../../../interfaces/ProxyList';
 import HttpsProxyAgent from 'https-proxy-agent'
 
@@ -35,7 +35,7 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
 
     const POSTSubData = qs.stringify(POSTConfig);
 
-    console.log(POSTSubData)
+    console.log(POSTConfig)
 
     console.log(allCookies)
 
@@ -69,6 +69,8 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
         data : POSTSubData,
         httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     })
+
+    // console.log(POSTSubLoginPageResponse)
 
     return POSTSubLoginPageResponse;
 }

@@ -27,6 +27,13 @@ const AmazonTask = async (task : Task, taskConfig : AmazonTaskConfig, statusWatc
     const proxy = proxies[identifier % proxies.length];
     const product = 'https://www.amazon.com/Mkeke-Compatible-iPhone-11-Clear/dp/B07W4FMQ5Y/';
 
+    // let proxy : Proxy = {
+    //     ip: '67.177.182.32',
+    //     port: 3000,
+    //     username: '',
+    //     password: ''
+    // }
+
     tsLogger(`Starting task ${identifier} on ${Site[site]} using proxy ${printProxy(proxy)} on profile ${profile.information.name} for size ${size} with account ${taskConfig.account.username} using ${taskConfig.mode} mode`)
     statusWatcher('Signing in...')
     let allCookies = await signIn(taskConfig.account.username, taskConfig.account.password, proxy);
