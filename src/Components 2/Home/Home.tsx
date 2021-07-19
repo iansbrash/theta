@@ -1,8 +1,13 @@
 import React, {
     FC,
-    useState
+    useState,
+    useEffect
 } from 'react';
 import ScreenWrapper from "../../Components 2/Component Library/ScreenWrapper";
+import axios from 'axios'
+import api from '../../Logic/api';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 const CheckoutsIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16" viewBox="0 0 20 20" fill="currentColor">
@@ -34,23 +39,25 @@ const AnalyticsIcon = () => (
     </svg>
 )
 
-interface CheckoutFeedPurchaseProps {
-    productTitle: string,
-    store: string,
+interface Checkout {
+    date: string | number,
+    orderNumber: string,
+    product: string,
+    site: string,
     profile: string,
     size: string,
-    proxyList: string,
     price: number
 }
 
-const CheckoutFeedPurchase : FC<CheckoutFeedPurchaseProps> = ({
-    productTitle,
-    store,
+const CheckoutFeedPurchase : FC<Checkout> = ({
+    product,
+    site,
     profile,
     size,
-    proxyList,
+    date,
+    orderNumber,
     price
-} : CheckoutFeedPurchaseProps) => {
+} : Checkout) => {
     return (
         <div className="space-x-2 p-2 w-full h-16 bg-theta-home-checkout-feed-purchase rounded-md shadow-md flex flex-row justify-start items-center">
             <div className="h-full w-12 rounded-md bg-theta-white shadow-md">
@@ -61,11 +68,11 @@ const CheckoutFeedPurchase : FC<CheckoutFeedPurchaseProps> = ({
             </div>
             <div className="flex flex-col justify-center items-start">
                 <div className="text-xl text-theta-gray-2 font-me leading-5 font-medium">
-                    {productTitle}
+                    {product}
                 </div>
                 <div className="flex flex-row justify-start items-center text-xl leading-5">
                     <div className="text-theta-gray-4">
-                        {store}
+                        {site}
                     </div>
                     <div className="text-theta-gray-7 mx-1">•</div>
                     <div className="text-theta-gray-4">
@@ -82,106 +89,66 @@ const CheckoutFeedPurchase : FC<CheckoutFeedPurchaseProps> = ({
 }
 
 
+interface Update {
+    version: string,
+    changes: string
+}
+
+
+
 const Home = () => {
 
     const impliedPadding = 'p-2'
-    const updates = [
-        "Version 1.0.0\nAdd Amazon US fast mode\nFix UI bugs in add tasks\nMore bug fixes",
-        "Version 1.0.0\nAdd Amazon US fast mode\nFix UI bugs in add tasks\nMore bug fixes",
-        "Version 1.0.0\nAdd Amazon US fast mode\nFix UI bugs in add tasks\nMore bug fixes",
-        "Version 1.0.0\nAdd Amazon US fast mode\nFix UI bugs in add tasks\nMore bug fixes",
-        "Version 1.0.0\nAdd Amazon US fast mode\nFix UI bugs in add tasks\nMore bug fixes"
-    ]
-    const checkoutsArray = () => [
-        {
-            productTitle: 'PS6 Quantum Edition',
-            store: "Amazon",
-            profile: "Real Card",
-            size: "Random",
-            proxyList: "Resi Main",
-            price: 699
-        },
-        {
-            productTitle: 'PS6 Quantum Edition',
-            store: "Amazon",
-            profile: "Real Card",
-            size: "Random",
-            proxyList: "Resi Main",
-            price: 699
-        },
-        {
-            productTitle: 'PS6 Quantum Edition',
-            store: "Amazon",
-            profile: "Real Card",
-            size: "Random",
-            proxyList: "Resi Main",
-            price: 699
-        },
-        {
-            productTitle: 'PS6 Quantum Edition',
-            store: "Amazon",
-            profile: "Real Card",
-            size: "Random",
-            proxyList: "Resi Main",
-            price: 699
-        },
-        {
-            productTitle: 'PS6 Quantum Edition',
-            store: "Amazon",
-            profile: "Real Card",
-            size: "Random",
-            proxyList: "Resi Main",
-            price: 699
-        },
-        {
-            productTitle: 'PS6 Quantum Edition',
-            store: "Amazon",
-            profile: "Real Card",
-            size: "Random",
-            proxyList: "Resi Main",
-            price: 699
-        },
-        {
-            productTitle: 'PS6 Quantum Edition',
-            store: "Amazon",
-            profile: "Real Card",
-            size: "Random",
-            proxyList: "Resi Main",
-            price: 699
-        },
-        {
-            productTitle: 'PS6 Quantum Edition',
-            store: "Amazon",
-            profile: "Real Card",
-            size: "Random",
-            proxyList: "Resi Main",
-            price: 699
-        },
-        {
-            productTitle: 'PS6 Quantum Edition',
-            store: "Amazon",
-            profile: "Real Card",
-            size: "Random",
-            proxyList: "Resi Main",
-            price: 699
-        },
-        {
-            productTitle: 'PS6 Quantum Edition',
-            store: "Amazon",
-            profile: "Real Card",
-            size: "Random",
-            proxyList: "Resi Main",
-            price: 699
-        }
-    ]
+    const sessionObject = useSelector((state : RootState) => state.session)
 
-    const [currentVersion, setCurrentVersion] = useState<string>('v1.0.0');
+    
+
+    const [currentVersion, setCurrentVersion] = useState<string>('');
     const [totalCheckouts, setTotalCheckouts] = useState<number>(10);
     const [totalDeclines, setTotalDeclines] = useState<number>(3);
-    const [updateLogs, setUpdateLogs] = useState<string[]>(updates)
-    const [checkouts, setCheckouts] = useState<CheckoutFeedPurchaseProps[]>(checkoutsArray)
+    const [updateLogs, setUpdateLogs] = useState<Update[]>([])
+    const [checkouts, setCheckouts] = useState<Checkout[]>([])
 
 
+    useEffect(() => {
+        (async () => {
+            const changelog = await axios({
+                method: 'get',
+                url: `${api}/public/changelog`
+            })
+
+            console.log(changelog.data)
+            setCurrentVersion("v" + changelog.data[0].version)
+            setUpdateLogs(changelog.data)
+        })();
+
+        (async () => {
+            const ch = await axios({
+                method: 'get',
+                url: `${api}/user/checkouts`,
+                headers: {
+                    license: sessionObject.license,
+                    // startingKey: '',
+                    amount: 10
+                }
+            })
+
+            setCheckouts(ch.data)
+        })();
+
+        (async () => {
+            const ch = await axios({
+                method: 'get',
+                url: `${api}/user/basic`,
+                headers: {
+                    license: sessionObject.license,
+                }
+            })
+            let basic = ch.data;
+            setTotalCheckouts(basic.checkouts)
+            setTotalDeclines(basic.declines)
+        })();
+    }, [])
     
 
     return (
@@ -217,10 +184,10 @@ const Home = () => {
                             {/* Actual logs */}
                             {updateLogs.map(log => (
                                 <div className="text-theta-white">
-                                    {log.split('\n').map((l, i) => i === 0 ? 
-                                        <div className="font-medium">{l}</div> : 
-                                        <div>{"- " + l}</div>
-                                    )}
+                                        <div className="font-medium">{`Version ${log.version}:`}</div>
+                                        {log.changes.split('\n').map((l) => 
+                                            <div>{"- " + l}</div>
+                                        )}
                                     <div className="h-4"></div>
                                 </div>
                             ))}
