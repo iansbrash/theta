@@ -1,5 +1,5 @@
 import React, {
-    FC, useState, ReactNode
+    FC, useState, ReactNode, useEffect
 } from 'react';
 import TaskClass, { cycleStatus } from '../../Logic/sites/classes/TaskClass';
 import sendSuccess from '../../Logic/webhooks/discordsuccess';
@@ -60,13 +60,15 @@ const delay = (ms : number) => new Promise(res => setTimeout(res, ms));
 interface TaskComponentProps {
     task: TaskClass,
     tasks: TaskClass[],
-    setTasks: (t : any[]) => void
+    setTasks: (t : any[]) => void,
+    tgName: string
 }
 
 const TaskComponent : FC<TaskComponentProps> = ({
     task,
     tasks,
-    setTasks
+    setTasks,
+    tgName
 } : TaskComponentProps) => {
 
     console.log('RENDERING A TASK!')
@@ -81,6 +83,18 @@ const TaskComponent : FC<TaskComponentProps> = ({
     const [productImage, setProductImage] = useState<string>('');
 
     const sessionObject = useSelector((state: RootState) => state.session);
+
+        // @ts-ignore
+        const startAllCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName].startAll)
+        // @ts-ignore
+        const stopAllCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName].stopAll)
+        // @ts-ignore
+        const massLinkCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName].massLink)
+    
+        useEffect(() => { startTask() }, [startAllCommander])
+        useEffect(() => { stopTask() }, [stopAllCommander])
+        // useEffect(() => { startTask() }, [massLinkCommander])
+    
 
     const startTask = async () => {
         task.start();

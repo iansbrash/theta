@@ -12,6 +12,7 @@ const ChevronRight = () => (
 )
 
 interface DrowndownSelectProps {
+    selection: any,
     setSelection: (s : any) => void,
     selectionArray: any[],
     bg: string,
@@ -26,6 +27,7 @@ interface DrowndownSelectProps {
 }
 
 const DropdownSelect : FC<DrowndownSelectProps> = ({
+    selection,
     setSelection,
     selectionArray,
     bg,
@@ -39,7 +41,7 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
     transformBack
 } : DrowndownSelectProps) => {
 
-    const [selectSearchInput, setSelectSearchInput] = useState<string>('');
+    const [selectSearchInput, setSelectSearchInput] = useState<string>(selection ? itemToString(selection) : '');
     const [dropdownDown, setDropdownDown] = useState<boolean>(false);
 
     const relativeRef = useRef<HTMLDivElement>(null);

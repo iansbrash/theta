@@ -3,7 +3,13 @@ import Site from '../../Logic/interfaces/enums/Site';
 import ProfileObject from '../../Logic/interfaces/ProfileObject';
 import TaskGroupInterface, { TaskHookProps } from '../../Components 2/Tasks/TaskGroupInterface'
 
-type SliceState = { taskGroups : TaskGroup[], savingOptions : { saveState: TaskSaveState; numberToSave: number } };
+type SliceState = { taskGroups : TaskGroup[], savingOptions : { saveState: TaskSaveState; numberToSave: number }, taskGroupCommanders : {[key : string] : TaskGroupCommanderProps} };
+
+interface TaskGroupCommanderProps {
+    startAll: number,
+    stopAll: number,
+    massLink: string
+}
 
 export interface TaskGroup {
     name: string,
@@ -28,12 +34,16 @@ export const tasksSlice = createSlice({
     name: 'counter',
     initialState: {
         taskGroups: [],
+        taskGroupCommanders: {},
         savingOptions: {
             saveState: TaskSaveState.Unsaved,
             numberToSave: 0
         },
     } as SliceState,
     reducers: {
+
+        // When we initially create a task group
+        // It also adds to taskGroupCommanders
         saveTaskGroup: {
             reducer (state, action : PayloadAction<{taskGroup : TaskGroup}>) { //; anotherProp: string; uuid: string
                 const {
@@ -41,6 +51,8 @@ export const tasksSlice = createSlice({
                 } = action.payload;
 
                 state.taskGroups = [...state.taskGroups, taskGroup]
+                state.taskGroupCommanders[taskGroup.name] = {startAll: 0, stopAll: 0, massLink: ''}
+
                 if (state.taskGroups.length === state.savingOptions.numberToSave) {
                     state.savingOptions.saveState = TaskSaveState.Saved
                 }
@@ -94,6 +106,27 @@ export const tasksSlice = createSlice({
                 }
             }
         },
+        activateNumberCommander: {
+            reducer (state, action : PayloadAction<{tgName : string, commanderName : "startAll" | "stopAll" | "massLink"}>) { //; anotherProp: string; uuid: string
+                const {
+                    tgName,
+                    commanderName
+                } = action.payload;   
+
+
+                // @ts-ignore
+                state.taskGroupCommanders[tgName][commanderName] = state.taskGroupCommanders[tgName][commanderName] + 1;
+
+            },
+            prepare (tgName : string, commanderName : "startAll" | "stopAll" | "massLink") {
+                return {
+                    payload: {
+                        tgName,
+                        commanderName
+                    }
+                }
+            }
+        },
         populateTasks: {
             reducer (state, action : PayloadAction<{taskGroups : TaskGroup[]}>) { //; anotherProp: string; uuid: string
                 const {
@@ -102,6 +135,8 @@ export const tasksSlice = createSlice({
 
                 state.taskGroups = taskGroups
                 state.savingOptions.saveState = TaskSaveState.Unsaved;
+
+                taskGroups.forEach(tg => state.taskGroupCommanders[tg.name] = {startAll: 0, stopAll: 0, massLink: ''})
             },
             prepare (taskGroups) {
                 return {
@@ -115,6 +150,6 @@ export const tasksSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { populateTasks, saveTaskGroup, beginSave, saveTaskGroupOnAdd } = tasksSlice.actions
+export const { populateTasks, saveTaskGroup, beginSave, saveTaskGroupOnAdd, activateNumberCommander } = tasksSlice.actions
 
 export default tasksSlice.reducer

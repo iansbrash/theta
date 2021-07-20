@@ -22,7 +22,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 import Site from '../../Logic/interfaces/enums/Site';
 import Size from '../../Logic/interfaces/enums/Size';
-import { TaskSaveState, saveTaskGroupOnAdd } from '../../redux/reducers/tasksSlice'
+import { TaskSaveState, saveTaskGroupOnAdd, activateNumberCommander } from '../../redux/reducers/tasksSlice'
 import electron from 'electron';
 import AmazonTaskClass from '../../Logic/sites/Amazon/classes/AmazonTaskClass';
 import TaskClass from '../../Logic/sites/classes/TaskClass';
@@ -195,13 +195,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     taskGroupName
 } : TaskGroupInterfaceProps) => {
 
-    const [dropdownDown, setDowndownDown] = useState<boolean>(false);
-    const [selectSiteInput, setSelectSiteInput] = useState<Site>();
     const [monitorDelay, setMonitorDelay] = useState<number>(3000);
     const [errorDelay, setErrorDelay] = useState<number>(3000);
 
-    // activates when we exit app and need to save tasks
-    const saveState : TaskSaveState = useSelector((state : RootState) => state.tasks.savingOptions.saveState)
     const dispatch = useDispatch(); 
 
     // Add Tasks hooks
@@ -213,42 +209,24 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     // @ts-ignore
     const allAccountGroups : AccountGroup[] = useSelector((state : RootState) => state.accounts.accountGroupObject["Amazon"])
 
-    useEffect(() => {
-        // if (saveState === TaskSaveState.Saving) {
-        //     dispatch(saveTaskGroup({
-        //         name: taskGroupName,
-        //         site: Site.Amazon,
-        //         tasks: tasks,
-        //         delays: {
-        //             monitor: 3000,
-        //             error: 3000
-        //         }
-        //     }))
-        // }
-    }, [saveState])
-
-
-    const onInputFocus = () => {
-        setDowndownDown(true)
-    }
-
-    const onInputBlur = () => {
-        setDowndownDown(false)
-    }
-    
     // our actual tasks!    
     const [tasks, setTasks] = useState<TaskHookProps[]>([]);
     const [tasks2, setTasks2] = useState<AmazonTaskClass[]>([]);
 
-    // for loading tasks
-    const [loadTasksOnStart, setLoadTasksOnStart] = useState<boolean>(false);
+    const taskGroupsSelector = useSelector((state : RootState) => state.tasks.taskGroups.find(tg => tg.name === taskGroupName))
 
-    const taskGroupsSelector = useSelector((state :RootState) => state.tasks.taskGroups.find(tg => tg.name === taskGroupName))
+    // @ts-ignore
+    const [selectSiteInput, setSelectSiteInput] = useState<Site>(Site[taskGroupsSelector.site]);
+// @ts-ignore
+   console.log(`Site[Site[taskGroupsSelector.site]]: ${Site[taskGroupsSelector.site]}`)
+    
     useEffect(() => {
         setTasks(taskGroupsSelector ? taskGroupsSelector.tasks : [])
+        setTasks2(taskGroupsSelector ? taskGroupsSelector.tasks.map((t : TaskHookProps) => 
+            new AmazonTaskClass(t.taskConfig.identifier, t.taskConfig.site, t.taskConfig.profile, t.taskConfig.size, t.taskConfig.proxies, t.taskConfig.input, t.siteConfig)
+        ) : [])
     }, [])
 
-  
     // Modal Hooks (Add Tasks)
     const [addTasksEnabled, setAddTasksEnabled] = useState<boolean>(false);
     const [addTasksProfiles, setAddTasksProfiles] = useState<ProfileObject[]>([]);
@@ -376,23 +354,18 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
         }
     }
 
-    const [currentSite, setCurrentSite] = useState<string>('');
-
-    const sites = ['Amazon', 'Target'];
-
-    const [siteSelectionArray, setSiteSelectionArray] = useState<string[]>(sites);
-
-
-
-    const handleSiteChange = (s : string) => {
-        setCurrentSite(s);
-        setSelectSiteInput(s);
-        onInputBlur();
-    }
-
     const stopAllTasks = () => {
-        console.log(store.getState())
+        dispatch(activateNumberCommander(taskGroupName, "stopAll"))
     }
+
+    const deleteAllTasks = () => {
+
+    }
+
+    const startAllTasks = () => {
+        dispatch(activateNumberCommander(taskGroupName, "startAll"))
+    }
+
 
 
     return (
@@ -428,6 +401,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                     </div>
                                     <div className="w-full h-8">
                                         <DropdownSelect 
+                                            selection={addTasksMode}
                                             setSelection={setAddTasksMode}
                                             selectionArray={Object.keys(AmazonModes)}
                                             bg={'bg-theta-sidebar'}
@@ -446,6 +420,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                     </div>
                                     <div className="w-full h-8">
                                         <DropdownSelect 
+                                            selection={addTasksAccountGroup}
                                             setSelection={setAddTasksAccountGroup}
                                             selectionArray={allAccountGroups}
                                             bg={'bg-theta-sidebar'}
@@ -498,6 +473,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                     </div>
                                     <div className="w-full h-8">
                                         <DropdownSelect 
+                                            selection={addTasksProxies}
                                             setSelection={setAddTasksProxies}
                                             selectionArray={allProxies}
                                             bg={'bg-theta-sidebar'}
@@ -538,6 +514,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
                             {/* Input part */}
                             <DropdownSelect
+                                selection={selectSiteInput}
                                 setSelection={setSelectSiteInput}
                                 selectionArray={Object.keys(Site)}
                                 bg={'bg-theta-bg'}
@@ -592,20 +569,21 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                 </div> */}
 
                 <AutoSizer>
-                {({height, width}) => (
-                    <List 
-                        rowCount={tasks2.length}
-                        rowHeight={52}
-                        width={width}
-                        height={height}
-                        rowRenderer={AutoResizerTaskComponent}
-                        className="scrollbar-hide focus:outline-none"
-                        data={tasks2}
-                        data2={setTasks2}
-                    >
-                        
-                    </List>
-                )}
+                    {({height, width}) => (
+                        <List 
+                            rowCount={tasks2.length}
+                            rowHeight={52}
+                            width={width}
+                            height={height}
+                            rowRenderer={AutoResizerTaskComponent}
+                            className="scrollbar-hide focus:outline-none"
+                            data={tasks2}
+                            data2={setTasks2}
+                            data3={taskGroupsSelector?.name}
+                        >
+                            
+                        </List>
+                    )}
                 </AutoSizer>
             </div>
 
@@ -635,7 +613,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
                 </div>
                 <div className="flex flex-row justify-center items-center space-x-4">
-                    <button className="transition transform duration-250 ease-in-out hover:scale-110 focus:outline-none rounded-full bg-theta-sidebar shadow-lg text-theta-tasks-taskcomponent-start flex flex-row justify-center items-center">
+                    <button className="transition transform duration-250 ease-in-out hover:scale-110 focus:outline-none rounded-full bg-theta-sidebar shadow-lg text-theta-tasks-taskcomponent-start flex flex-row justify-center items-center"
+                    onClick={() => startAllTasks()}
+                    >
                         <div className="ml-4 mr-2 text-theta-gray-2 font-medium text-2xl">
                             Start
                         </div>
@@ -653,7 +633,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clipRule="evenodd" />
                         </svg>
                     </button>
-                    <button className="transition transform duration-250 ease-in-out hover:scale-110 focus:outline-none rounded-full bg-theta-sidebar-dark shadow-lg text-theta-tasks-taskcomponent-delete flex flex-row justify-center items-center">
+                    <button className="transition transform duration-250 ease-in-out hover:scale-110 focus:outline-none rounded-full bg-theta-sidebar-dark shadow-lg text-theta-tasks-taskcomponent-delete flex flex-row justify-center items-center"
+                    onClick={() => deleteAllTasks()}
+                    >
                         <div className="ml-4 mr-2 text-theta-gray-2 font-medium text-2xl">
                             Delete
                         </div>

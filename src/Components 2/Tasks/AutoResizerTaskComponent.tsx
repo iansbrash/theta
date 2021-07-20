@@ -30,51 +30,13 @@ const AutoResizerTaskComponent : FC<AutoResizerTaskComponentProps> = (props) => 
     // const data : TaskHookProps = props.parent.props.data[props.index]
     const data : TaskClass = props.parent.props.data[props.index]
 
-    // const {
-    //     taskConfig,
-    //     siteConfig
-    // } = data;
-
-    // const {
-    //     identifier,
-    //     site,
-    //     size,
-    //     profile,
-    //     proxies,
-    //     input
-    // } = taskConfig
-
-    // const testTask : TaskClass = new AmazonTaskClass(
-    //     1, 
-    //     Site.Amazon, 
-    //     testProfile, 
-    //     [Size.OS], 
-    //     testProxyList, 
-    //     'https://www.amazon.com/Mkeke-Compatible-iPhone-11-Clear/dp/B07W4FMQ5Y/',
-    //     {
-    //         mode: AmazonModes.Normal,
-    //         account: testAccount
-    //     }
-    // )
-
-    // const task : TaskClass = new AmazonTaskClass(
-    //     identifier, 
-    //     site, 
-    //     profile, 
-    //     size, 
-    //     proxies, 
-    //     input,
-    //     siteConfig
-    // )
-    // pass the task array through props.parent.props.data
-    // should pass the config instead, rather than the task itself
-
     return (
         <div className="block" style={props.style} key={data.identifier}>
             <TaskComponent 
                 task={data}
                 tasks={props.parent.props.data}
                 setTasks={props.parent.props.data2}
+                tgName={props.parent.props.data3}
             />
             <div className="h-4"></div>
         </div>

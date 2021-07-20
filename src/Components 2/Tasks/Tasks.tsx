@@ -5,9 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { beginSave, TaskGroup as TaskGroupInterface, TaskSaveState } from '../../redux/reducers/tasksSlice';
 import { RootState } from '../../redux/store';
-import { TaskHookProps } from './TaskGroupInterface';
+import { saveTaskGroup } from '../../redux/reducers/tasksSlice';
 import TaskGroupInterfaceRenderer from './TaskGroupInterfaceRenderer'
-import electron from 'electron';
 
 const TaskGroupIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
@@ -175,76 +174,29 @@ const Tasks = () => {
     const [tgCount, setTgCount] = useState<number>(0);
     const [taskGroups, setTaskGroups] = useState<string[]>([]);
 
-    // const dispatch = useDispatch()
-    // const saveState : TaskSaveState = useSelector((state : RootState) => state.tasks.savingOptions.saveState)
-    // @ts-ignore
-    // window._saved = false
-    // mainWindow.on('close', (e) => {
-    //     // success? quit the app
-    //     console.log('wtf')
-    //     if (saveState === TaskSaveState.Unsaved) {
-    //         console.log(1)
-    //         dispatch(beginSave(taskGroups.length))
-    //         e.preventDefault();
-    //         electron.ipcRenderer.invoke('closeApp')
-    //     }
-    //     else if (saveState === TaskSaveState.Saving) {
-    //         console.log(2)
-    //         e.preventDefault();
-    //         electron.ipcRenderer.invoke('closeApp')
-    //     }
-    //     else {
-    //         console.log(3)
-    //         electron.ipcRenderer.invoke('writejson', 'tasks.json', taskGroupsSelector)
-
-    //         // window.onbeforeunload = null;
-    //         // e.returnValue = true;
-
-    //         electron.ipcRenderer.invoke('closeApp')
-    //     }
-    //     // window.onbeforeunload = null
-    //     // e.returnValue = false
-    //     // await electron.ipcRenderer.invoke('closeApp')
-    // });
-
-    // electron.ipcRenderer.on('startSave', async (event, arg) => {
-    //     if (saveState === TaskSaveState.Unsaved) {
-    //         console.log(1)
-    //         dispatch(beginSave(taskGroups.length))
-    //         await electron.ipcRenderer.invoke('closeApp')
-    //     }
-    //     else if (saveState === TaskSaveState.Saving) {
-    //         console.log(2)
-    //         await electron.ipcRenderer.invoke('closeApp')
-    //     }
-    //     else {
-    //         console.log(3)
-    //         await electron.ipcRenderer.invoke('writejson', 'tasks.json', taskGroupsSelector)
-
-    //         // window.onbeforeunload = null;
-    //         // e.returnValue = true;
-
-    //         electron.ipcRenderer.invoke('closeApp')
-    //     }
-    //     // window.onbeforeunload = null
-    //     // e.returnValue = false
-    //     // await electron.ipcRenderer.invoke('closeApp')
-    // })
-
-    // window.onbeforeunload = e => {
-    //     console.log(e);
-    //     if(true) {
-    //         e.returnValue = true;
-    //         electron.ipcRenderer.invoke("closeApp")
-    //     }
-    //     else e.returnValue = true;
-    // };
  
+    const dispatch = useDispatch()
 
     const addTaskGroup = () => {
-        setTaskGroups([...taskGroups, `Task Group #${tgCount}`])
-        setSelectedTaskGroup(`Task Group #${tgCount}`)
+
+        let newTaskGroupName = "Task Group"
+        let iter = 1;
+
+        while (taskGroupsSelector.findIndex(taskGr => taskGr.name === newTaskGroupName + " " + iter) !== -1) {
+            iter += 1;
+        }
+
+        setTaskGroups([...taskGroups, `Task Group ${tgCount}`])
+        setSelectedTaskGroup(`Task Group ${tgCount}`)
         setTgCount(tgCount + 1)
+        dispatch(saveTaskGroup({
+            name: newTaskGroupName + " " + iter,
+            site: undefined,
+            tasks: [],
+            delays: {
+                error: 3000,
+                monitor: 3000
+        }}))
     }
 
     return (
