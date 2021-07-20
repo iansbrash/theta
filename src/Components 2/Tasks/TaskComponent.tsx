@@ -192,6 +192,7 @@ const TaskComponent : FC<TaskComponentProps> = ({
         setStatusColor('text-theta-gray-2');
         setStatus("Stopped")
         task.stop()
+        // throw "stopped"
     }
 
     return (

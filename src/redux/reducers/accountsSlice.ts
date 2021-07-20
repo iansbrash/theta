@@ -164,6 +164,35 @@ export const accountsSlice = createSlice({
                 }
             }
         },
+        strictlyUpdateAccountGroup: {
+            reducer (state, action : PayloadAction<{accountGroup : AccountGroup, oldName : string}>) { //; anotherProp: string; uuid: string
+                const {
+                    accountGroup,
+                    oldName
+                } = action.payload;
+
+                // @ts-ignore
+                if (state.accountGroupObject[Site[accountGroup.site]].findIndex((accGr : AccountGroup) => accGr.name === oldName) === -1) {
+                    console.log(`ERROR: AccountGroup does not exist. Not removing from store.`)
+                    throw "AccountGroup does not exist";
+                }
+                else {
+                    // @ts-ignore
+                    const toUpdateIndex = state.accountGroupObject[Site[accountGroup.site]].findIndex((accGr : AccountGroup) => accGr.name === oldName); 
+                    // @ts-ignore
+                    state.accountGroupObject[Site[accountGroup.site]][toUpdateIndex] = accountGroup;
+                }
+
+            },
+            prepare (accountGroup, oldName) {
+                return {
+                    payload: {
+                        accountGroup,
+                        oldName
+                    }
+                }
+            }
+        },
         populateAccountGroups: {
             reducer (state, action : PayloadAction<{accountGroupsObject : object}>) { //; anotherProp: string; uuid: string
                 const {
@@ -192,7 +221,8 @@ export const {
     deleteAccountGroup,
     populateAccountGroups, 
     addAccountsToAccountGroup,
-    deleteAccountFromAccountGroup
+    deleteAccountFromAccountGroup,
+    strictlyUpdateAccountGroup
 } = accountsSlice.actions
 
 export default accountsSlice.reducer

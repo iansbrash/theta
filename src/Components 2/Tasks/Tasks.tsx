@@ -99,7 +99,7 @@ const TaskGroup : FC<TaskGroupProps> = ({
                         {/* Icons for tasks */}
                         <div className="flex flex-row justify-start items-center space-x-2">
                             <TaskGroupIndicatorTag 
-                                num={314}
+                                num={0}
                                 color={'bg-theta-tasks-taskgroup-tags-idle'}
                                 border={'border-theta-tasks-taskgroup-tags-idle-border'}
                                 icon={<LoadingIndicator 
@@ -107,7 +107,7 @@ const TaskGroup : FC<TaskGroupProps> = ({
                                 />}
                             />
                             <TaskGroupIndicatorTag 
-                                num={314}
+                                num={0}
                                 color={'bg-theta-tasks-taskgroup-tags-atc'}
                                 border={'border-theta-tasks-taskgroup-tags-atc-border'}
                                 icon={<CartedIcon />}
@@ -118,7 +118,7 @@ const TaskGroup : FC<TaskGroupProps> = ({
                     {/* Checkouts / Declines */}
                     <div className="flex flex-col justify-start items-end space-y-2">
                         <TaskGroupIndicatorTag 
-                            num={23} 
+                            num={0} 
                             color={'bg-theta-tasks-taskgroup-tags-checkout'}
                             border={'border-theta-tasks-taskgroup-tags-checkout-border'}
                             icon={
@@ -126,7 +126,7 @@ const TaskGroup : FC<TaskGroupProps> = ({
                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                             </svg>}/>
                         <TaskGroupIndicatorTag 
-                            num={4}
+                            num={0}
                             color={'bg-theta-tasks-taskgroup-tags-decline'}
                             border={'border-theta-tasks-taskgroup-tags-decline-border'}
                             icon={

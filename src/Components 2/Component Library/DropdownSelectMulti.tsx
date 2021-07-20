@@ -20,7 +20,8 @@ interface DrowndownSelectMultiProps {
     textSize?: string,
     placeholder: string,
     itemToString: (a : any) => string,
-    placeholderPlural: string
+    placeholderPlural: string,
+    disabled?: boolean
 }
 
 const DropdownSelectMulti : FC<DrowndownSelectMultiProps> = ({
@@ -31,7 +32,8 @@ const DropdownSelectMulti : FC<DrowndownSelectMultiProps> = ({
     selection,
     placeholder,
     itemToString,
-    placeholderPlural
+    placeholderPlural,
+    disabled
 } : DrowndownSelectMultiProps) => {
 
     const [selectSearchInput, setSelectSearchInput] = useState<string>('');
@@ -84,6 +86,37 @@ const DropdownSelectMulti : FC<DrowndownSelectMultiProps> = ({
         setSelection([])
     }
 
+    if (disabled) {
+        return (
+            <div className="h-full w-full flex flex-col pointer-events-none" ref={relativeRef}>
+                <button className={`border-t border-l border-r border-theta-sidebar relative focus:outline-none w-full h-full rounded-t-lg rounded-b-lg border-b ${bg} flex flex-col justify-start items-center`}
+                onClick={() => null}
+                >
+                    <div className="h-full flex flex-row justify-start items-center w-full">
+                        <div className="w-8"></div>
+                        <input
+                            value={''}
+                            onChange={(e) => null}
+                            onFocus={() => null}
+                            placeholder={placeholder}
+                            className={`rounded-r-xl h-full w-full ${bg} focus:outline-none placeholder-theta-gray-7 text-theta-gray-7 ${textSize ? textSize : 'text-2xl'}`}
+                        />
+                    </div>
+                    <div className="text-theta-gray-7 absolute left-0 top-0 bottom-0 flex justify-center items-center">
+                        <ChevronRight />
+                    </div>
+
+                    <button className="focus:outline-none absolute right-1 top-0 bottom-0 flex justify-center items-center text-theta-gray-7"
+                        onClick={() => resetSelection()}
+                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                </button>
+            </div>
+        )
+    }
 
 
     return (

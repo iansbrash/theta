@@ -23,7 +23,8 @@ import {
     addAccountGroup, 
     addAccountsToAccountGroup, 
     deleteAccount,
-    deleteAccountGroup
+    deleteAccountGroup,
+    strictlyUpdateAccountGroup
 } from '../../redux/reducers/accountsSlice';
 import { RootState } from '../../redux/store';
 
@@ -271,6 +272,34 @@ const Accounts : FC = () => {
         }
     }
 
+    const saveAccountGroup = async () => {
+        if (selectedAccountGroup) {
+
+            const newAccGr : AccountGroup = {
+                name: selectedAccountGroupName,
+                site: selectedAccountGroup.site,
+                accounts: selectedAccountGroup.accounts
+            }
+
+            try {
+                dispatch(strictlyUpdateAccountGroup(newAccGr, selectedAccountGroup.name))
+
+                // @ts-ignore
+                const toUpdateIndex = loadedAccountGroups[Site[accountGroup.site]].findIndex((accGr : AccountGroup) => accGr.name === oldName); 
+                // @ts-ignore
+                loadedAccountGroups[Site[accountGroup.site]][toUpdateIndex] = accountGroup;
+
+                let toUpdate = JSON.parse(JSON.stringify(loadedAccountGroups))
+                toUpdate[toUpdateIndex] = newAccGr;
+                await electron.ipcRenderer.invoke("writejson", "proxies.json", toUpdate)
+            }
+            catch (err) {
+                console.log(err);
+            }
+            
+        }
+    }
+
     useEffect(() => {
         setSelectedAccountGroupName(selectedAccountGroup ? selectedAccountGroup.name : '')
     }, [selectedAccountGroup])
@@ -329,7 +358,7 @@ const Accounts : FC = () => {
                                             textSize={'text-xl'}
                                             placeholder={'Select site'}
                                             itemToString={(site : Site) => Site[site]}
-                                            offsetWidth={'-mr-2'}
+                                            // offsetWidth={'-mr-2'}
                                         />
                                     </div>
                                 </div>
@@ -414,7 +443,7 @@ const Accounts : FC = () => {
                                             textSize={'text-xl'}
                                             placeholder={'Select site'}
                                             itemToString={(site : Site) => Site[site]}
-                                            offsetWidth={'-mr-2'}
+                                            // offsetWidth={'-mr-2'}
                                         />
                                     </div>
                                 </div>
@@ -557,12 +586,20 @@ const Accounts : FC = () => {
                                     </div>
                                     <div className="flex flex-row justify-end items-center space-x-4">
                                         <button className="focus:outline-none px-2 w-12 h-12 rounded-md shadow-md bg-theta-logo flex justify-center items-center text-theta-white"
+                                        onClick={() => saveAccountGroup()}
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                            </svg>
+                                        </button>
+                                        <button className="focus:outline-none px-2 w-12 h-12 rounded-md shadow-md bg-blue-500 flex justify-center items-center text-theta-white"
                                         onClick={() => setAddAccountsInAccountGroupModal(true)}
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                             </svg>
                                         </button>
+
                                         <button className="focus:outline-none h-12 w-12 rounded-md shadow-md bg-red-400 flex justify-center items-center text-theta-white"
                                         onClick={() => duplicateAccountGroup()}
                                         >

@@ -357,6 +357,11 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     }
 
     const deleteAllTasks = () => {
+        dispatch(activateNumberCommander(taskGroupName, "stopAll"))
+        setTimeout(() => {
+            setTasks2([])
+            setTasks([])
+        }, 500)
 
     }
 
@@ -425,6 +430,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                             textSize={'text-xl'}
                                             placeholder={'Select account group'}
                                             itemToString={(a : AccountGroup) => a.name}
+                                            disabled={addTasksAccount.length !== 0}
                                         />
                                     </div>
                                 </div>
@@ -442,6 +448,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                             itemToString={(acc : Account) => acc.username}
                                             selection={addTasksAccount}
                                             placeholderPlural={'accounts'}
+                                            disabled={addTasksAccountGroup !== undefined}
                                         />
                                     </div>
                                 </div>

@@ -23,7 +23,8 @@ interface DrowndownSelectProps {
     maxRowsBeforeOverflow?: number,
     border?: string,
     noShadow?: boolean,
-    transformBack?: boolean
+    transformBack?: boolean,
+    disabled?: boolean
 }
 
 const DropdownSelect : FC<DrowndownSelectProps> = ({
@@ -38,7 +39,8 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
     maxRowsBeforeOverflow,
     border,
     noShadow,
-    transformBack
+    transformBack,
+    disabled
 } : DrowndownSelectProps) => {
 
     const [selectSearchInput, setSelectSearchInput] = useState<string>(selection ? itemToString(selection) : '');
@@ -79,6 +81,36 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
         }
     }, [])
 
+    if (disabled) {
+        return (
+            <div className="h-full w-full flex flex-col pointer-events-none" ref={relativeRef}>
+        
+                {/* Input part */}
+                <button className={`border-t border-l border-r border-theta-sidebar relative focus:outline-none w-full h-full rounded-t-lg rounded-b-lg border-b ${bg} flex flex-col justify-start items-center`}
+                onClick={() => null}
+                >
+                    <div className="h-full flex flex-row justify-start items-center w-full">
+                        <div className={offsetWidth ? offsetWidth : 'w-7'}></div>
+                        <input
+                            value={''}
+                            onChange={(e) => null}
+                            onFocus={() => null}
+                            placeholder={placeholder}
+                            className={`rounded-r-xl h-full w-full ${bg} focus:outline-none placeholder-theta-gray-7 text-theta-gray-7 ${textSize ? textSize : 'text-2xl'}`}
+                        />
+                    </div>
+                    <div className="text-theta-gray-7 absolute left-0 top-0 bottom-0 flex justify-center items-center">
+                        <ChevronRight />
+                    </div>
+                </button>
+            </div>
+        )
+    }
+
+    const resetSelection = () => {
+        setSelection(undefined)
+        setSelectSearchInput('')
+    }
 
     return (
         <div className="h-full w-full flex flex-col"
@@ -101,6 +133,18 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
                 <div className="text-theta-gray-7 absolute left-0 top-0 bottom-0 flex justify-center items-center">
                     <ChevronRight />
                 </div>
+
+                {disabled !== undefined ? 
+                <>
+                    <button className="focus:outline-none absolute right-1 top-0 bottom-0 flex justify-center items-center text-theta-gray-7"
+                    onClick={() => resetSelection()}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </>
+                : null}
             </button>
 
             {/* Drop down part */}
