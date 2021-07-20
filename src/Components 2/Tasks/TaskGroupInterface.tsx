@@ -216,9 +216,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     const taskGroupsSelector = useSelector((state : RootState) => state.tasks.taskGroups.find(tg => tg.name === taskGroupName))
 
     // @ts-ignore
-    const [selectSiteInput, setSelectSiteInput] = useState<Site>(Site[taskGroupsSelector.site]);
-// @ts-ignore
-   console.log(`Site[Site[taskGroupsSelector.site]]: ${Site[taskGroupsSelector.site]}`)
+    const [selectSiteInput, setSelectSiteInput] = useState<Site>(taskGroupsSelector ? Site[taskGroupsSelector.site] : undefined);
     
     useEffect(() => {
         setTasks(taskGroupsSelector ? taskGroupsSelector.tasks : [])

@@ -5,7 +5,7 @@ import TaskGroupInterface, { TaskHookProps } from '../../Components 2/Tasks/Task
 
 type SliceState = { taskGroups : TaskGroup[], savingOptions : { saveState: TaskSaveState; numberToSave: number }, taskGroupCommanders : {[key : string] : TaskGroupCommanderProps} };
 
-interface TaskGroupCommanderProps {
+export interface TaskGroupCommanderProps {
     startAll: number,
     stopAll: number,
     massLink: string
@@ -65,6 +65,23 @@ export const tasksSlice = createSlice({
                 }
             }
         },
+        deleteTaskGroup: {
+            reducer (state, action : PayloadAction<{tgName : string}>) { //; anotherProp: string; uuid: string
+                const {
+                    tgName
+                } = action.payload;
+
+                state.taskGroups = state.taskGroups.filter(tg => tg.name !== tgName)
+                delete state.taskGroupCommanders[tgName]
+            },
+            prepare (tgName) {
+                return {
+                    payload: {
+                        tgName,
+                    }
+                }
+            }
+        },
         beginSave: {
             reducer (state, action : PayloadAction<{numOfTaskGroup : number}>) {
                 state.savingOptions.saveState = TaskSaveState.Saving
@@ -107,22 +124,45 @@ export const tasksSlice = createSlice({
             }
         },
         activateNumberCommander: {
-            reducer (state, action : PayloadAction<{tgName : string, commanderName : "startAll" | "stopAll" | "massLink"}>) { //; anotherProp: string; uuid: string
+            reducer (state, action : PayloadAction<{tgName : string, commanderName : "startAll" | "stopAll"}>) { //; anotherProp: string; uuid: string
                 const {
                     tgName,
                     commanderName
                 } = action.payload;   
 
-
+                console.log(`tgName: ${tgName}`)
                 // @ts-ignore
                 state.taskGroupCommanders[tgName][commanderName] = state.taskGroupCommanders[tgName][commanderName] + 1;
 
             },
-            prepare (tgName : string, commanderName : "startAll" | "stopAll" | "massLink") {
+            prepare (tgName : string, commanderName : "startAll" | "stopAll") {
                 return {
                     payload: {
                         tgName,
                         commanderName
+                    }
+                }
+            }
+        },
+        activateStringCommander: {
+            reducer (state, action : PayloadAction<{tgName : string, commanderName : "massLink", value : string}>) { //; anotherProp: string; uuid: string
+                const {
+                    tgName,
+                    commanderName,
+                    value
+                } = action.payload;   
+
+                console.log(`tgName: ${tgName}`)
+                // @ts-ignore
+                state.taskGroupCommanders[tgName][commanderName] = value
+
+            },
+            prepare (tgName : string, commanderName : "massLink", value : string) {
+                return {
+                    payload: {
+                        tgName,
+                        commanderName,
+                        value
                     }
                 }
             }
@@ -150,6 +190,6 @@ export const tasksSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { populateTasks, saveTaskGroup, beginSave, saveTaskGroupOnAdd, activateNumberCommander } = tasksSlice.actions
+export const { deleteTaskGroup, populateTasks, saveTaskGroup, beginSave, saveTaskGroupOnAdd, activateNumberCommander, activateStringCommander } = tasksSlice.actions
 
 export default tasksSlice.reducer

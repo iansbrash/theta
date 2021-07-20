@@ -5,17 +5,16 @@ import React, {
     useRef
 } from 'react';
 import { useDispatch } from 'react-redux';
+import { activateNumberCommander, activateStringCommander, deleteTaskGroup as deleteTaskGroupAction, TaskGroup } from '../../redux/reducers/tasksSlice';
+import { RightClickMenuTypes } from '../../App 2'
+import electron from 'electron'
 
 
-
-enum RightClickMenuType {
-    taskGroup,
-}
 
 interface RightClickMenuProps {
     clientX: number,
     clientY: number,
-    type: RightClickMenuType,
+    type: RightClickMenuTypes,
     dropdownToggled: boolean,
     setDropdown: (b : boolean) => void,
     typeConfig: any
@@ -40,11 +39,25 @@ const RightClickMenu : FC<RightClickMenuProps> = ({
 
     const RightClickMenuRef = useRef(null);
 
-    const deleteTaskGroup = () => {
+    const deleteTaskGroup = async () => {
+        dispatch(deleteTaskGroupAction(typeConfig.tgName))
+
+        console.log(`'detete makes ithere`)
+
+        let t = await electron.ipcRenderer.invoke('readjson', 'tasks.json')
+        t = t.filter((tg : TaskGroup) => tg.name !== typeConfig.tgName);
+        await electron.ipcRenderer.invoke('writejson', 'tasks.json', t)
+        console.log(`'detete makes ithere222222`)
+
+        setDropdown(false)
 
     }
 
     const RCMTypeOptions : RCMTypeOptionsProps[][] = [
+        // Default
+        [],
+
+        // TaskGroup
         [
             {
                 name: 'Start All',
@@ -55,7 +68,7 @@ const RightClickMenu : FC<RightClickMenuProps> = ({
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>,
-                onClick: () => null
+                onClick: () => null//dispatch(activateNumberCommander(typeConfig.tgName, 'startAll'))
             },
             {
                 name: 'Stop All',
@@ -66,32 +79,32 @@ const RightClickMenu : FC<RightClickMenuProps> = ({
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
                     </svg>
                 </div>,
-                onClick: () => null
+                onClick: () => null//dispatch(activateNumberCommander(typeConfig.tgName, 'stopAll'))
             },
-            {
+            { // text-indigo-500
                 name: 'MLC',
                 icon: 
-                <div className="text-indigo-500">
+                <div className="text-gray-500">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                     </svg>
                 </div>,
-                onClick: () => null
+                onClick: () => dispatch(activateStringCommander(typeConfig.tgName, 'massLink', ''))
             },
-            {
+            { //text-purple-500
                 name: 'Rename',
                 icon: 
-                <div className="text-purple-500">
+                <div className="text-gray-500">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>  
                 </div>,
                 onClick: () => null
             },
-            {
+            { // text-blue-500
                 name: 'Duplicate',
                 icon: 
-                <div className="text-blue-500">
+                <div className="text-gray-500">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                     </svg>
@@ -106,7 +119,7 @@ const RightClickMenu : FC<RightClickMenuProps> = ({
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                 </div>,
-                onClick: () => null
+                onClick: () => deleteTaskGroup()
             }
         ]
     ]

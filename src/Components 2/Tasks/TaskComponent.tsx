@@ -85,14 +85,14 @@ const TaskComponent : FC<TaskComponentProps> = ({
     const sessionObject = useSelector((state: RootState) => state.session);
 
         // @ts-ignore
-        const startAllCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName].startAll)
+        const startAllCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName]?.startAll)
         // @ts-ignore
-        const stopAllCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName].stopAll)
+        const stopAllCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName]?.stopAll)
         // @ts-ignore
-        const massLinkCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName].massLink)
+        const massLinkCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName]?.massLink)
     
-        useEffect(() => { startTask() }, [startAllCommander])
-        useEffect(() => { stopTask() }, [stopAllCommander])
+        useEffect(() => { startAllCommander ? startTask() : null }, [startAllCommander])
+        useEffect(() => { stopAllCommander ? stopTask() : null }, [stopAllCommander])
         // useEffect(() => { startTask() }, [massLinkCommander])
     
 
@@ -106,6 +106,8 @@ const TaskComponent : FC<TaskComponentProps> = ({
         let prTitle = productTitle;
         let prImage = '';
 
+        let lastStatus = 'Signing in (1)';
+
         while (task.status === 'Active') {
             setStatusColor('text-blue-100');
             res = await task.cycle();
@@ -113,7 +115,6 @@ const TaskComponent : FC<TaskComponentProps> = ({
             if (task.getStatus() === "Stopped") {
                 return;
             }
-            // console.error(res);
             setStatus(res.message);
 
             if (res.extraData !== undefined) {
@@ -127,8 +128,9 @@ const TaskComponent : FC<TaskComponentProps> = ({
             if (res.status === "Error") {
                 setStatusColor('text-red-400');
                 await delay(7500);
-                setStatus(res.message);
+                setStatus(lastStatus);
             }
+            lastStatus = res.message;
         }
 
         if (res.message === "Checked Out") {
@@ -180,31 +182,6 @@ const TaskComponent : FC<TaskComponentProps> = ({
         stopTask();
 
         setTasks(tasks.filter(t => t.identifier !== task.identifier));
-        // let requestApi = {
-        //     method: 'POST',
-        //     headers: {
-        //     //   'Content-Type': 'custom complex media type here',
-        //     //   'Authorization': 'Bearer ' + accessToken // if api is secured
-        //     },
-        //     protocol: 'https:',
-        //     hostname: 'amazon.com',
-        //     port: 443,
-        //     path: '/'
-        // };
-
-        // const request = electron.net.request(requestApi)
-
-        // request.on('response', (response) => {
-        //     console.log(`STATUS: ${response.statusCode}`);
-        //     // resolve(response);
-        
-        //     response.on('error', (error : any) => {
-        //       console.log(`ERROR: ${JSON.stringify(error)}`);
-        //     //   reject(error);
-        //     })
-        //   });
-        
-        // request.end(JSON.stringify(usageData));
     }
 
     const editTask = () => {

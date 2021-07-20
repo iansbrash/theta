@@ -85,7 +85,8 @@ const TaskGroup : FC<TaskGroupProps> = ({
 
 
     return (
-        <div className="w-full h-auto px-2 taskGroup">
+        // @ts-ignore
+        <div tgName={name} className="w-full h-auto px-2 taskGroup">
             <button className="w-full focus:outline-none"
             onClick={() => handleClick()}
             >
@@ -168,6 +169,14 @@ const Tasks = () => {
 
     }, [])
 
+    // Used to deleting a task group on front end
+    useEffect(() => {
+        setTaskGroups(taskGroupsSelector.map(t => t.name))
+        if (taskGroupsSelector.length !== 0 && taskGroupsSelector.findIndex(t => t.name === selectedTaskGroup) === -1) {
+            setSelectedTaskGroup(taskGroupsSelector[0].name)
+        }
+    }, [taskGroupsSelector.length])
+
 
     const [selectedTaskGroup, setSelectedTaskGroup] = useState<string>('');
 
@@ -186,8 +195,8 @@ const Tasks = () => {
             iter += 1;
         }
 
-        setTaskGroups([...taskGroups, `Task Group ${tgCount}`])
-        setSelectedTaskGroup(`Task Group ${tgCount}`)
+        setTaskGroups([...taskGroups, newTaskGroupName + " " + iter])
+        setSelectedTaskGroup(newTaskGroupName + " " + iter)
         setTgCount(tgCount + 1)
         dispatch(saveTaskGroup({
             name: newTaskGroupName + " " + iter,

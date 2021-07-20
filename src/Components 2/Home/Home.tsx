@@ -6,8 +6,10 @@ import React, {
 import ScreenWrapper from "../../Components 2/Component Library/ScreenWrapper";
 import axios from 'axios'
 import api from '../../Logic/api';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { addUpdates, addBasic, addCheckouts } from '../../redux/reducers/homeSlice';
+import LoadingIndicator from '../Component Library/LoadingIndicator';
 
 const CheckoutsIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16" viewBox="0 0 20 20" fill="currentColor">
@@ -39,7 +41,7 @@ const AnalyticsIcon = () => (
     </svg>
 )
 
-interface Checkout {
+export interface Checkout {
     date: string | number,
     orderNumber: string,
     product: string,
@@ -91,64 +93,67 @@ const CheckoutFeedPurchase : FC<Checkout> = ({
 }
 
 
-interface Update {
+export interface Update {
     version: string,
     changes: string
 }
 
 
-
 const Home = () => {
+
+    const dispatch = useDispatch()
 
     const impliedPadding = 'p-2'
     const sessionObject = useSelector((state : RootState) => state.session)
 
     
 
-    const [currentVersion, setCurrentVersion] = useState<string>('');
-    const [totalCheckouts, setTotalCheckouts] = useState<number>(10);
-    const [totalDeclines, setTotalDeclines] = useState<number>(3);
-    const [updateLogs, setUpdateLogs] = useState<Update[]>([])
-    const [checkouts, setCheckouts] = useState<Checkout[]>([])
+
+    const checkouts = useSelector((state : RootState) => state.home.checkouts)
+    const basic = useSelector((state : RootState) => state.home.basic)
+    const updates = useSelector((state : RootState) => state.home.updates)
 
 
     useEffect(() => {
         (async () => {
-            const changelog = await axios({
-                method: 'get',
-                url: `${api}/public/changelog`
-            })
+            if (updates.length === 0) {
+                const changelog = await axios({
+                    method: 'get',
+                    url: `${api}/public/changelog`
+                })
 
-            console.log(changelog.data)
-            setCurrentVersion("v" + changelog.data[0].version)
-            setUpdateLogs(changelog.data)
+                dispatch(addUpdates(changelog.data))
+            }
         })();
 
         (async () => {
-            const ch = await axios({
-                method: 'get',
-                url: `${api}/user/checkouts`,
-                headers: {
-                    license: sessionObject.license,
-                    // startingKey: '',
-                    amount: 10
-                }
-            })
-
-            setCheckouts(ch.data)
+            if (checkouts.length === 0) {
+                const ch = await axios({
+                    method: 'get',
+                    url: `${api}/user/checkouts`,
+                    headers: {
+                        license: sessionObject.license,
+                        // startingKey: '',
+                        amount: 10
+                    }
+                })
+                dispatch(addCheckouts(ch.data))
+            }
         })();
 
         (async () => {
-            const ch = await axios({
-                method: 'get',
-                url: `${api}/user/basic`,
-                headers: {
-                    license: sessionObject.license,
-                }
-            })
-            let basic = ch.data;
-            setTotalCheckouts(basic.checkouts)
-            setTotalDeclines(basic.declines)
+            if (basic.checkouts === -1) {
+                const ch = await axios({
+                    method: 'get',
+                    url: `${api}/user/basic`,
+                    headers: {
+                        license: sessionObject.license,
+                    }
+                })
+                let basic = ch.data;
+
+                dispatch(addBasic(basic))
+            }
         })();
     }, [])
     
@@ -171,7 +176,7 @@ const Home = () => {
                             </div>
                             
                             <div className="text-theta-white text-xl font-medium">
-                                {currentVersion}
+                                {updates.length === 0 ? '' :  "v" + updates[0].version}
                             </div>
                         </div>
                         
@@ -182,18 +187,21 @@ const Home = () => {
 
                         {/* Actual scrolling list of updates */}
                         <div className="flex flex-col justify-start items-start overflow-scroll scrollbar-hide text-xl">
-                            
-                            {/* Actual logs */}
-                            {updateLogs.map(log => (
-                                <div className="text-theta-white">
-                                        <div className="font-medium">{`Version ${log.version}:`}</div>
-                                        {log.changes.split('\n').map((l) => 
-                                            <div>{"- " + l}</div>
-                                        )}
-                                    <div className="h-4"></div>
-                                </div>
-                            ))}
-
+                        {
+                            updates.length === 0 ? <div className="flex flex-1 justify-center items-center"><LoadingIndicator size={12}/></div> :
+                            <>
+                                {/* Actual logs */}
+                                {updates.map(log => (
+                                    <div className="text-theta-white">
+                                            <div className="font-medium">{`Version ${log.version}:`}</div>
+                                            {log.changes.split('\n').map((l) => 
+                                                <div>{"- " + l}</div>
+                                            )}
+                                        <div className="h-4"></div>
+                                    </div>
+                                ))}
+                            </>
+                        }
                         </div>
 
                         {/* Bottom gradient fade */}
@@ -207,22 +215,33 @@ const Home = () => {
                 {/* Checkouts */}
                 <div className={`h-full w-1/4 ${impliedPadding}`}>
                     <div className="w-full h-full rounded-md shadow-md bg-theta-home-checkouts flex flex-row justify-center items-center text-theta-white">
-                        <CheckoutsIcon />
-                        {/* NOTE: MB-1 because it looks better with current icons */}
-                        <div className="mb-1 text-5xl font-bold">
-                            {totalCheckouts}
-                        </div>
+                        {
+                            basic.checkouts === -1 ? <LoadingIndicator size={12}/> :
+                            <>
+                                <CheckoutsIcon />
+                                {/* NOTE: MB-1 because it looks better with current icons */}
+                                <div className="mb-1 text-5xl font-bold">
+                                    {basic.checkouts}
+                                </div>
+                            </>
+                        }
+
                     </div>
                 </div>
 
                 {/* Declines */}
                 <div className={`h-full w-1/4 ${impliedPadding}`}>
                     <div className="w-full h-full rounded-md shadow-md bg-theta-home-declines flex flex-row justify-center items-center text-theta-white">
-                        <DeclinesIcon />
-                        {/* NOTE: MB-1 because it looks better with current icons */}
-                        <div className="mb-1 text-5xl font-bold self-center">
-                            {totalDeclines}
-                        </div>
+                        {
+                            basic.declines === -1 ? <LoadingIndicator size={12}/> :
+                            <>
+                                <DeclinesIcon />
+                                {/* NOTE: MB-1 because it looks better with current icons */}
+                                <div className="mb-1 text-5xl font-bold self-center">
+                                    {basic.declines}
+                                </div>
+                            </>
+                        }
                     </div>
                 </div>
             </div>

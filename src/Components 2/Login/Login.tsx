@@ -92,13 +92,13 @@ const Login : FC = () => {
 
 
     return (
-        <div className="flex flex-col h-screen w-screen justify-center items-center bg-indigo-1000 p-5 ">
-            <div className="font-medium text-lg text-indigo-400 m-1">
+        <div className="flex flex-col h-screen w-screen justify-center items-center bg-theta-sidebar p-5 rounded-md">
+            <div className="font-medium text-lg text-theta-gray-7 m-1">
                 {status}
             </div>
             <div className="w-full justify-center items-center flex flex-row mb-10">
-                <div className="flex justify-center items-center rounded-lg shadow-lg w-auto border border-indigo-600 h-10 bg-indigo-950 flex-row">
-                    <div className="text-indigo-400 mx-2">
+                <div className="transition duration-500 ease-in-out border-theta-sidebar-dark hover:border-theta-logo flex justify-center items-center rounded-lg shadow-lg w-auto border h-10 bg-theta-bg flex-row">
+                    <div className="text-theta-gray-7 mx-2">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                         </svg>
@@ -106,12 +106,12 @@ const Login : FC = () => {
                     <input 
                     value={license}
                     onChange={(e) => setLicense(e.target.value)}
-                    className="placeholder-indigo-300 focus:outline-none bg-indigo-950 w-72 text-xl text-indigo-300"
+                    className="placeholder-indigo-300 focus:outline-none bg-theta-bg w-72 text-xl text-theta-gray-7 placeholder-theta-gray-7"
                     placeholder="XXXX-XXXX-XXXX-XXXX-XXXX"
                     />
                 </div>
                 <button
-                className="focus:outline-none h-10 w-10 justify-center items-center flex border border-indigo-600 text-color-400 rounded-md ml-2 text-indigo-400 bg-indigo-900"
+                className="transition duration-500 ease-in-out border-theta-sidebar-dark hover:border-theta-logo focus:outline-none h-10 w-10 justify-center items-center flex border text-theta-gray-7 rounded-md ml-2 text-theta-gray-7 bg-theta-bg"
                 onClick={() => attemptAuth()}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">

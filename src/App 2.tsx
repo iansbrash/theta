@@ -40,7 +40,6 @@ import ProfileObject from "./Logic/interfaces/ProfileObject";
 import { populateProxies } from "./redux/reducers/proxiesSlice";
 import ProxyList from "./Logic/interfaces/ProxyList";
 import { beginSave, populateTasks, TaskGroup, TaskSaveState } from "./redux/reducers/tasksSlice";
-import { RootState } from "./redux/store";
 
 
 
@@ -86,7 +85,10 @@ const TempLogo = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w
 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
 </svg>
 
-
+export enum RightClickMenuTypes {
+    Default,
+    TaskGroup,
+}
 
 const AppTwo = () => {
 
@@ -122,6 +124,10 @@ const AppTwo = () => {
     const [rightClickMenuActive, setRightClickMenuActive] = useState<boolean>(false);
     const [clientX, setClientX] = useState<number>(0);
     const [clientY, setClientY] = useState<number>(0);
+    const [rightClickMenuTypeConfig, setRightClickMenuTypeConfig] = useState<object>({});
+    const [rightClickMenuType, setRightClickMenuType] = useState<RightClickMenuTypes>(RightClickMenuTypes.Default)
+
+
 
     window.oncontextmenu = function(e) {
 
@@ -131,14 +137,16 @@ const AppTwo = () => {
         setClientX(e.clientX)
         setClientY(e.clientY)
         setRightClickMenuActive(true)
-
+        setRightClickMenuTypeConfig({})
+        setRightClickMenuType(RightClickMenuTypes.Default)
 
         // @ts-ignore
         let e2 : any = e.target;
         while (e2.id !== 'root' && e2.type !== 'head' && e2.type !== 'html') {
             try {
                 if (e2.className.includes("taskGroup")) {
-                    // alert(':)');
+                    setRightClickMenuType(RightClickMenuTypes.TaskGroup)
+                    setRightClickMenuTypeConfig({tgName: e2.getAttribute("tgname")})
                     return false;
                 }
                 else {
@@ -193,7 +201,6 @@ const AppTwo = () => {
 
 
 
-
     return (
         <HashRouter>
             <Route path="/login">
@@ -204,10 +211,10 @@ const AppTwo = () => {
                     <RightClickMenu 
                         clientX={clientX}
                         clientY={clientY}
-                        type={0}
+                        type={rightClickMenuType}
                         dropdownToggled={rightClickMenuActive}
                         setDropdown={setRightClickMenuActive}
-                        typeConfig={{}}
+                        typeConfig={rightClickMenuTypeConfig}
                     />
 
                     <div className="rounded-lg relative flex flex-row h-full w-screen justify-start items-center bg-gradient-to-r from-theta-bg-start to-theta-bg">
