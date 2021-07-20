@@ -59,6 +59,7 @@ abstract class TaskClass implements Task {
 
     abstract start(): void;
     abstract stop(): void;
+    getStatus : (() => string) = () => { return this.status; }
 
     // Cycle methods and variables
     abstract cycle(): Promise<cycleStatus>;

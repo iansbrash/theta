@@ -46,7 +46,8 @@ interface Checkout {
     site: string,
     profile: string,
     size: string,
-    price: number
+    price: number,
+    image: string
 }
 
 const CheckoutFeedPurchase : FC<Checkout> = ({
@@ -56,21 +57,22 @@ const CheckoutFeedPurchase : FC<Checkout> = ({
     size,
     date,
     orderNumber,
-    price
+    price,
+    image
 } : Checkout) => {
     return (
         <div className="space-x-2 p-2 w-full h-16 bg-theta-home-checkout-feed-purchase rounded-md shadow-md flex flex-row justify-start items-center">
-            <div className="h-full w-12 rounded-md bg-theta-white shadow-md">
+            <div className="h-12 w-12 rounded-md bg-theta-white shadow-md flex justify-center items-center">
                 <img 
-                className="rounded-md"
-                src={`https://images-na.ssl-images-amazon.com/images/I/61JbCra%2B7GL._SX342_.jpg`}
+                className="h-12 w-12 rounded-md"
+                src={image}
                 />
             </div>
-            <div className="flex flex-col justify-center items-start">
-                <div className="text-xl text-theta-gray-2 font-me leading-5 font-medium">
+            <div className="flex-1 flex flex-col justify-center items-start">
+                <div className="text-xl text-theta-gray-2 font-me leading-5 font-medium w-full" style={{WebkitLineClamp: 2}}>
                     {product}
                 </div>
-                <div className="flex flex-row justify-start items-center text-xl leading-5">
+                <div className="flex flex-row justify-start items-center text-xl leading-5 w-full">
                     <div className="text-theta-gray-4">
                         {site}
                     </div>
@@ -81,7 +83,7 @@ const CheckoutFeedPurchase : FC<Checkout> = ({
                 </div>
                 
             </div>
-            <div className="flex flex-1 justify-end items-center font-bold text-theta-gray-4 text-xl">
+            <div className="flex justify-end items-center font-bold text-theta-gray-4 text-xl">
                 {`$${price}`}
             </div>
         </div>

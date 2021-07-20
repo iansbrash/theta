@@ -50,7 +50,7 @@ class AmazonTaskClass extends TaskClass {
         [],
         [],
         [],
-        ['productTitle', 'productThumbnail'],
+        ['productTitle', 'productImage'],
         [],
         [],
         [],
@@ -93,10 +93,6 @@ class AmazonTaskClass extends TaskClass {
             console.log('here 1')
             if (res === null || res === undefined) {}
             else if (res.extraData) {
-                // let extraData = {};
-                // Object.keys(res.extraData).forEach((data : string) => 
-                //     extraData = {...extraData, [data]: extraData[data]}
-                // )
                 returnCycleStatus.extraData = res.extraData;
             }
             console.log(`returnCycleStatus in tryatch`)
@@ -139,16 +135,12 @@ class AmazonTaskClass extends TaskClass {
     }
 
     async cycle() : Promise<cycleStatus> {
-
-        console.log('in ACtive')
-
         if (this.status === "Active") {
             try {
 
                 console.log(`about to run ${this.normalFlow[this.nextFunctionIndex]}`)
                 // @ts-ignore
                 const res = await this[this.normalFlow[this.nextFunctionIndex]]();
-                console.log('here 3')
 
                 let returnCycleStatus : cycleStatus = {
                     status: 'Success',
@@ -236,17 +228,6 @@ class AmazonTaskClass extends TaskClass {
     
             this.allCookies = res.allCookies;
         }, 'Getting product') 
-        // allCookies, allCookiesObject['session-id']
-        const res = await electron.ipcRenderer.invoke('AmazonPOSTSubLoginPage', this.allCookies, this.storage.sessiondId, {
-            appAction: this.storage.appAction,
-            appActionToken: this.storage.appActionToken,
-            prevRID: this.storage.prevRID,
-            workflowState: this.storage.workflowState,
-            email: this.config.account.username,
-            password: this.config.account.password
-        } , this.proxyList.proxies[0]);
-
-        this.allCookies = res.allCookies;
     }
 
     /** SignIn Flow via IPC */
@@ -283,7 +264,6 @@ class AmazonTaskClass extends TaskClass {
                 }
             }
     
-            // return res.productTitle;
         }, 'Adding to cart');
     }
 
@@ -302,20 +282,6 @@ class AmazonTaskClass extends TaskClass {
                 sessionId: this.storage.sessionId,
             }
         }, 'Getting checkout screen')
-        const res = await electron.ipcRenderer.invoke('AmazonPOSTAddToCart', this.allCookies, this.storage, this.proxyList.proxies[0]);
-        console.log('here 2')
-
-        this.allCookies = res.allCookies;
-
-        // dont think this actually returns anything...
-        this.storage = {
-            ...res.storage,
-            sessionId: this.storage.sessionId,
-        }
-
-        console.log('here 3')
-
-        return res.status;
     }
 
     /** ATC Flow via IPC */
@@ -331,11 +297,6 @@ class AmazonTaskClass extends TaskClass {
     
             this.allCookies = res.allCookies;
         }, "Adding shipping")
-        const res = await electron.ipcRenderer.invoke('GETCheckoutScreen', this.allCookies, this.proxyList.proxies[0]);
-
-        this.storage = res.storage;
-
-        this.allCookies = res.allCookies;
     }
 
     async POSTAddShippingAddressFormHandler() : Promise<cycleStatus> {
@@ -352,16 +313,6 @@ class AmazonTaskClass extends TaskClass {
         this.storage = res.storage;
         this.allCookies = res.allCookies;
         }, 'Selecting shipping')
-        const res = await electron.ipcRenderer.invoke('POSTAddShippingAddressFormHandler', 
-            this.allCookies, 
-            this.profile.information,
-            this.profile.shipping,
-            this.storage,
-            this.proxyList.proxies[0]
-        );
-
-        this.storage = res.storage;
-        this.allCookies = res.allCookies;
     }
 
     async POSTSelectShippingAddress() : Promise<cycleStatus> {
@@ -371,10 +322,6 @@ class AmazonTaskClass extends TaskClass {
 
             this.allCookies = res.allCookies;
         }, 'Adding payment (1)')
-
-        const res = await electron.ipcRenderer.invoke('POSTSelectShippingAddress', this.allCookies, this.storage, this.proxyList.proxies[0]);
-
-        this.allCookies = res.allCookies;
     }
 
     async GETAddPaymentPage() : Promise<cycleStatus> {
@@ -389,13 +336,6 @@ class AmazonTaskClass extends TaskClass {
                 ...res.storage
             }
         }, 'Adding payment (2)')
-        const res = await electron.ipcRenderer.invoke('GETAddPaymentPage', this.allCookies, this.proxyList.proxies[0]);
-
-        this.allCookies = res.allCookies;
-        this.storage = {
-            ...this.storage,
-            ...res.storage
-        }
     }
 
     async POSTRegister() : Promise<cycleStatus> {
@@ -406,10 +346,6 @@ class AmazonTaskClass extends TaskClass {
             this.allCookies = res.allCookies;
             this.storage = res.storage;
         }, 'Adding payment (3)')
-        const res = await electron.ipcRenderer.invoke('POSTRegister', this.allCookies, this.storage, this.proxyList.proxies[0]);
-
-        this.allCookies = res.allCookies;
-        this.storage = res.storage;
     }
 
     async POSTAddPaymentMethod() : Promise<cycleStatus> {
@@ -424,15 +360,6 @@ class AmazonTaskClass extends TaskClass {
                 ...res.storage
             }
         }, 'Selecting payment')
-
-        // allCookies, proxy
-        const res = await electron.ipcRenderer.invoke('POSTAddPaymentMethod', this.allCookies, this.storage, this.profile.payment, this.proxyList.proxies[0]);
-
-        this.allCookies = res.allCookies;
-        this.storage = {
-            ...this.storage,
-            ...res.storage
-        }
     }
 
     async POSTSelectPaymentMethod() : Promise<cycleStatus> {
@@ -444,10 +371,6 @@ class AmazonTaskClass extends TaskClass {
             this.allCookies = res.allCookies;
             this.storage = res.storage;
         }, 'Getting submit order screen')
-        const res = await electron.ipcRenderer.invoke('POSTSelectPaymentMethod', this.allCookies, this.storage, this.proxyList.proxies[0]);
-
-        this.allCookies = res.allCookies;
-        this.storage = res.storage;
     }
 
     async POSTAsyncContinueAfterSelection() : Promise<cycleStatus> {
@@ -475,11 +398,6 @@ class AmazonTaskClass extends TaskClass {
 
     async checkout() : Promise<void> {
         const res = await electron.ipcRenderer.invoke('AmazonCheckout', this.allCookies, this.proxyList.proxies[0]);
-
-
-
-        // this.allCookies = res.allCookies;
-        // this.storage = res.storage;
     }
 
 

@@ -61,8 +61,9 @@ const SignIn = async (email : string, password : string, proxy : Proxy) : Promis
         prevRID,
         workflowState,
         email,
-        password
-    }, proxy)
+        password,
+
+    }, proxy, 'key1', '220937a')
 
     allCookies = accumulateCookies(
         allCookies,

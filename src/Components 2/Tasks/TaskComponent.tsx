@@ -7,6 +7,8 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../redux/store';
 import AmazonTaskClass from '../../Logic/sites/Amazon/classes/AmazonTaskClass';
 import { AmazonModes } from '../../Logic/interfaces/site_task_config/AmazonTaskConfig';
+import axios from 'axios';
+import api from '../../Logic/api';
 
 interface InterestingWrapperProps {
     children: ReactNode,
@@ -78,6 +80,8 @@ const TaskComponent : FC<TaskComponentProps> = ({
     const [productTitle, setProductTitle] = useState<string>(task.input)
     const [productImage, setProductImage] = useState<string>('');
 
+    const sessionObject = useSelector((state: RootState) => state.session);
+
     const startTask = async () => {
         task.start();
         setStatusColor('text-blue-200');
@@ -85,15 +89,25 @@ const TaskComponent : FC<TaskComponentProps> = ({
 
         let res : cycleStatus = {message: 'Starting...', status: 'Success'};
 
+        let prTitle = productTitle;
+        let prImage = '';
+
         while (task.status === 'Active') {
             setStatusColor('text-blue-100');
             res = await task.cycle();
-            console.error(res);
+
+            if (task.getStatus() === "Stopped") {
+                return;
+            }
+            // console.error(res);
             setStatus(res.message);
 
             if (res.extraData !== undefined) {
-                setProductTitle(res.extraData.productTitle)
-                setProductImage(res.extraData.productImage)
+                prTitle = res.extraData.productTitle;
+                setProductTitle(prTitle)
+
+                prImage = res.extraData.productImage
+                setProductImage(prImage)
             }
 
             if (res.status === "Error") {
@@ -105,22 +119,44 @@ const TaskComponent : FC<TaskComponentProps> = ({
 
         if (res.message === "Checked Out") {
             setStatusColor('text-green-400')
+            console.log(productImage)
             
             try {
                 sendSuccess(
                     discordWebhook,
-                    productTitle,
+                    prTitle,
                     "Amazon",
                     task.profile.information.name,
                     "Random",
                     task.proxyList.name,
                     "brash@usc.edu",
                     "Normal",
-                    productImage
+                    prImage
                 )
             }
             catch (err) {
                 console.error (`Couldn't send success to discord webhook`)
+            }
+
+            try {
+                await axios({
+                    method: 'post',
+                    url: `${api}/log/user/checkout`,
+                    headers: {
+                        license: sessionObject.license,
+                        session: sessionObject.session,
+                        orderNumber: 'TEMPORDER#',
+                        product: prTitle,
+                        profile: task.profile.information.name,
+                        site: task.site,
+                        size: task.size,
+                        price: 69,
+                        image: prImage   
+                    }
+                })
+            }
+            catch (err) {
+                console.error("Error logging checkout to api")
             }
         }
     }

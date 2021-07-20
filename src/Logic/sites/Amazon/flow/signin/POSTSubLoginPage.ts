@@ -8,7 +8,6 @@ import requestRetryWrapper from '../../../../requestRetryWrapper';
 import { Proxy } from '../../../../interfaces/ProxyList';
 import HttpsProxyAgent from 'https-proxy-agent'
 import api from '../../../../api';
-import store from '../../../../../redux/store';
 
 const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data : LoginQuerys, proxy : Proxy, license : string, session : string) : Promise<AxiosResponse> => {
 
@@ -92,7 +91,7 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
     return POSTSubLoginPageResponse;
 }
 
-export const POSTSubLoginPageRetry : (allCookies : string[], sessionId: string, data : LoginQuerys, proxy : Proxy) => Promise<AxiosResponse> = requestRetryWrapper(POSTSubLoginPage, {
+export const POSTSubLoginPageRetry : (allCookies : string[], sessionId: string, data : LoginQuerys, proxy : Proxy, license : string, session : string) => Promise<AxiosResponse> = requestRetryWrapper(POSTSubLoginPage, {
     baseDelay: 3000,
     numberOfTries: 3,
     consoleRun: 'Posting to Amazon sub login page',

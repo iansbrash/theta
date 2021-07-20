@@ -196,7 +196,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 } : TaskGroupInterfaceProps) => {
 
     const [dropdownDown, setDowndownDown] = useState<boolean>(false);
-    const [selectSiteInput, setSelectSiteInput] = useState<string>('');
+    const [selectSiteInput, setSelectSiteInput] = useState<Site>();
     const [monitorDelay, setMonitorDelay] = useState<number>(3000);
     const [errorDelay, setErrorDelay] = useState<number>(3000);
 
@@ -537,47 +537,19 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                         >
 
                             {/* Input part */}
-                            <button className={`border-t border-l border-r border-theta-gray-7 relative focus:outline-none w-full h-full rounded-t-lg ${dropdownDown ? '' : 'rounded-b-lg border-b'} shadow-md bg-theta-bg flex flex-col justify-start items-center`}
-                            onClick={() => null}
-                            >
-                                <div className="h-full flex flex-row justify-start items-center">
-                                    <div className="w-7"></div>
-                                    <input
-                                        value={selectSiteInput}
-                                        onChange={(e) => setSelectSiteInput(e.target.value)}
-                                        onFocus={() => onInputFocus()}
-                                        // onBlur={() => onInputBlur()}
-                                        placeholder={'Select a site'}
-                                        className="rounded-xl h-full w-full bg-theta-bg focus:outline-none placeholder-theta-gray-2 text-theta-gray-2 text-2xl"
-                                    />
-                                </div>
-                                <div className="text-theta-gray-7 absolute left-0 top-0 bottom-0 flex justify-center items-center">
-                                    <ChevronRight />
-                                </div>
-                            </button>
+                            <DropdownSelect
+                                setSelection={setSelectSiteInput}
+                                selectionArray={Object.keys(Site)}
+                                bg={'bg-theta-bg'}
+                                placeholder={'Select a site'}
+                                itemToString={(s : Site) => Site[s]}
+                                // offsetWidth={}
+                                maxRowsBeforeOverflow={5}
+                                border={'border-theta-gray-7'}
+                                noShadow={true}
+                            />
 
                             {/* Drop down part */}
-                            <div className="relative w-full"
-                            >
-                                <div className={`${dropdownDown ? '' : 'hidden'} border-b border-l border-r border-theta-gray-7 rounded-bl-lg rounded-br-lg bg-theta-bg absolute top-0 left-0 right-0 flex flex-col justify-start items-center`}
-                                onBlur={() => onInputBlur()}
-                                >
-                                    
-                                    {siteSelectionArray.filter(s => s.toLowerCase().includes(selectSiteInput.toLowerCase())).map(site => (
-                                        <SiteOption 
-                                            name={site}
-                                            handleSiteChange={handleSiteChange}
-                                        />
-                                    ))}
-                                    {/* Adding this adds the ones that don't match the criteria below */}
-                                    {siteSelectionArray.filter(s => !s.toLowerCase().includes(selectSiteInput.toLowerCase())).map(site => (
-                                        <SiteOption 
-                                            name={site}
-                                            handleSiteChange={handleSiteChange}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -636,7 +608,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                 )}
                 </AutoSizer>
             </div>
-            <div className="h-20 w-full flex flex-row justify-between items-center mt-2">
+
+            {/* Bottom Actions */}
+            <div className={`${selectSiteInput ? 'flex' : 'hidden pointer-events-none'} h-20 w-full flex-row justify-between items-center mt-2`}>
                 {/* Error and Mintor Delay */}
                 <div className="flex flex-col justify-center items-start w-48 space-y-1">
                     <TextInput placeholder={'Error delay'}
@@ -691,11 +665,11 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
                 {/* MLC. 48 because thats the monitor/error size */}
                 <div className="flex flex-col justify-center items-end w-48 ">
-                <button className="transition transform duration-250 ease-in-out hover:scale-110 focus:outline-none rounded-full bg-theta-sidebar-dark shadow-lg text-blue-400 flex flex-row justify-center items-center"
+                <button className={`transition transform duration-250 ease-in-out hover:scale-110 focus:outline-none rounded-full bg-theta-sidebar-dark shadow-lg text-blue-400 flex flex-row justify-center items-center`}
                 onClick={() => setAddTasksEnabled(true)}
                 >
                         <div className="ml-4 mr-2 text-theta-gray-2 font-medium text-2xl">
-                            Add Tasks
+                            {'Add Tasks'}
                         </div>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
