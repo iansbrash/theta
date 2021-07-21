@@ -8,6 +8,8 @@ import {
     Link,
     useLocation
 } from "react-router-dom";
+import path from 'path';
+import fse from 'fs-extra';
 
 // screen components
 import Home from './Components 2/Home/Home';
@@ -41,6 +43,8 @@ import { populateProxies } from "./redux/reducers/proxiesSlice";
 import ProxyList from "./Logic/interfaces/ProxyList";
 import { beginSave, populateTasks, TaskGroup, TaskSaveState } from "./redux/reducers/tasksSlice";
 
+// path
+import { getAppDataFolder } from "./ipc/io/io";
 
 
 const ExitIcon = () => (
@@ -130,10 +134,6 @@ const AppTwo = () => {
 
 
     window.oncontextmenu = function(e) {
-
-        console.log(e);
-
-
         setClientX(e.clientX)
         setClientY(e.clientY)
         setRightClickMenuActive(true)
@@ -174,26 +174,69 @@ const AppTwo = () => {
         (async () => {
             console.log("Beginning store population on app open/restart")
 
-            const toSetProfiles : ProfileObject[] = await electron.ipcRenderer.invoke("readjson", 'profiles.json');
-            dispatch(populateProfiles(toSetProfiles))
+            // Catch is if the file doesn't exist
+            try {
+                const toSetProfiles : ProfileObject[] = await electron.ipcRenderer.invoke("readjson", 'profiles.json');
+                dispatch(populateProfiles(toSetProfiles))
+            }
+            catch (e) {
+                // fse.mkdirSync(path.join(getAppDataFolder(), 'profiles.json'));
+                await electron.ipcRenderer.invoke("writejson", 'profiles.json', []);
+            }
+            try {
+                const toSetProxies : ProxyList[] = await electron.ipcRenderer.invoke("readjson", 'proxies.json');
+                dispatch(populateProxies(toSetProxies))
+            }
+            catch (e) {
+                // fse.mkdirSync(path.join(getAppDataFolder(), 'proxies.json'));
+                await electron.ipcRenderer.invoke("writejson", 'proxies.json', []);
+            }
 
-            const toSetProxies : ProxyList[] = await electron.ipcRenderer.invoke("readjson", 'proxies.json');
-            dispatch(populateProxies(toSetProxies))
+            try {
+                const toSetAccounts : object = await electron.ipcRenderer.invoke("readjson", 'accounts.json');
+                dispatch(populateAccounts(toSetAccounts))
+            }
+            catch (e) {
+                // fse.mkdirSync(path.join(getAppDataFolder(), 'accounts.json'));
+                await electron.ipcRenderer.invoke("writejson", 'accounts.json', {"Amazon": []});
+            }
 
-            const toSetAccounts : object = await electron.ipcRenderer.invoke("readjson", 'accounts.json');
-            dispatch(populateAccounts(toSetAccounts))
+            try {
+                const toSetAccountGroups : object = await electron.ipcRenderer.invoke("readjson", 'accountgroups.json');
+                dispatch(populateAccountGroups(toSetAccountGroups))
+            }
+            catch (e) {
+                // fse.mkdirSync(path.join(getAppDataFolder(), 'accountgroups.json'));
+                await electron.ipcRenderer.invoke("writejson", 'accountgroups.json', {"Amazon": []});
+            }
 
-            const toSetAccountGroups : object = await electron.ipcRenderer.invoke("readjson", 'accountgroups.json');
-            dispatch(populateAccountGroups(toSetAccountGroups))
+            try {
+                const toSetSettings : object = await electron.ipcRenderer.invoke("readjson", "settings.json");
+                dispatch(populateSettings(toSetSettings))
+            }
+            catch (e) {
+                // fse.mkdirSync(path.join(getAppDataFolder(), 'settings.json'));
+                await electron.ipcRenderer.invoke("writejson", 'settings.json', {"defaults":{"delays":{"error":3000,"monitor":3000},"webhooks":{"discord":"","slack":""}}});
+            }
 
-            const toSetSettings : object = await electron.ipcRenderer.invoke("readjson", "settings.json");
-            dispatch(populateSettings(toSetSettings))
+            try {
+                const toSetTasks : object = await electron.ipcRenderer.invoke("readjson", "tasks.json");
+                dispatch(populateTasks(toSetTasks))
+            }
+            catch (e) {
+                // fse.mkdirSync(path.join(getAppDataFolder(), 'tasks.json'));
+                await electron.ipcRenderer.invoke("writejson", 'tasks.json', []);
+            }
 
-            const toSetTasks : object = await electron.ipcRenderer.invoke("readjson", "tasks.json");
-            dispatch(populateTasks(toSetTasks))
-
-            const toSetSession : any = await electron.ipcRenderer.invoke("readjson", "session.json");
-            dispatch(populateSession(toSetSession.session, toSetSession.license))
+            try {
+                const toSetSession : any = await electron.ipcRenderer.invoke("readjson", "session.json");
+                dispatch(populateSession(toSetSession.session, toSetSession.license))
+            }
+            catch (e) {
+                // fse.mkdirSync(path.join(getAppDataFolder(), 'session.json'));
+                await electron.ipcRenderer.invoke("writejson", 'session.json', {"session":"","license":""}
+            );
+            }
         })();
     }, [])
 

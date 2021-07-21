@@ -3,8 +3,8 @@ import fse from 'fs-extra';
 import path from 'path';
 import testProfile from '../../Logic/sensitive/testInterfaces/testProfile';
 
-const getAppDataFolder = () : string => {
-    return path.join( app.getPath('appData'), 'Theta' )
+export const getAppDataFolder = () : string => {
+    return path.join( (electron.app || electron.remote.app).getPath('appData'), 'Thaeta' )
 }
 
 const ioBundle = () => {
@@ -35,6 +35,10 @@ const ioBundle = () => {
 
         const toWritePath = args[0]
         const content = args[1]
+
+        if (!fse.existsSync(getAppDataFolder())){
+            fse.mkdirSync(getAppDataFolder());
+        }
 
         try {
             const writeRes = await fse.writeJSON(path.join( getAppDataFolder(), toWritePath ), content )

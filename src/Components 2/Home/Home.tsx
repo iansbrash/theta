@@ -1,7 +1,8 @@
 import React, {
     FC,
-    useState,
-    useEffect
+    useRef,
+    useEffect,
+    useState
 } from 'react';
 import ScreenWrapper from "../../Components 2/Component Library/ScreenWrapper";
 import axios from 'axios'
@@ -113,6 +114,7 @@ const Home = () => {
     const basic = useSelector((state : RootState) => state.home.basic)
     const updates = useSelector((state : RootState) => state.home.updates)
 
+    const [loadingCheckouts, setLoadingCheckouts] = useState<boolean>(true)
 
     useEffect(() => {
         (async () => {
@@ -127,7 +129,8 @@ const Home = () => {
         })();
 
         (async () => {
-            if (checkouts.length === 0) {
+            if (loadingCheckouts) {
+                console.log("LOADING CHECKOUTS")
                 const ch = await axios({
                     method: 'get',
                     url: `${api}/user/checkouts`,
@@ -138,6 +141,7 @@ const Home = () => {
                     }
                 })
                 dispatch(addCheckouts(ch.data))
+                setLoadingCheckouts(false)
             }
         })();
 
@@ -283,13 +287,21 @@ const Home = () => {
                         </div>
 
                         {/* Checkouts List */}
-                        <div className="space-y-2 flex flex-col justify-start items-center w-full overflow-scroll scrollbar-hide">
+                        <div className="space-y-2 flex flex-col justify-start items-center w-full overflow-scroll scrollbar-hide h-full">
                             <div className="h-2"></div>
-                            {checkouts.map((co) => (
+                            {loadingCheckouts ? <div className="flex w-full h-full justify-center items-center"><LoadingIndicator size={12}/></div> : (checkouts.length === 0 ? 
+                            <>
+                                <div className="flex w-full h-full justify-center items-center">
+                                    <div className="text-theta-white text-4xl font-bold">
+                                        Get cooking 👨‍🍳
+                                    </div>
+                                </div>
+                            </>
+                            : checkouts.map((co) => (
                                 <CheckoutFeedPurchase 
                                     {...co}
                                 />
-                            ))}
+                            )))}
                         </div>
 
                         {/* Bottom gradient fade */}
