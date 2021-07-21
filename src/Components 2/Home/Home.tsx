@@ -186,9 +186,9 @@ const Home = () => {
                         </div>
 
                         {/* Actual scrolling list of updates */}
-                        <div className="flex flex-col justify-start items-start overflow-scroll scrollbar-hide text-xl">
+                        <div className="flex flex-col justify-start items-start overflow-scroll scrollbar-hide text-xl w-full h-full">
                         {
-                            updates.length === 0 ? <div className="flex flex-1 justify-center items-center"><LoadingIndicator size={12}/></div> :
+                            updates.length === 0 ? <div className="flex w-full h-full justify-center items-center"><LoadingIndicator size={12}/></div> :
                             <>
                                 {/* Actual logs */}
                                 {updates.map(log => (

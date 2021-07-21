@@ -26,7 +26,7 @@ export const accountsSlice = createSlice({
                 const mergedAccounts = new Set([...state.accountsObject[Site[ accounts[0].site ]], ...accounts])
                 
                 // @ts-ignore
-                state.accountsObject[Site[accounts[0].site]] = mergedAccounts;
+                state.accountsObject[Site[accounts[0].site]] = [...mergedAccounts];
 
             },
             prepare (accounts) {
@@ -42,6 +42,7 @@ export const accountsSlice = createSlice({
                 const {
                     account,
                 } = action.payload;
+
                 
                 // @ts-ignore
                 state.accountsObject[Site[account.site]] = state.accountsObject[Site[account.site]].filter(acc => acc.username !== account.username);

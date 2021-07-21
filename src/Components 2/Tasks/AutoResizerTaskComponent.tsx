@@ -34,8 +34,10 @@ const AutoResizerTaskComponent : FC<AutoResizerTaskComponentProps> = (props) => 
         <div className="block" style={props.style} key={data.identifier}>
             <TaskComponent 
                 task={data}
-                tasks={props.parent.props.data}
-                setTasks={props.parent.props.data2}
+                tasks2={props.parent.props.data}
+                tasks={props.parent.props.data5}
+                setTasks2={props.parent.props.data2}
+                setTasks={props.parent.props.data4}
                 tgName={props.parent.props.data3}
             />
             <div className="h-4"></div>

@@ -1,5 +1,5 @@
 import React, {
-    FC, useState, ReactNode, useEffect
+    FC, useState, ReactNode, useEffect, useRef
 } from 'react';
 import TaskClass, { cycleStatus } from '../../Logic/sites/classes/TaskClass';
 import sendSuccess from '../../Logic/webhooks/discordsuccess';
@@ -9,6 +9,7 @@ import AmazonTaskClass from '../../Logic/sites/Amazon/classes/AmazonTaskClass';
 import { AmazonModes } from '../../Logic/interfaces/site_task_config/AmazonTaskConfig';
 import axios from 'axios';
 import api from '../../Logic/api';
+import { TaskHookProps } from './TaskGroupInterface';
 
 interface InterestingWrapperProps {
     children: ReactNode,
@@ -59,15 +60,19 @@ const delay = (ms : number) => new Promise(res => setTimeout(res, ms));
 
 interface TaskComponentProps {
     task: TaskClass,
-    tasks: TaskClass[],
+    tasks: TaskHookProps[],
+    tasks2: TaskClass[],
     setTasks: (t : any[]) => void,
+    setTasks2: (t : any[]) => void,
     tgName: string
 }
 
 const TaskComponent : FC<TaskComponentProps> = ({
     task,
     tasks,
+    tasks2,
     setTasks,
+    setTasks2,
     tgName
 } : TaskComponentProps) => {
 
@@ -84,15 +89,17 @@ const TaskComponent : FC<TaskComponentProps> = ({
 
     const sessionObject = useSelector((state: RootState) => state.session);
 
-        // @ts-ignore
         const startAllCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName]?.startAll)
-        // @ts-ignore
         const stopAllCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName]?.stopAll)
-        // @ts-ignore
         const massLinkCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName]?.massLink)
+        const deleteAllCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName]?.deleteAll)
     
-        useEffect(() => { startAllCommander ? startTask() : null }, [startAllCommander])
-        useEffect(() => { stopAllCommander ? stopTask() : null }, [stopAllCommander])
+        let initialRender1 = useRef(true);
+        let initialRender2 = useRef(true);
+        let initialRender3 = useRef(true);
+        useEffect(() => { !initialRender1.current && startAllCommander ? startTask() : initialRender1.current = false }, [startAllCommander])
+        useEffect(() => { !initialRender2.current && stopAllCommander ? stopTask() : initialRender2.current = false }, [stopAllCommander])
+        useEffect(() => { !initialRender3.current && deleteAllCommander ? deleteAll() : initialRender3.current = false }, [deleteAllCommander])
         // useEffect(() => { startTask() }, [massLinkCommander])
     
 
@@ -161,12 +168,12 @@ const TaskComponent : FC<TaskComponentProps> = ({
                     headers: {
                         license: sessionObject.license,
                         session: sessionObject.session,
-                        orderNumber: 'TEMPORDER#',
+                        orderNumber: 'N/A',
                         product: prTitle,
                         profile: task.profile.information.name,
                         site: task.site,
                         size: task.size,
-                        price: 69,
+                        price: 0,
                         image: prImage   
                     }
                 })
@@ -180,8 +187,19 @@ const TaskComponent : FC<TaskComponentProps> = ({
     const deleteTask = () => {
 
         stopTask();
+        // task = null;
 
-        setTasks(tasks.filter(t => t.identifier !== task.identifier));
+        setTasks2(tasks2.filter(t => t.identifier !== task.identifier));
+        setTasks(tasks.filter(t => t.taskConfig.identifier !== task.identifier));
+    }
+
+    const deleteAll = () => {
+        console.log('deleteAll triggered')
+        console.log(deleteAllCommander)
+
+        stopTask()
+        setTasks2([])
+        setTasks([])
     }
 
     const editTask = () => {

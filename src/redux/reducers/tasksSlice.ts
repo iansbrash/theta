@@ -8,7 +8,8 @@ type SliceState = { taskGroups : TaskGroup[], savingOptions : { saveState: TaskS
 export interface TaskGroupCommanderProps {
     startAll: number,
     stopAll: number,
-    massLink: string
+    massLink: string,
+    deleteAll: 0
 }
 
 export interface TaskGroup {
@@ -17,7 +18,7 @@ export interface TaskGroup {
     tasks: TaskHookProps[],
     delays: {
         monitor: number,
-        error: number
+        error: number,
     }
 }
 
@@ -51,7 +52,7 @@ export const tasksSlice = createSlice({
                 } = action.payload;
 
                 state.taskGroups = [...state.taskGroups, taskGroup]
-                state.taskGroupCommanders[taskGroup.name] = {startAll: 0, stopAll: 0, massLink: ''}
+                state.taskGroupCommanders[taskGroup.name] = {startAll: 0, stopAll: 0, massLink: '', deleteAll: 0}
 
                 if (state.taskGroups.length === state.savingOptions.numberToSave) {
                     state.savingOptions.saveState = TaskSaveState.Saved
@@ -124,7 +125,7 @@ export const tasksSlice = createSlice({
             }
         },
         activateNumberCommander: {
-            reducer (state, action : PayloadAction<{tgName : string, commanderName : "startAll" | "stopAll"}>) { //; anotherProp: string; uuid: string
+            reducer (state, action : PayloadAction<{tgName : string, commanderName : "startAll" | "stopAll" | "deleteAll"}>) { //; anotherProp: string; uuid: string
                 const {
                     tgName,
                     commanderName
@@ -135,7 +136,7 @@ export const tasksSlice = createSlice({
                 state.taskGroupCommanders[tgName][commanderName] = state.taskGroupCommanders[tgName][commanderName] + 1;
 
             },
-            prepare (tgName : string, commanderName : "startAll" | "stopAll") {
+            prepare (tgName : string, commanderName : "startAll" | "stopAll" | "deleteAll") {
                 return {
                     payload: {
                         tgName,
@@ -176,7 +177,7 @@ export const tasksSlice = createSlice({
                 state.taskGroups = taskGroups
                 state.savingOptions.saveState = TaskSaveState.Unsaved;
 
-                taskGroups.forEach(tg => state.taskGroupCommanders[tg.name] = {startAll: 0, stopAll: 0, massLink: ''})
+                taskGroups.forEach(tg => state.taskGroupCommanders[tg.name] = {startAll: 0, stopAll: 0, massLink: '', deleteAll: 0})
             },
             prepare (taskGroups) {
                 return {

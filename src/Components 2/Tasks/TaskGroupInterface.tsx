@@ -65,113 +65,7 @@ const TextInput : FC<TextInputProps> = ({
     ) 
 }
 
-interface SliderContainerProps {
-    siteMinW: string,
-    siteMaxW: string,
-    origDivW: number,
-    children: React.ReactNode,
-    pxMin: number,
-    pxMax: number
-}
 
-const SliderContainer : FC<SliderContainerProps> = ({
-    siteMaxW,
-    siteMinW,
-    origDivW,
-    pxMin,
-    pxMax,
-    children
-} : SliderContainerProps) => {
-
-    const [divW, setDivW] = useState<number>(origDivW);
-    const [mousePosition, setMousePosition] = useState({ x: -1, y: -1 });
-    const [mouseDown, setMouseDown] = useState(false);
-
-
-    useEffect(() => {
-        setDivW(origDivW)
-    }, [origDivW])
-
-    const tryMove = (ev : any) => {
-
-        console.log('trying to move')
-        
-        // moveing left
-        if (mousePosition.x === -1) {
-            // first init
-        }
-        else if (mousePosition.x > ev.clientX) {
-            console.log('first')
-            let newW = divW - (mousePosition.x - ev.clientX)
-            if (newW < pxMin) {
-                setDivW(pxMin);
-            }
-            else {
-                setDivW(newW)
-            }
-        }
-        else {
-            console.log('sec')
-
-            let newW = divW - (mousePosition.x - ev.clientX)
-            if (newW > pxMax) {
-                setDivW(pxMax);
-            }
-            else {
-                setDivW(newW)
-            }
-        }
-        setMousePosition({x: ev.clientX, y: ev.clientY})
-    }
-
-    const oMU = () => {
-        setMouseDown(false);
-        setMousePosition({x: -1, y: -1})
-    }
-
-
-    return (
-        <div className={`${siteMinW} ${siteMaxW} bg-theta-sidebar cursor-move`}
-        onMouseDown={() => setMouseDown(true)}
-        onMouseUp={() => oMU()}
-        onMouseMove={(ev) => mouseDown ? tryMove(ev) : null}
-        onMouseLeave={() => oMU()}
-        style={{width: `${divW}px`}}
-        >
-            {children}
-        </div>
-    )
-}
-
-
-interface SiteOptionProps {
-    name: string,
-    handleSiteChange: (s : string) => void
-}
-
-const SiteOption : FC<SiteOptionProps> = ({
-    name,
-    handleSiteChange
-} : SiteOptionProps) => {
-    return (
-        <button className="relative text-theta-gray-7 hover:text-theta-gray-2 focus:outline-none transition flex flex-row justify-start items-center w-full h-10"
-            onClick={() => handleSiteChange(name)}
-        >   
-            {/* This is w-8 because we have a space in front of the placeholder in the input */}
-            <div className="w-7"></div>
-            <div className="text-2xl">
-                {name}
-            </div>
-        </button>
-    )
-}
-
-
-const ChevronRight = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
-        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-    </svg>
-)
 
 export interface TaskHookProps {
     taskConfig: {
@@ -234,7 +128,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     const [addTasksAccount, setAddTasksAccount] = useState<Account[]>([]);
     const [addTasksAccountGroup, setAddTasksAccountGroup] = useState<AccountGroup>();
 
-    const [taskIdentifierCount, setTaskIdentifierCount] = useState<number>(0)
+    const [taskIdentifierCount, setTaskIdentifierCount] = useState<number>(taskGroupsSelector ? Math.max.apply(Math, taskGroupsSelector.tasks.map(function(o) { return o.taskConfig.identifier; })) + 1 : 0 )
 
     // triggered from Add Task modal
     const addTasks = async () => {
@@ -251,7 +145,11 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
         let toAddTasks : TaskHookProps[] = [];
         let toAddTasks2 : AmazonTaskClass[] = []
 
-        addTasksProfiles.forEach((profile : ProfileObject) => {
+        console.log('Accounts and AccountGroups')
+        console.log(addTasksAccount)
+        console.log(addTasksAccountGroup)
+
+        addTasksProfiles.forEach((profile : ProfileObject, i : number) => {
             const newTask : TaskHookProps = {
                 taskConfig: {
                     identifier: identifierStart,
@@ -265,7 +163,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                 },
                 siteConfig: {
                     mode: addTasksMode,
-                    account: addTasksAccount[0]
+                    account: addTasksAccount && addTasksAccount.length > 0 ? addTasksAccount[i % addTasksAccount.length] : addTasksAccountGroup?.accounts[i % addTasksAccountGroup.accounts.length]
                 }
             }
 
@@ -277,8 +175,8 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                 addTasksProxies!,
                 addTasksInput,
                 {
-                    mode: addTasksMode!,
-                    account: addTasksAccount[0]
+                    mode: addTasksMode!, // @ts-ignore
+                    account: addTasksAccount && addTasksAccount.length > 0 ? addTasksAccount[i % addTasksAccount.length] : addTasksAccountGroup?.accounts[i % addTasksAccountGroup.accounts.length]
                 }
             )
 
@@ -357,12 +255,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     }
 
     const deleteAllTasks = () => {
-        dispatch(activateNumberCommander(taskGroupName, "stopAll"))
-        setTimeout(() => {
-            setTasks2([])
-            setTasks([])
-        }, 500)
-
+        dispatch(activateNumberCommander(taskGroupName, "deleteAll"))
     }
 
     const startAllTasks = () => {
@@ -585,8 +478,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                             data={tasks2}
                             data2={setTasks2}
                             data3={taskGroupsSelector?.name}
+                            data4={setTasks}
+                            data5={tasks}
                         >
-                            
                         </List>
                     )}
                 </AutoSizer>
@@ -597,23 +491,23 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                 {/* Error and Mintor Delay */}
                 <div className="flex flex-col justify-center items-start w-48 space-y-1">
                     <TextInput placeholder={'Error delay'}
-                    input={errorDelay}
-                    setInput={setErrorDelay} 
-                    icon={
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
-                    }
+                        input={errorDelay}
+                        setInput={setErrorDelay} 
+                        icon={
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        }
                     />
 
                     <TextInput placeholder={'Monitor delay'}
-                    input={monitorDelay}
-                    setInput={setMonitorDelay} 
-                    icon={
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    }
+                        input={monitorDelay}
+                        setInput={setMonitorDelay} 
+                        icon={
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        }
                     />
 
                 </div>

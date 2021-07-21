@@ -52,7 +52,10 @@ const AccountForMap : FC<AccountForMapProps>= ({
     const dispatch = useDispatch();
 
     const deleteSelf = async () => {
+        console.log(`beforeDeleteAccount`)
+        console.log(account)
         dispatch(deleteAccount(account));
+        console.log('after delete account')
 
         let accs = await electron.ipcRenderer.invoke("readjson", "accounts.json");
         accs[Site[account.site]] = accs[Site[account.site]].filter((a : Account) => a.username !== account.username);
@@ -139,15 +142,24 @@ const Accounts : FC = () => {
     }
 
     const validateAddAccountsFromModal = () => {
-        if (addAccountsSite === null || addAccountsSite == undefined) {
+        if (addAccountsSite === null || addAccountsSite === undefined) {
             throw "Site selector is undefined or null";
         }
         else if (addAccountsAccounts === '') {
             throw "Account input is empty"
         }
-        else {
-            return;
-        }
+
+        let formattingTest = addAccountsAccounts.split('\n').forEach((userpass : string) => {
+            if (userpass.includes(':') === false) throw "Please separate credentials with a colon";
+
+            let temp = userpass.split(':')
+            if (temp.length !== 2) throw "We don't support passwords with colons in them"
+            if (!temp[0].includes('@')) throw "Emails need an @ in them"
+            if (temp[0].split('@').length !== 2) throw "Email is all sorts of fucked up"
+            if (temp[1] === '') throw "Password is blank"
+        })
+        
+        return;
     }
 
     const createNewBlankAccountGroup = async () => {
@@ -311,7 +323,7 @@ const Accounts : FC = () => {
     const [addAccountsInAccountGroupSelectedAccounts, setAddAccountsInAccountGroupSelectedAccounts] = useState<Account[]>([])
 
     const [addAccountsAccounts, setAddAccountsAccounts] = useState<string>('');
-    const [addAccountsSite, setAddAccountsSite] = useState<Site>(Site.Amazon);
+    const [addAccountsSite, setAddAccountsSite] = useState<Site>();
 
 
 
