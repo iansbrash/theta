@@ -29,6 +29,7 @@ export const sessionSlice = createSlice({
                 // axios.defaults.headers['session'] = session;
                 // axios.defaults.headers.common['license'] = license;
                 // axios.defaults.headers.common['session'] = session;
+                // we need: username, avatar, id, discriminator
             },
             prepare (session, license) {
                 return {

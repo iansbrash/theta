@@ -6,9 +6,12 @@ import {
     getValueByDelimiters
 } from '../../../../requestFunctions';
 import CookieObject from '../../../../interfaces/CookieObject';
-import { GETMainLoginPageRetry } from './GETMainLoginPage';
-import { POSTMainLoginPageRetry } from './POSTMainLoginPage';
-import { POSTSubLoginPageRetry } from './POSTSubLoginPage';
+// @ts-ignore
+import GETMainLoginPage,{ GETMainLoginPageRetry } from './GETMainLoginPage';
+// @ts-ignore
+import POSTMainLoginPage, { POSTMainLoginPageRetry } from './POSTMainLoginPage';
+// @ts-ignore
+import POSTSubLoginPage, { POSTSubLoginPageRetry } from './POSTSubLoginPage';
 import { Proxy } from '../../../../interfaces/ProxyList';
 
 const SignIn = async (email : string, password : string, proxy : Proxy) : Promise<string[]> => {
@@ -17,7 +20,7 @@ const SignIn = async (email : string, password : string, proxy : Proxy) : Promis
     let allCookiesObject : CookieObject = {}; 
 
 
-    const MainLoginPageRetryResponse : AxiosResponse = await GETMainLoginPageRetry(allCookies, proxy);
+    const MainLoginPageRetryResponse : AxiosResponse = await GETMainLoginPage(allCookies, proxy);
 
     allCookies = accumulateCookies(allCookies,
         returnParsedCookies(MainLoginPageRetryResponse.headers['set-cookie'])
@@ -38,7 +41,7 @@ const SignIn = async (email : string, password : string, proxy : Proxy) : Promis
     //     email: string
     // }
 
-    const POSTMainLoginPageResponse = await POSTMainLoginPageRetry(allCookies, allCookiesObject['session-id'], {
+    const POSTMainLoginPageResponse = await POSTMainLoginPage(allCookies, allCookiesObject['session-id'], {
         appActionToken,
         appAction,
         prevRID,
@@ -55,20 +58,24 @@ const SignIn = async (email : string, password : string, proxy : Proxy) : Promis
     prevRID = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="prevRID" value="', '" />');
     workflowState = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="workflowState" value="', '" />');
 
-    const POSTSubLoginPageRetryResponse = await POSTSubLoginPageRetry(allCookies, allCookiesObject['session-id'], {
+    const POSTSubLoginPageRetryResponse = await POSTSubLoginPage(allCookies, allCookiesObject['session-id'], {
         appActionToken,
         appAction,
         prevRID,
         workflowState,
         email,
         password,
+    }, proxy, 'BETA-FRL4-W53T-G86K-TW9M', '569561a')
 
-    }, proxy, 'key1', '379251a')
+    console.log(allCookies)
 
+    
     allCookies = accumulateCookies(
         allCookies,
         returnParsedCookies(POSTSubLoginPageRetryResponse.headers['set-cookie'])
     )
+
+    console.log(allCookies)
 
     return allCookies;
 }

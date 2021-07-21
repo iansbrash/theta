@@ -46,6 +46,7 @@ const signinIpc = () => {
         let workflowState = getValueByDelimiters(findNewCookiesData, '<input type="hidden" name="workflowState" value="', '" />');
 
     
+        // console.log(MainLoginPageRetryResponse.data)
 
         return {
             allCookies: allCookies,
@@ -89,6 +90,8 @@ const signinIpc = () => {
             returnParsedCookies(POSTMainLoginPageResponse.headers['set-cookie'])    
         );
 
+        console.log(POSTMainLoginPageResponse.data)
+
 
         return {
             allCookies: allCookies,
@@ -121,6 +124,7 @@ const signinIpc = () => {
             password
         } = props;
     
+        console.log(`logging in with email: ${email}, password: ${password}`)
         const POSTSubLoginPageRetryResponse = await POSTSubLoginPage(allCookies, sessionId, {
             appActionToken,
             appAction,
@@ -134,6 +138,8 @@ const signinIpc = () => {
             allCookies,
             returnParsedCookies(POSTSubLoginPageRetryResponse.headers['set-cookie'])
         )
+
+        console.log(allCookies)
 
         return {
             allCookies

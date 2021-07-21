@@ -11,7 +11,7 @@ const POSTAddToCart = async (
     allCookies : string[], 
     CSRFToken : string, 
     offerListingID: string,
-    sessionId: string,
+    sessionId: string, //@ts-ignore
     ASIN: string,
     rsid: string,
     proxy : Proxy
@@ -19,13 +19,13 @@ const POSTAddToCart = async (
 
     // console.log('CSRF: ' + CSRFToken)
 
-    var data = qs.stringify({
+    let data2 = {
         'CSRF': CSRFToken,
         'offerListingID': offerListingID,
         'session-id': sessionId,
-        'ASIN': ASIN,
+        'ASIN': 'B07W4FMQ5Y', //ASIN,
         'isMerchantExclusive': '0',
-        'merchantID': 'A17RGBHHDMOPR5',
+        'merchantID': 'A36MCMZ9LZTDGA', // should change this lmao
         'isAddon': '0',
         'nodeID': '',
         'sellingCustomerID': '',
@@ -46,7 +46,10 @@ const POSTAddToCart = async (
         'dropdown-selection': 'add-new',
         'dropdown-selection-ubb': 'add-new',
         // 'itemCount': '2' 
-    });
+    };
+    console.log(data2)
+
+    var data = qs.stringify(data2);
 
     const POSTAmazonATCResponse : any = await axios({
         method: 'post',

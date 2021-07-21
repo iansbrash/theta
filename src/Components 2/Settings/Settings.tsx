@@ -1,15 +1,18 @@
 import React, {
     FC,
-    useState 
+    useState,
+    useEffect
 } from 'react';
 import ScreenWrapper from '../Component Library/ScreenWrapper';
 import TextInput from '../Component Library/TextInput';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { updateDefaultDelays, updateDefaultWebhooks } from '../../redux/reducers/settingsSlice';
+import { updateDefaultDelays, updateDefaultWebhooks, updateDiscordInfo } from '../../redux/reducers/settingsSlice';
 import electron from 'electron'
 import sendSuccess from '../../Logic/webhooks/discordsuccess';
 import axios from 'axios';
+import api from '../../Logic/api';
+import LoadingIndicator from '../Component Library/LoadingIndicator';
 
 const Settings = () => {
 
@@ -18,10 +21,31 @@ const Settings = () => {
     const defaultDiscordWebhook : string = useSelector((state : RootState)  => state.settings.defaults.webhooks.discord)
 
     const licenseState = useSelector((state : RootState) => state.session.license)
+    const discord = useSelector((state : RootState) => state.settings.discord)
 
     console.log(`defaultDiscordWebhook: ${defaultDiscordWebhook}`)
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        (async () => {
+            if (discord.id === '') {
+                try {
+                    const res = await axios({
+                        method: 'get',
+                        url: `${api}/user/discord`,
+                        headers: {
+                            license: licenseState
+                        }
+                    })
+    
+                    dispatch(updateDiscordInfo(res.data))
+                }
+                catch (err) { console.error("Error getting discord info") }
+
+            }
+        })();
+    }, [])
 
     const testSuccess = () => {
         try {
@@ -189,16 +213,16 @@ const Settings = () => {
                                 <div className="px-4 flex flex-col justify-start items-start w-full">
                                     <div className="w-full bg-theta-tasks-taskgroup shadow-lg rounded-lg p-4">
                                         <div className="flex flex-row justify-start items-center w-full h-20 bg-theta-sidebar rounded-lg shadow-lg space-x-2">
-                                            <div className="h-16 rounded-full bg-theta-bg m-2 w-16">
-
+                                            <div className="h-16 rounded-full bg-theta-bg m-2 w-16 flex justify-center items-center">
+                                                {discord.id === '' ? <LoadingIndicator size={8}/> : <img className="rounded-full" src={`https://cdn.discordapp.com/avatars/${discord.id}/${discord.avatar}.png`}/>}
                                             </div>
 
                                             <div className="flex flex-col justify-center items-start">
                                                 <div className="text-theta-white text-2xl font-medium leading-3">
-                                                    iaen<span className="text-theta-gray-2 text-lg">#2317</span>
+                                                    {discord.id === '' ? null : <>{discord.username}<span className="text-theta-gray-2 text-lg">#{discord.discriminator}</span></>}
                                                 </div>
                                                 <div className="text-theta-gray-7 text-md leading-3">
-                                                    Expires never
+                                                    {licenseState.substring(0, 4) === 'BETA' ? "Beta license" : 'Expires never'}
                                                 </div>
                                             </div>
                                         </div>

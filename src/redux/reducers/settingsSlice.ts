@@ -11,7 +11,13 @@ export const settingsSlice = createSlice({
             webhooks: {
                 discord: '',
                 slack: ''
-            }
+            },
+        },
+        discord: {
+            id: '',
+            username: '',
+            discriminator: '',
+            avatar: ''
         }
     },
     reducers: {
@@ -69,11 +75,23 @@ export const settingsSlice = createSlice({
                     }
                 }
             }
+        },
+        updateDiscordInfo: {
+            reducer (state, action : PayloadAction<{discord : {id: string, username: string, discriminator: string, avatar: string}}>) { //; anotherProp: string; uuid: string
+                state.discord = action.payload.discord;
+            },
+            prepare (discord) {
+                return {
+                    payload: {
+                        discord,
+                    }
+                }
+            }
         }
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { updateDefaultDelays, updateDefaultWebhooks, populateSettings } = settingsSlice.actions
+export const { updateDefaultDelays, updateDefaultWebhooks, populateSettings, updateDiscordInfo } = settingsSlice.actions
 
 export default settingsSlice.reducer

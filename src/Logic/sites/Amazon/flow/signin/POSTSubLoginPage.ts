@@ -55,6 +55,8 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
         password: password
     };
 
+    console.log(POSTConfig)
+
     const POSTSubData = qs.stringify(POSTConfig);
 
     const POSTSubLoginPageResponse = await axios({

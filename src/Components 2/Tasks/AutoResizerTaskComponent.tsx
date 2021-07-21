@@ -28,7 +28,8 @@ interface AutoResizerTaskComponentProps {
 const AutoResizerTaskComponent : FC<AutoResizerTaskComponentProps> = (props) => {
 
     // const data : TaskHookProps = props.parent.props.data[props.index]
-    const data : TaskClass = props.parent.props.data[props.index]
+    let data : TaskClass = props.parent.props.data[props.index];
+    // (data as AmazonTaskClass).config.account = testAccount;
 
     return (
         <div className="block" style={props.style} key={data.identifier}>
