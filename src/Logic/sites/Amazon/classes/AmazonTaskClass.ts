@@ -3,7 +3,7 @@ import Size from "../../../interfaces/enums/Size";
 import ProfileObject from "../../../interfaces/ProfileObject";
 import ProxyList from "../../../interfaces/ProxyList";
 import TaskClass, { internalStatus, cycleStatus } from "../../classes/TaskClass";
-import AmazonTaskConfig from "../../../interfaces/site_task_config/AmazonTaskConfig";
+import AmazonTaskConfig, { AmazonModes } from "../../../interfaces/site_task_config/AmazonTaskConfig";
 import electron from 'electron';
 import { convertCookieArrayToObject } from "../../../requestFunctions";
 
@@ -28,6 +28,8 @@ class AmazonTaskClass extends TaskClass {
     allCookiesObject : object = {};
     storage : storage = {};
     status : string = "Idle";
+    flow : "normalFlow" | "fastFlow" | "preloadFlow";
+    flowExtraData : "normalFlowExtraData" | "fastFlowExtraData" | "preloadFlowExtraData";
 
     normalFlow : string[] = [
         'GETMainLoginPage',
@@ -47,6 +49,121 @@ class AmazonTaskClass extends TaskClass {
     ]
 
     normalFlowExtraData : string[][] = [
+        [],
+        [],
+        [],
+        ['productTitle', 'productImage'],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+    ]
+
+    fastFlow : string[] = [
+        'GETMainLoginPage',
+        'POSTMainLoginPage',
+        'POSTSubLoginPage',
+        'AmazonGETProduct',
+        'AmazonPOSTAddToCart',
+        'FAST_GETCheckoutScreen', // It is the same up to here, then we do 3 steps instead of 8
+        'FAST_AsyncContinue1',
+        'FAST_AsyncContinue2',
+        'FAST_POSTSubmitOrder'
+    ]
+
+    fastFlowExtraData : string[][] = [
+        [],
+        [],
+        [],
+        ['productTitle', 'productImage'],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+    ]
+
+    async FAST_GETCheckoutScreen() : Promise<cycleStatus> {
+
+        console.log(this.storage)
+        return await this.tryCatchWrapper(async () => {
+            const res = await electron.ipcRenderer.invoke('FAST_GETCheckoutScreen', this.allCookies, this.proxyList.proxies[0]);
+
+            this.allCookies = res.allCookies;
+            this.storage = {
+                ...this.storage,
+                ...res.storage
+            }
+        }, 'Getting checkout screen')
+    }
+
+    async FAST_AsyncContinue1() : Promise<cycleStatus> {
+
+        // console.log(this.storage)
+        return await this.tryCatchWrapper(async () => {
+            const res = await electron.ipcRenderer.invoke('FAST_AsyncContinue1', this.allCookies, this.storage, this.proxyList.proxies[0]);
+
+            this.allCookies = res.allCookies;
+            // this.storage = {
+            //     ...this.storage,
+            //     ...res.storage
+            // }
+        }, 'Selecting payment')
+    }
+
+    async FAST_AsyncContinue2() : Promise<cycleStatus> {
+
+        console.log(this.storage)
+        return await this.tryCatchWrapper(async () => {
+            const res = await electron.ipcRenderer.invoke('FAST_AsyncContinue2', this.allCookies, this.storage, this.profile.payment, this.proxyList.proxies[0]);
+
+            this.allCookies = res.allCookies;
+            this.storage = {
+                ...this.storage,
+                ...res.storage
+            }
+        }, 'Selecting payment')
+    }
+
+    async FAST_POSTSubmitOrder() : Promise<cycleStatus> {
+
+        console.log(this.storage)
+        return await this.tryCatchWrapper(async () => {
+            const res = await electron.ipcRenderer.invoke('FAST_POSTSubmitOrder', this.allCookies, this.storage, this.profile.payment, this.proxyList.proxies[0]);
+
+            this.allCookies = res.allCookies;
+            this.storage = {
+                ...this.storage,
+                ...res.storage
+            }
+        }, 'Selecting payment')
+    }
+
+    preloadFlow : string[] = [
+        'GETMainLoginPage',
+        'POSTMainLoginPage',
+        'POSTSubLoginPage',
+        'AmazonGETProduct',
+        'AmazonPOSTAddToCart',
+        'GETCheckoutScreen',
+        'POSTAddShippingAddressFormHandler',
+        'POSTSelectShippingAddress',
+        'GETAddPaymentPage',
+        'POSTRegister',
+        'POSTAddPaymentMethod',
+        'POSTSelectPaymentMethod',
+        'POSTAsyncContinueAfterSelection',
+        'POSTSubmitOrder'
+    ]
+
+    preloadFlowExtraData : string[][] = [
         [],
         [],
         [],
@@ -79,6 +196,21 @@ class AmazonTaskClass extends TaskClass {
         super(identifier, site, profile, size, proxyList, input);
         this.config = config;
         this.allCookies = [];
+        if (config.mode === AmazonModes.Normal) {
+            this.flow = "normalFlow";
+            this.flowExtraData = "normalFlowExtraData"
+        }
+        else if (config.mode === AmazonModes.Fast) {
+            this.flow = "fastFlow"
+            this.flowExtraData = "fastFlowExtraData"
+        }
+        else if (config.mode === AmazonModes.Preload) {
+            this.flow = "preloadFlow"
+            this.flowExtraData = "preloadFlowExtraData"
+        }
+        else {
+            throw "Flow does not exist"
+        }
     }
 
     async tryCatchWrapper(fn : (() => Promise<any>), successMessage : string) : Promise<cycleStatus> {
@@ -90,13 +222,11 @@ class AmazonTaskClass extends TaskClass {
                 status: "Success",
                 message: successMessage
             }
-            console.log('here 1')
+
             if (res === null || res === undefined) {}
             else if (res.extraData) {
                 returnCycleStatus.extraData = res.extraData;
             }
-            console.log(`returnCycleStatus in tryatch`)
-            console.log(returnCycleStatus)
 
             return returnCycleStatus
         }
@@ -108,14 +238,6 @@ class AmazonTaskClass extends TaskClass {
         }
     }
 
-    async test() : Promise<string> {
-        const res = await electron.ipcRenderer.invoke('IPCTest', 'arg1', 'arg2');
-
-        return res;
-
-    }
-
-    // deprecated ?
     async start() : Promise<string> {
         if (this.status !== "Active"){
 
@@ -138,19 +260,21 @@ class AmazonTaskClass extends TaskClass {
         if (this.status === "Active") {
             try {
 
-                console.log(`about to run ${this.normalFlow[this.nextFunctionIndex]}`)
+                console.log(`about to run ${this[this.flow][this.nextFunctionIndex]}`)
+
                 // @ts-ignore
-                const res = await this[this.normalFlow[this.nextFunctionIndex]]();
+                const res = await this[this[this.flow][this.nextFunctionIndex]]();
 
                 let returnCycleStatus : cycleStatus = {
                     status: 'Success',
                     message: res.message
                 }
 
-                if (this['normalFlowExtraData'][this.nextFunctionIndex].length > 0) {
+                // @ts-ignore
+                if (this[this.flowExtraData][this.nextFunctionIndex].length > 0) {
                     let extraData = {};
                     // @ts-ignore
-                    this['normalFlowExtraData'][this.nextFunctionIndex].forEach(data => extraData = {...extraData, [data]: res.extraData[data]} )
+                    this[this.flowExtraData][this.nextFunctionIndex].forEach(data => extraData = {...extraData, [data]: res.extraData[data]} )
 
                     returnCycleStatus.extraData = extraData;
                 }

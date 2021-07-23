@@ -1,11 +1,11 @@
-import AmazonTaskConfig from "../../../interfaces/site_task_config/AmazonTaskConfig";
-import Task from "../../../interfaces/Task";
-import tsLogger from "../../../logger";
-import Checkout from "./checkout/checkout";
-import AddToCart from "./atc/atc";
-import signIn from "./signin/signin";
-import Site from "../../../interfaces/enums/Site";
-import { Proxy } from "../../../interfaces/ProxyList";
+import AmazonTaskConfig from "../../../../../interfaces/site_task_config/AmazonTaskConfig";
+import Task from "../../../../../interfaces/Task";
+import tsLogger from "../../../../../logger";
+import Checkout from "../../checkout/checkout";
+import AddToCart from "../../atc/atc";
+import signIn from "../../signin/signin";
+import Site from "../../../../../interfaces/enums/Site";
+import { Proxy } from "../../../../../interfaces/ProxyList";
 
 const printProxy = (proxy : Proxy) => {
     return Object.values(proxy).join(':');

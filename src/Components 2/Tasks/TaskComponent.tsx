@@ -174,7 +174,8 @@ const TaskComponent : FC<TaskComponentProps> = ({
                         site: task.site,
                         size: task.size,
                         price: 0,
-                        image: prImage   
+                        image: prImage,
+                        mode: AmazonModes[(task as AmazonTaskClass).config.mode]   
                     }
                 })
             }

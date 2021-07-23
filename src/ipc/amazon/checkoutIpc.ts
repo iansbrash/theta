@@ -381,9 +381,11 @@ const checkoutIpc = () => {
         'useCtb': '1',
         'scopeId': 'H4TE1S1QDTHHHAJFM2HZ',
         // 'isQuantityInvariant': '',
+
         'promiseTime-0': '1624950000',
         'promiseAsin-0': 'B07W4FMQ5Y',
-        'selectedPaymentPaystationId': 'amzn1.pm.wallet.MGhfUFVfQ1VTXzExMDA4ZDM0LTQ1ZjQtNDlkYy1hN2VlLWI4MDU0Yzc3MjIyNQ.QTI1SEExSEUxUkQ0MlU',
+
+        // 'selectedPaymentPaystationId': 'amzn1.pm.wallet.MGhfUFVfQ1VTXzExMDA4ZDM0LTQ1ZjQtNDlkYy1hN2VlLWI4MDU0Yzc3MjIyNQ.QTI1SEExSEUxUkQ0MlU',
         'hasWorkingJavascript': '1',
         // 'placeYourOrder1': '1',
         // 'isfirsttimecustomer': '0',
@@ -421,7 +423,7 @@ const checkoutIpc = () => {
 
 
     // console.log(newFinalData);
-    console.log(POSTAsyncContinueAfterSelectionResponseCollectedData);
+    // console.log(POSTAsyncContinueAfterSelectionResponseCollectedData);
 
     return {
         allCookies,

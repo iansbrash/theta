@@ -1,4 +1,4 @@
-import AmazonTask from './AmazonTask';
+import AmazonTask from './testing/1/AmazonTask';
 import testProfile from '../../../sensitive/testInterfaces/testProfile';
 import testAccount from '../../../sensitive/testInterfaces/testAccount';
 import testProxyList from '../../../sensitive/testInterfaces/testProxyList';
