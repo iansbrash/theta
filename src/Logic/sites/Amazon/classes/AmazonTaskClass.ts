@@ -83,16 +83,9 @@ class AmazonTaskClass extends TaskClass {
         [],
         [],
         [],
-        [],
-        [],
-        [],
-        [],
-        [],
     ]
 
     async FAST_GETCheckoutScreen() : Promise<cycleStatus> {
-
-        console.log(this.storage)
         return await this.tryCatchWrapper(async () => {
             const res = await electron.ipcRenderer.invoke('FAST_GETCheckoutScreen', this.allCookies, this.proxyList.proxies[0]);
 
@@ -105,45 +98,41 @@ class AmazonTaskClass extends TaskClass {
     }
 
     async FAST_AsyncContinue1() : Promise<cycleStatus> {
-
-        // console.log(this.storage)
         return await this.tryCatchWrapper(async () => {
             const res = await electron.ipcRenderer.invoke('FAST_AsyncContinue1', this.allCookies, this.storage, this.proxyList.proxies[0]);
 
             this.allCookies = res.allCookies;
-            // this.storage = {
-            //     ...this.storage,
-            //     ...res.storage
-            // }
-        }, 'Selecting payment')
+            this.storage = {
+                ...res.storage,
+                ...this.storage
+            }
+        }, 'Submitting order (1)')
     }
 
     async FAST_AsyncContinue2() : Promise<cycleStatus> {
-
-        console.log(this.storage)
         return await this.tryCatchWrapper(async () => {
-            const res = await electron.ipcRenderer.invoke('FAST_AsyncContinue2', this.allCookies, this.storage, this.profile.payment, this.proxyList.proxies[0]);
+            const res = await electron.ipcRenderer.invoke('FAST_AsyncContinue2', this.allCookies, this.storage, this.proxyList.proxies[0]);
 
             this.allCookies = res.allCookies;
+
+            // This makes it so finalData is the only thing left
             this.storage = {
-                ...this.storage,
+                // ...this.storage,
                 ...res.storage
             }
-        }, 'Selecting payment')
+        }, 'Submitting order (2)')
     }
 
     async FAST_POSTSubmitOrder() : Promise<cycleStatus> {
-
-        console.log(this.storage)
         return await this.tryCatchWrapper(async () => {
-            const res = await electron.ipcRenderer.invoke('FAST_POSTSubmitOrder', this.allCookies, this.storage, this.profile.payment, this.proxyList.proxies[0]);
+            const response = await electron.ipcRenderer.invoke('FAST_POSTSubmitOrder', this.allCookies, this.storage.finalData, this.proxyList.proxies[0]);
 
-            this.allCookies = res.allCookies;
-            this.storage = {
-                ...this.storage,
-                ...res.storage
+            if (response !== "Success") {
+                throw "Checkout Error"
             }
-        }, 'Selecting payment')
+
+            this.status = "Checked Out"
+        }, 'Checked Out')
     }
 
     preloadFlow : string[] = [
