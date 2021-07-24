@@ -192,7 +192,7 @@ class AmazonTaskClass extends TaskClass {
         // Not great but passable solution
         this.currentProxy = this.proxyList.proxies[this.identifier % this.proxyList.proxies.length]
 
-
+        
         if (config.mode === AmazonModes.Normal) {
             this.flow = "normalFlow";
             this.flowExtraData = "normalFlowExtraData"
