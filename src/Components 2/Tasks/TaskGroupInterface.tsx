@@ -22,7 +22,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 import Site from '../../Logic/interfaces/enums/Site';
 import Size from '../../Logic/interfaces/enums/Size';
-import { TaskSaveState, saveTaskGroupOnAdd, activateNumberCommander } from '../../redux/reducers/tasksSlice'
+import { TaskSaveState, saveTaskGroupOnAdd, activateNumberCommander, updateTaskGroupDelay } from '../../redux/reducers/tasksSlice'
 import electron from 'electron';
 import AmazonTaskClass from '../../Logic/sites/Amazon/classes/AmazonTaskClass';
 import TaskClass from '../../Logic/sites/classes/TaskClass';
@@ -33,15 +33,20 @@ interface TextInputProps {
     placeholder: string,
     icon: ReactNode,
     input: number,
-    setInput: (s : number) => void,
+    // setInput: (s : number) => void,
+    type : "error" | "monitor",
+    tgName : string
 }
 
 const TextInput : FC<TextInputProps> = ({
     placeholder,
     icon,
     input,
-    setInput
+    type,
+    tgName
 }: TextInputProps) => {
+
+    const dispatch = useDispatch()
 
 
     return (
@@ -52,7 +57,7 @@ const TextInput : FC<TextInputProps> = ({
                 <div className="w-8"></div>
                 <input
                     value={input}
-                    onChange={(e) => setInput(parseInt( e.target.value ))}
+                    onChange={(e) => e.target.value === '' ? dispatch(updateTaskGroupDelay(tgName, type, 0)) : (e.target.value.match(/^[0-9]*$/g) ? dispatch(updateTaskGroupDelay(tgName, type, parseInt( e.target.value ))) : null)}
                     style={{WebkitAppearance: 'none'}}
                     placeholder={placeholder}
                     className={`rounded-lg h-full w-full bg-transparent focus:outline-none placeholder-theta-gray-7 text-theta-gray-2 text-xl`}
@@ -88,9 +93,15 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     hidden,
     taskGroupName
 } : TaskGroupInterfaceProps) => {
+    const taskGroupsSelector = useSelector((state : RootState) => state.tasks.taskGroups.find(tg => tg.name === taskGroupName))
 
-    const [monitorDelay, setMonitorDelay] = useState<number>(3000);
-    const [errorDelay, setErrorDelay] = useState<number>(3000);
+    const defaultDelays = useSelector((state : RootState) => state.settings.defaults.delays)
+
+    // const [monitorDelay, setMonitorDelay] = useState<number>(taskGroupsSelector ? taskGroupsSelector.delays.monitor : defaultDelays.monitor);
+    // const [errorDelay, setErrorDelay] = useState<number>(taskGroupsSelector ? taskGroupsSelector.delays.error : defaultDelays.error);
+
+    const monitorDelay = taskGroupsSelector ? useSelector((state : RootState) => state.tasks.taskGroups.find(tg => tg.name === taskGroupName)?.delays.monitor) : defaultDelays.monitor
+    const errorDelay = taskGroupsSelector ? useSelector((state : RootState) => state.tasks.taskGroups.find(tg => tg.name === taskGroupName)?.delays.error) : defaultDelays.error
 
     const dispatch = useDispatch(); 
 
@@ -107,7 +118,6 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     const [tasks, setTasks] = useState<TaskHookProps[]>([]);
     const [tasks2, setTasks2] = useState<AmazonTaskClass[]>([]);
 
-    const taskGroupsSelector = useSelector((state : RootState) => state.tasks.taskGroups.find(tg => tg.name === taskGroupName))
 
     // @ts-ignore
     const [selectSiteInput, setSelectSiteInput] = useState<Site>(taskGroupsSelector ? Site[taskGroupsSelector.site] : undefined);
@@ -115,7 +125,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     useEffect(() => {
         setTasks(taskGroupsSelector ? taskGroupsSelector.tasks : [])
         setTasks2(taskGroupsSelector ? taskGroupsSelector.tasks.map((t : TaskHookProps) => 
-            new AmazonTaskClass(t.taskConfig.identifier, t.taskConfig.site, t.taskConfig.profile, t.taskConfig.size, t.taskConfig.proxies, t.taskConfig.input, t.siteConfig)
+            new AmazonTaskClass(t.taskConfig.identifier, t.taskConfig.site, t.taskConfig.profile, t.taskConfig.size, t.taskConfig.proxies, t.taskConfig.input, t.siteConfig, taskGroupsSelector.delays.monitor, taskGroupsSelector.delays.error)
         ) : [])
     }, [])
 
@@ -128,7 +138,8 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     const [addTasksAccount, setAddTasksAccount] = useState<Account[]>([]);
     const [addTasksAccountGroup, setAddTasksAccountGroup] = useState<AccountGroup>();
 
-    const [taskIdentifierCount, setTaskIdentifierCount] = useState<number>(taskGroupsSelector ? Math.max.apply(Math, taskGroupsSelector.tasks.map(function(o) { return o.taskConfig.identifier; })) + 1 : 0 )
+    // const [taskIdentifierCount, setTaskIdentifierCount] = useState<number>(taskGroupsSelector ? Math.max.apply(Math, taskGroupsSelector.tasks.map(function(o) { return o.taskConfig.identifier; })) + 1 : 0 )
+    const [taskIdentifierCount, setTaskIdentifierCount] = useState<number>(taskGroupsSelector ? taskGroupsSelector.tasks.reduce((accumulator : number, currentValue : TaskHookProps) => accumulator < currentValue.taskConfig.identifier ? currentValue.taskConfig.identifier : accumulator, 0) + 1 : 0 )
 
     // triggered from Add Task modal
     const addTasks = async () => {
@@ -177,7 +188,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                 {
                     mode: addTasksMode!, // @ts-ignore
                     account: addTasksAccount && addTasksAccount.length > 0 ? addTasksAccount[i % addTasksAccount.length] : addTasksAccountGroup?.accounts[i % addTasksAccountGroup.accounts.length]
-                }
+                },
+                monitorDelay,
+                errorDelay
             )
 
             toAddTasks2.push(newTaskClass)
@@ -195,8 +208,8 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
             site: Site.Amazon,
             tasks: [...tasks, ...toAddTasks],
             delays: {
-                error: 3000,
-                monitor: 3000
+                error: errorDelay,
+                monitor: monitorDelay
             }
         }))
 
@@ -210,7 +223,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                 site: Site.Amazon,
                 tasks: [...tasks, ...toAddTasks],
                 delays: {
-                    error: 3000, monitor: 3000
+                    error: errorDelay, monitor: monitorDelay
                 }
             }])
         }
@@ -220,7 +233,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                 site: Site.Amazon,
                 tasks: [...tasks, ...toAddTasks],
                 delays: {
-                    error: 3000, monitor: 3000
+                    error: errorDelay, monitor: monitorDelay
                 }
             }
 
@@ -299,7 +312,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                                         <DropdownSelect 
                                             selection={addTasksMode}
                                             setSelection={setAddTasksMode}
-                                            selectionArray={Object.keys(AmazonModes)}
+                                            selectionArray={[AmazonModes.Normal, AmazonModes.Fast]}
                                             bg={'bg-theta-sidebar'}
                                             textSize={'text-xl'}
                                             placeholder={'Select mode'}
@@ -491,8 +504,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                 {/* Error and Mintor Delay */}
                 <div className="flex flex-col justify-center items-start w-48 space-y-1">
                     <TextInput placeholder={'Error delay'}
-                        input={errorDelay}
-                        setInput={setErrorDelay} 
+                        input={errorDelay!}
+                        type={"error"} 
+                        tgName={taskGroupName}
                         icon={
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -501,8 +515,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                     />
 
                     <TextInput placeholder={'Monitor delay'}
-                        input={monitorDelay}
-                        setInput={setMonitorDelay} 
+                        input={monitorDelay!}
+                        type={"monitor"} 
+                        tgName={taskGroupName}
                         icon={
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />

@@ -1,7 +1,7 @@
 import Site from "../../../interfaces/enums/Site";
 import Size from "../../../interfaces/enums/Size";
 import ProfileObject from "../../../interfaces/ProfileObject";
-import ProxyList from "../../../interfaces/ProxyList";
+import ProxyList, { Proxy } from "../../../interfaces/ProxyList";
 import TaskClass, { internalStatus, cycleStatus } from "../../classes/TaskClass";
 import AmazonTaskConfig, { AmazonModes } from "../../../interfaces/site_task_config/AmazonTaskConfig";
 import electron from 'electron';
@@ -30,6 +30,7 @@ class AmazonTaskClass extends TaskClass {
     status : string = "Idle";
     flow : "normalFlow" | "fastFlow" | "preloadFlow";
     flowExtraData : "normalFlowExtraData" | "fastFlowExtraData" | "preloadFlowExtraData";
+    currentProxy : Proxy;
 
     normalFlow : string[] = [
         'GETMainLoginPage',
@@ -52,7 +53,7 @@ class AmazonTaskClass extends TaskClass {
         [],
         [],
         [],
-        ['productTitle', 'productImage'],
+        ['productTitle', 'productImage', 'productPrice'],
         [],
         [],
         [],
@@ -77,7 +78,7 @@ class AmazonTaskClass extends TaskClass {
         [],
         [],
         [],
-        ['productTitle', 'productImage'],
+        ['productTitle', 'productImage', 'productPrice'],
         [],
         [],
         [],
@@ -87,31 +88,31 @@ class AmazonTaskClass extends TaskClass {
 
     async FAST_GETCheckoutScreen() : Promise<cycleStatus> {
         return await this.tryCatchWrapper(async () => {
-            const res = await electron.ipcRenderer.invoke('FAST_GETCheckoutScreen', this.allCookies, this.proxyList.proxies[0]);
+            const res = await electron.ipcRenderer.invoke('FAST_GETCheckoutScreen', this.allCookies, this.currentProxy);
 
             this.allCookies = res.allCookies;
             this.storage = {
                 ...this.storage,
                 ...res.storage
             }
-        }, 'Getting checkout screen')
+        }, 'Submitting order (1)')
     }
 
     async FAST_AsyncContinue1() : Promise<cycleStatus> {
         return await this.tryCatchWrapper(async () => {
-            const res = await electron.ipcRenderer.invoke('FAST_AsyncContinue1', this.allCookies, this.storage, this.proxyList.proxies[0]);
+            const res = await electron.ipcRenderer.invoke('FAST_AsyncContinue1', this.allCookies, this.storage, this.currentProxy);
 
             this.allCookies = res.allCookies;
             this.storage = {
                 ...res.storage,
                 ...this.storage
             }
-        }, 'Submitting order (1)')
+        }, 'Submitting order (2)')
     }
 
     async FAST_AsyncContinue2() : Promise<cycleStatus> {
         return await this.tryCatchWrapper(async () => {
-            const res = await electron.ipcRenderer.invoke('FAST_AsyncContinue2', this.allCookies, this.storage, this.proxyList.proxies[0]);
+            const res = await electron.ipcRenderer.invoke('FAST_AsyncContinue2', this.allCookies, this.storage, this.currentProxy);
 
             this.allCookies = res.allCookies;
 
@@ -120,12 +121,12 @@ class AmazonTaskClass extends TaskClass {
                 // ...this.storage,
                 ...res.storage
             }
-        }, 'Submitting order (2)')
+        }, 'Submitting order (3)')
     }
 
     async FAST_POSTSubmitOrder() : Promise<cycleStatus> {
         return await this.tryCatchWrapper(async () => {
-            const response = await electron.ipcRenderer.invoke('FAST_POSTSubmitOrder', this.allCookies, this.storage.finalData, this.proxyList.proxies[0]);
+            const response = await electron.ipcRenderer.invoke('FAST_POSTSubmitOrder', this.allCookies, this.storage.finalData, this.currentProxy);
 
             if (response !== "Success") {
                 throw "Checkout Error"
@@ -156,7 +157,7 @@ class AmazonTaskClass extends TaskClass {
         [],
         [],
         [],
-        ['productTitle', 'productImage'],
+        ['productTitle', 'productImage', 'productPrice'],
         [],
         [],
         [],
@@ -179,12 +180,19 @@ class AmazonTaskClass extends TaskClass {
         size : Size[], 
         proxyList : ProxyList, 
         input : string, 
-        config : AmazonTaskConfig
+        config : AmazonTaskConfig,
+        monitor : number,
+        error : number
     ) {
 
-        super(identifier, site, profile, size, proxyList, input);
+        super(identifier, site, profile, size, proxyList, input, monitor, error);
         this.config = config;
         this.allCookies = [];
+
+        // Not great but passable solution
+        this.currentProxy = this.proxyList.proxies[this.identifier % this.proxyList.proxies.length]
+
+
         if (config.mode === AmazonModes.Normal) {
             this.flow = "normalFlow";
             this.flowExtraData = "normalFlowExtraData"
@@ -230,7 +238,6 @@ class AmazonTaskClass extends TaskClass {
     async start() : Promise<string> {
         if (this.status !== "Active"){
 
-            // this.nextFunction = this.GETMainLoginPage;
             this.nextFunctionIndex = 0;
             this.internalStatus = internalStatus.Active;
             this.status = "Active";
@@ -303,7 +310,7 @@ class AmazonTaskClass extends TaskClass {
     async GETMainLoginPage() : Promise<cycleStatus> {
 
         return await this.tryCatchWrapper(async () => {
-            const res : ipcResponse = await electron.ipcRenderer.invoke('AmazonGETMainLoginPage', this.allCookies, this.proxyList.proxies[0]);
+            const res : ipcResponse = await electron.ipcRenderer.invoke('AmazonGETMainLoginPage', this.allCookies, this.currentProxy);
             this.allCookies = res.allCookies;
             this.storage = res.storage;
             return;
@@ -322,7 +329,7 @@ class AmazonTaskClass extends TaskClass {
                 prevRID: this.storage.prevRID,
                 workflowState: this.storage.workflowState,
                 email: this.config.account.username
-            }, this.proxyList.proxies[0]);
+            }, this.currentProxy);
             this.allCookies = res.allCookies;
         }, 'Signing in (3)')
     }
@@ -337,7 +344,7 @@ class AmazonTaskClass extends TaskClass {
                 workflowState: this.storage.workflowState,
                 email: this.config.account.username,
                 password: this.config.account.password
-            } , this.proxyList.proxies[0], this.license, this.session);
+            } , this.currentProxy, this.license, this.session);
     
             this.allCookies = res.allCookies;
         }, 'Getting product') 
@@ -352,7 +359,7 @@ class AmazonTaskClass extends TaskClass {
         const product = 'https://www.amazon.com/Mkeke-Compatible-iPhone-11-Clear/dp/B07W4FMQ5Y/';
 
 
-        const res = await electron.ipcRenderer.invoke('AmazonATC', this.allCookies, product, this.proxyList.proxies[0]);
+        const res = await electron.ipcRenderer.invoke('AmazonATC', this.allCookies, product, this.currentProxy);
         this.allCookies = res;
     }
 
@@ -362,7 +369,7 @@ class AmazonTaskClass extends TaskClass {
         // allCookies, allCookiesObject['session-id']
 
         return await this.tryCatchWrapper(async () => {
-            const res = await electron.ipcRenderer.invoke('AmazonGETProduct', this.allCookies, this.input, this.proxyList.proxies[0]);
+            const res = await electron.ipcRenderer.invoke('AmazonGETProduct', this.allCookies, this.input, this.currentProxy);
 
             this.allCookies = res.allCookies;
             this.storage = {
@@ -384,7 +391,7 @@ class AmazonTaskClass extends TaskClass {
         // allCookies, allCookiesObject['session-id']
 
         return await this.tryCatchWrapper(async () => {
-            const res = await electron.ipcRenderer.invoke('AmazonPOSTAddToCart', this.allCookies, this.storage, this.proxyList.proxies[0]);
+            const res = await electron.ipcRenderer.invoke('AmazonPOSTAddToCart', this.allCookies, this.storage, this.currentProxy);
             // console.log('here 2')
     
             this.allCookies = res.allCookies;
@@ -404,7 +411,7 @@ class AmazonTaskClass extends TaskClass {
     async GETCheckoutScreen() : Promise<cycleStatus> {
         // allCookies, proxy
         return await this.tryCatchWrapper(async () => {
-            const res = await electron.ipcRenderer.invoke('GETCheckoutScreen', this.allCookies, this.proxyList.proxies[0]);
+            const res = await electron.ipcRenderer.invoke('GETCheckoutScreen', this.allCookies, this.currentProxy);
 
             this.storage = res.storage;
     
@@ -420,7 +427,7 @@ class AmazonTaskClass extends TaskClass {
             this.profile.information,
             this.profile.shipping,
             this.storage,
-            this.proxyList.proxies[0]
+            this.currentProxy
         );
 
         this.storage = res.storage;
@@ -431,7 +438,7 @@ class AmazonTaskClass extends TaskClass {
     async POSTSelectShippingAddress() : Promise<cycleStatus> {
         // allCookies, proxy
         return await this.tryCatchWrapper(async () => {
-            const res = await electron.ipcRenderer.invoke('POSTSelectShippingAddress', this.allCookies, this.storage, this.proxyList.proxies[0]);
+            const res = await electron.ipcRenderer.invoke('POSTSelectShippingAddress', this.allCookies, this.storage, this.currentProxy);
 
             this.allCookies = res.allCookies;
         }, 'Adding payment (1)')
@@ -441,7 +448,7 @@ class AmazonTaskClass extends TaskClass {
         // allCookies, proxy
 
         return await this.tryCatchWrapper(async () => {
-            const res = await electron.ipcRenderer.invoke('GETAddPaymentPage', this.allCookies, this.proxyList.proxies[0]);
+            const res = await electron.ipcRenderer.invoke('GETAddPaymentPage', this.allCookies, this.currentProxy);
 
             this.allCookies = res.allCookies;
             this.storage = {
@@ -454,7 +461,7 @@ class AmazonTaskClass extends TaskClass {
     async POSTRegister() : Promise<cycleStatus> {
         // allCookies, proxy
         return await this.tryCatchWrapper(async () => {
-            const res = await electron.ipcRenderer.invoke('POSTRegister', this.allCookies, this.storage, this.proxyList.proxies[0]);
+            const res = await electron.ipcRenderer.invoke('POSTRegister', this.allCookies, this.storage, this.currentProxy);
 
             this.allCookies = res.allCookies;
             this.storage = res.storage;
@@ -465,7 +472,7 @@ class AmazonTaskClass extends TaskClass {
 
         console.log(this.storage)
         return await this.tryCatchWrapper(async () => {
-            const res = await electron.ipcRenderer.invoke('POSTAddPaymentMethod', this.allCookies, this.storage, this.profile.payment, this.proxyList.proxies[0]);
+            const res = await electron.ipcRenderer.invoke('POSTAddPaymentMethod', this.allCookies, this.storage, this.profile.payment, this.currentProxy);
 
             this.allCookies = res.allCookies;
             this.storage = {
@@ -479,7 +486,7 @@ class AmazonTaskClass extends TaskClass {
         // allCookies, proxy
 
         return await this.tryCatchWrapper(async () => {
-            const res = await electron.ipcRenderer.invoke('POSTSelectPaymentMethod', this.allCookies, this.storage, this.proxyList.proxies[0]);
+            const res = await electron.ipcRenderer.invoke('POSTSelectPaymentMethod', this.allCookies, this.storage, this.currentProxy);
 
             this.allCookies = res.allCookies;
             this.storage = res.storage;
@@ -490,7 +497,7 @@ class AmazonTaskClass extends TaskClass {
         // allCookies, proxy
 
         return await this.tryCatchWrapper(async () => {
-            const res = await electron.ipcRenderer.invoke('POSTAsyncContinueAfterSelection', this.allCookies, this.storage, this.proxyList.proxies[0]);
+            const res = await electron.ipcRenderer.invoke('POSTAsyncContinueAfterSelection', this.allCookies, this.storage, this.currentProxy);
 
             this.storage = res.storage;
         }, "Submitting order...")
@@ -499,7 +506,7 @@ class AmazonTaskClass extends TaskClass {
     async POSTSubmitOrder() : Promise<cycleStatus> {
 
         return await this.tryCatchWrapper(async () => {
-            const response = await electron.ipcRenderer.invoke('POSTSubmitOrder', this.allCookies, this.storage, this.proxyList.proxies[0]);
+            const response = await electron.ipcRenderer.invoke('POSTSubmitOrder', this.allCookies, this.storage, this.currentProxy);
 
             if (response !== "Success") {
                 throw "Checkout Error"
@@ -510,7 +517,7 @@ class AmazonTaskClass extends TaskClass {
     }
 
     async checkout() : Promise<void> {
-        const res = await electron.ipcRenderer.invoke('AmazonCheckout', this.allCookies, this.proxyList.proxies[0]);
+        const res = await electron.ipcRenderer.invoke('AmazonCheckout', this.allCookies, this.currentProxy);
     }
 
 

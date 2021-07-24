@@ -56,6 +56,11 @@ const atcIpc = () => {
 
         let productTitle : string = getValueByDelimiters(FindCSRFData, '<span id="productTitle" class="a-size-large product-title-word-break">', '</span>')
         productTitle = productTitle.trim();
+
+        let productPrice : string = getValueByDelimiters(FindCSRFData, '<span id="price_inside_buybox" class="a-size-medium a-color-price">', '</span>')
+        // price = price.trim();
+        productPrice = productPrice.replace(/[^0-9\.-]+/g,"")
+
         console.log(`productTitle: ${productTitle}`)
         let ASIN = getValueByDelimiters(FindCSRFData, '<input type="hidden" id="attach-baseAsin" value="', '" />');
         if (ASIN.length !== 10) {
@@ -87,7 +92,8 @@ const atcIpc = () => {
                 productTitle
             },
             productTitle,
-            productImage
+            productImage,
+            productPrice
         }
     })
 

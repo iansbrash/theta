@@ -9,7 +9,7 @@ export interface TaskGroupCommanderProps {
     startAll: number,
     stopAll: number,
     massLink: string,
-    deleteAll: 0
+    deleteAll: number
 }
 
 export interface TaskGroup {
@@ -52,7 +52,12 @@ export const tasksSlice = createSlice({
                 } = action.payload;
 
                 state.taskGroups = [...state.taskGroups, taskGroup]
-                state.taskGroupCommanders[taskGroup.name] = {startAll: 0, stopAll: 0, massLink: '', deleteAll: 0}
+                state.taskGroupCommanders[taskGroup.name] = {
+                    startAll: 0, 
+                    stopAll: 0, 
+                    massLink: '', 
+                    deleteAll: 0
+                }
 
                 if (state.taskGroups.length === state.savingOptions.numberToSave) {
                     state.savingOptions.saveState = TaskSaveState.Saved
@@ -168,6 +173,31 @@ export const tasksSlice = createSlice({
                 }
             }
         },
+        updateTaskGroupDelay: {
+            reducer (state, action : PayloadAction<{tgName : string, delayType : "monitor" | "error", value : number}>) { //; anotherProp: string; uuid: string
+                const {
+                    tgName,
+                    delayType,
+                    value
+                } = action.payload;   
+
+                console.log(`tgName: ${tgName}`)
+                // @ts-ignore
+
+                
+                state.taskGroups.find(tg => tg.name === tgName).delays[delayType] = value;
+
+            },
+            prepare (tgName : string, delayType : "monitor" | "error", value : number) {
+                return {
+                    payload: {
+                        tgName,
+                        delayType,
+                        value
+                    }
+                }
+            }
+        },
         populateTasks: {
             reducer (state, action : PayloadAction<{taskGroups : TaskGroup[]}>) { //; anotherProp: string; uuid: string
                 const {
@@ -177,7 +207,12 @@ export const tasksSlice = createSlice({
                 state.taskGroups = taskGroups
                 state.savingOptions.saveState = TaskSaveState.Unsaved;
 
-                taskGroups.forEach(tg => state.taskGroupCommanders[tg.name] = {startAll: 0, stopAll: 0, massLink: '', deleteAll: 0})
+                taskGroups.forEach(tg => state.taskGroupCommanders[tg.name] = {
+                    startAll: 0, 
+                    stopAll: 0, 
+                    massLink: '', 
+                    deleteAll: 0
+                })
             },
             prepare (taskGroups) {
                 return {
@@ -191,6 +226,15 @@ export const tasksSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { deleteTaskGroup, populateTasks, saveTaskGroup, beginSave, saveTaskGroupOnAdd, activateNumberCommander, activateStringCommander } = tasksSlice.actions
+export const { 
+    deleteTaskGroup, 
+    populateTasks, 
+    saveTaskGroup, 
+    beginSave, 
+    saveTaskGroupOnAdd, 
+    activateNumberCommander, 
+    activateStringCommander, 
+    updateTaskGroupDelay 
+} = tasksSlice.actions
 
 export default tasksSlice.reducer

@@ -1,4 +1,3 @@
-import { resolve } from "path";
 import Site from "../../interfaces/enums/Site";
 import Size from "../../interfaces/enums/Size";
 import ProfileObject from "../../interfaces/ProfileObject";
@@ -9,6 +8,11 @@ import store from "../../../redux/store";
 export enum internalStatus {
     "Idle",
     "Active"
+}
+
+export interface Delay {
+    monitor : number,
+    error : number
 }
 
 export interface cycleStatus {
@@ -25,7 +29,8 @@ abstract class TaskClass implements Task {
     proxyList;
     status : string;
     session : string;
-    license: string;
+    license : string;
+    delays : Delay;
 
     
 
@@ -41,7 +46,9 @@ abstract class TaskClass implements Task {
         profile : ProfileObject, 
         size : Size[], 
         proxyList : ProxyList, 
-        input : string
+        input : string,
+        monitor : number,
+        error : number
         ) {
         this.identifier = identifier;
         this.site = site;
@@ -50,6 +57,11 @@ abstract class TaskClass implements Task {
         this.proxyList = proxyList;
         this.status = 'Idle';
         this.input = input;
+
+        this.delays = {
+            monitor,
+            error
+        }
 
         this.internalStatus = internalStatus.Idle
 
@@ -74,9 +86,12 @@ abstract class TaskClass implements Task {
         return this.identifier;
     }
 
-    // setStatusWatcher(f : (s : string) => void) {
-    //     this.statusWatcher = f;
-    // }
+    setDelays(m : number, e : number) {
+        this.delays = {
+            monitor: m,
+            error: e
+        }
+    }
 }
 
 export default TaskClass;

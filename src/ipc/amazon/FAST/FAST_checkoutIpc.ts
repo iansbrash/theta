@@ -67,7 +67,7 @@ const FAST_checkoutIpc = () => {
             returnParsedCookies(FAST_AsyncContinue1Response.headers['set-cookie'])
         )
 
-        console.log(FAST_AsyncContinue1Response.data)
+        // console.log(FAST_AsyncContinue1Response.data)
 
         let async2Data = FAST_AsyncContinue1Response.data.panels[4].content;
         let ppwWidgetState = getValueByDelimiters(async2Data, 'name="ppw-widgetState" value="', '"')

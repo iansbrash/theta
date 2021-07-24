@@ -10,6 +10,7 @@ import { AmazonModes } from '../../Logic/interfaces/site_task_config/AmazonTaskC
 import axios from 'axios';
 import api from '../../Logic/api';
 import { TaskHookProps } from './TaskGroupInterface';
+import Site from '../../Logic/interfaces/enums/Site';
 
 interface InterestingWrapperProps {
     children: ReactNode,
@@ -87,20 +88,32 @@ const TaskComponent : FC<TaskComponentProps> = ({
     const [productTitle, setProductTitle] = useState<string>(task.input)
     const [productImage, setProductImage] = useState<string>('');
 
+    const taskGroupDelaysSelector = useSelector((state : RootState) => state.tasks.taskGroups.find(tg => tg.name === tgName)?.delays)
+
+    // updates the task's delays on update
+    useEffect(() => {
+        // call task.updateDelays() or someshiot
+        console.log("Task group delayus updated!" + taskGroupDelaysSelector?.error + ' ' + taskGroupDelaysSelector?.monitor)
+
+        if (taskGroupDelaysSelector) {
+            task.setDelays(taskGroupDelaysSelector.monitor, taskGroupDelaysSelector.monitor)
+        }
+    }, [taskGroupDelaysSelector])
+
+
     const sessionObject = useSelector((state: RootState) => state.session);
 
-        const startAllCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName]?.startAll)
-        const stopAllCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName]?.stopAll)
-        const massLinkCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName]?.massLink)
-        const deleteAllCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName]?.deleteAll)
-    
-        let initialRender1 = useRef(true);
-        let initialRender2 = useRef(true);
-        let initialRender3 = useRef(true);
-        useEffect(() => { !initialRender1.current && startAllCommander ? startTask() : initialRender1.current = false }, [startAllCommander])
-        useEffect(() => { !initialRender2.current && stopAllCommander ? stopTask() : initialRender2.current = false }, [stopAllCommander])
-        useEffect(() => { !initialRender3.current && deleteAllCommander ? deleteAll() : initialRender3.current = false }, [deleteAllCommander])
-        // useEffect(() => { startTask() }, [massLinkCommander])
+    const startAllCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName]?.startAll)
+    const stopAllCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName]?.stopAll)
+    const massLinkCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName]?.massLink)
+    const deleteAllCommander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[tgName]?.deleteAll)
+
+    let initialRender1 = useRef(true);
+    let initialRender2 = useRef(true);
+    let initialRender3 = useRef(true);
+    useEffect(() => { !initialRender1.current && startAllCommander ? startTask() : initialRender1.current = false }, [startAllCommander])
+    useEffect(() => { !initialRender2.current && stopAllCommander ? stopTask() : initialRender2.current = false }, [stopAllCommander])
+    useEffect(() => { !initialRender3.current && deleteAllCommander ? deleteAll() : initialRender3.current = false }, [deleteAllCommander])
     
 
     const startTask = async () => {
@@ -115,11 +128,14 @@ const TaskComponent : FC<TaskComponentProps> = ({
 
         let lastStatus = 'Signing in (1)';
 
+        let prPrice = 0;
+
         while (task.status === 'Active') {
             setStatusColor('text-blue-100');
             res = await task.cycle();
 
             if (task.getStatus() === "Stopped") {
+                setStatus("Stopped")
                 return;
             }
             setStatus(res.message);
@@ -130,11 +146,13 @@ const TaskComponent : FC<TaskComponentProps> = ({
 
                 prImage = res.extraData.productImage
                 setProductImage(prImage)
+
+                prPrice = res.extraData.productPrice
             }
 
             if (res.status === "Error") {
                 setStatusColor('text-red-400');
-                await delay(7500);
+                await delay(task.delays.error);
                 setStatus(lastStatus);
             }
             lastStatus = res.message;
@@ -148,12 +166,12 @@ const TaskComponent : FC<TaskComponentProps> = ({
                 sendSuccess(
                     discordWebhook,
                     prTitle,
-                    "Amazon",
+                    task.site,
                     task.profile.information.name,
-                    "Random",
+                    "OS",
                     task.proxyList.name,
-                    "brash@usc.edu",
-                    "Normal",
+                    (task as AmazonTaskClass).config.account.username,
+                    AmazonModes[(task as AmazonTaskClass).config.mode],
                     prImage
                 )
             }
@@ -173,7 +191,7 @@ const TaskComponent : FC<TaskComponentProps> = ({
                         profile: task.profile.information.name,
                         site: task.site,
                         size: task.size,
-                        price: 0,
+                        price: prPrice,
                         image: prImage,
                         mode: AmazonModes[(task as AmazonTaskClass).config.mode]   
                     }
@@ -203,6 +221,7 @@ const TaskComponent : FC<TaskComponentProps> = ({
         setTasks([])
     }
 
+    // COMING SOON!
     const editTask = () => {
 
     }
@@ -222,8 +241,7 @@ const TaskComponent : FC<TaskComponentProps> = ({
                 </div>
             </div>
             <InterestingWrapperProps width={'w-3/10'} bg={taskBg}>
-                {/* {task.profile.information.name} */}
-                {task.identifier}
+                {task.profile.information.name}
             </InterestingWrapperProps>
             <InterestingWrapperProps width={'w-3/10'} bg={taskBg}>
                 {task.proxyList.name}
@@ -233,22 +251,22 @@ const TaskComponent : FC<TaskComponentProps> = ({
             </InterestingWrapperProps>
             <InterestingWrapperProps width={'w-72'} bg={taskBg}>
                 <div className="h-full w-full flex flex-row justify-between items-center">
-                    <button className="text-green-200 focus:outline-none"
+                    <button className="text-theta-tasks-taskcomponent-start focus:outline-none"
                     onClick={() => startTask()}
                     >
                         <PlayIcon />
                     </button>
-                    <button className="text-blue-200 focus:outline-none"
+                    <button className="text-blue-400 focus:outline-none"
                     onClick={() => editTask()}
                     >
                         <EditIcon />
                     </button>
-                    <button className="text-yellow-200 focus:outline-none"
+                    <button className="text-theta-tasks-taskcomponent-stop focus:outline-none"
                     onClick={() => stopTask()}
                     >
                         <StopIcon />
                     </button>
-                    <button className="text-red-200 focus:outline-none"
+                    <button className="text-theta-tasks-taskcomponent-delete focus:outline-none"
                     onClick={() => deleteTask()}
                     >
                         <DeleteIcon />
