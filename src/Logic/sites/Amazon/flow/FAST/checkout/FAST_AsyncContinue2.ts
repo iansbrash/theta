@@ -2,44 +2,39 @@ import axios, { AxiosResponse } from 'axios';
 import { joinCookies } from '../../../../../requestFunctions';
 import { Proxy } from '../../../../../interfaces/ProxyList';
 import HttpsProxyAgent from 'https-proxy-agent'
+import qs from 'qs';
 
-const FAST_AsyncContinue2 = async (allCookies : string[], storage : {purchaseId: string, addressID: string, addressBookId: string}, proxy : Proxy) : Promise<AxiosResponse> => {
+const FAST_AsyncContinue2 = async (allCookies : string[], superDynamicParams : object, proxy : Proxy) : Promise<AxiosResponse> => {
     const FAST_AsyncContinue2Url = `https://www.amazon.com/gp/buy/shared/handlers/async-continue.html`
 
-    const {
-        addressBookId,
-        addressID,
-        purchaseId
-    } = storage;
+  
 
     let dataConfig = {
-        // submissionURL: /gp/buy/addressselect/handlers/continue.html/ref=chk_addr_select_1_mru?ie=UTF8&action=select-shipping&addressID=MLH6M2BGUAJSRR256M6EG1224DR1EH1AHA25HA1HE1RD42UPXTQ2EIA2OXJDLFBG&enableDeliveryPreferences=1&fromAnywhere=0&isCurrentAddress=0&numberOfDistinctItems=1&purchaseId=106-6565639-0269811&requestToken=
-        // pickupUrl: /gp/buy/storeaddress/handlers/popover/search.html/ref=chk_addr_locker_search_sec
-        usecase: 'checkout',
+        // "ppw-widgetState": superDynamicParams.,
+        'ie': 'UTF-8',
+        'ppw-claimCode': '',
+        ...superDynamicParams,
+        // 'ppw-instrumentRowSelection': '',// instrumentId=0h_PU_CUS_8a6bf2b9-8fe9-4de2-812b-15ee68c88c95&isExpired=false&paymentMethod=CC&tfxEligible=false
+        // 'ppw-0h_PU_CUS_73c3ed2a-f7b3-4118-bda7-54c644e95ae3_rewardsAccountSelection_customAmountValue': '',//  10.96
+        // 'ppw-0h_PU_CUS_73c3ed2a-f7b3-4118-bda7-54c644e95ae3_rewardsAccountSelection_maxAmountValueHiddenInput':  '',// 10.96
+        // 'ppw-0h_PU_CUS_73c3ed2a-f7b3-4118-bda7-54c644e95ae3_rewardsAccountSelection_currencyUnitHiddenInput': 'USD',
+        // 'ppw-0h_PU_CUS_73c3ed2a-f7b3-4118-bda7-54c644e95ae3_rewardsAccountSelection_instrumentIdHiddenInput':  '',// 0h_PU_CUS_73c3ed2a-f7b3-4118-bda7-54c644e95ae3
+        // 'ppw-0h_PU_CUS_73c3ed2a-f7b3-4118-bda7-54c644e95ae3_rewardsAccountSelection_parentInstrumentIdHiddenInput':  '',// 0h_PU_CUS_8a6bf2b9-8fe9-4de2-812b-15ee68c88c95
+        // 'ppw-0h_PU_CUS_73c3ed2a-f7b3-4118-bda7-54c644e95ae3_rewardsAccountSelection_currencyToPointsConversionRatioHiddenInput': 1,
+        // 'ppw-0h_PU_CUS_8a6bf2b9-8fe9-4de2-812b-15ee68c88c95_childRewardsAccountInstrumentId':  '',// 0h_PU_CUS_73c3ed2a-f7b3-4118-bda7-54c644e95ae3
         hasWorkingJavascript: 1,
-        addressBookId: addressBookId,
-        pickupType: 'All',
-        storeCountry: 'US',
-        searchCriterion: 'storeZip',
-        storeZip: '',
+        'ppw-jsEnabled': true,
+        'ppw-widgetEvent:SetPaymentPlanSelectContinueEvent':  '',// 
         isAsync: 1,
         isClientTimeBased: 1,
-        ie: 'UTF8',
-        action: 'select-shipping',
-        addressID: addressID,
-        enableDeliveryPreferences: 1,
-        fromAnywhere: 0,
-        isCurrentAddress: 0,
-        numberOfDistinctItems: 1,
-        purchaseId: purchaseId,
-        requestToken: '',
-        handler: '/gp/buy/addressselect/handlers/continue.html'
+        handler: '/gp/buy/payselect/handlers/apx-submit-continue.html'
     }
 
     // @ts-ignore
-    const data = Object.keys(dataConfig).map((key, index) => key + '=' + encodeURIComponent(dataConfig[key])).join('&')
+    const data = qs.stringify(dataConfig)
 
     console.log(data)
+
 
     // const data = qs.stringify(dataConfig)
 
