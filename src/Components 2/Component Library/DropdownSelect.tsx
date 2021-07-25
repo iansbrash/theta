@@ -24,7 +24,8 @@ interface DrowndownSelectProps {
     border?: string,
     noShadow?: boolean,
     transformBack?: boolean,
-    disabled?: boolean
+    disabled?: boolean,
+    onlySetSelection?: boolean
 }
 
 const DropdownSelect : FC<DrowndownSelectProps> = ({
@@ -40,7 +41,8 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
     border,
     noShadow,
     transformBack,
-    disabled
+    disabled,
+    onlySetSelection
 } : DrowndownSelectProps) => {
 
     const [selectSearchInput, setSelectSearchInput] = useState<string>(selection ? itemToString(selection) : '');
@@ -48,10 +50,16 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
 
     const relativeRef = useRef<HTMLDivElement>(null);
 
+    useEffect(() => { selection ? setSelectSearchInput(itemToString(selection)) : null}, [selection])
 
     const handleSiteChange = (a : any) => {
-        setSelection(transformBack ? itemToString(a) : a);
-        setSelectSearchInput(itemToString(a));
+        if (onlySetSelection) {
+            setSelection(transformBack ? itemToString(a) : a);
+        }
+        else {
+            setSelection(transformBack ? itemToString(a) : a);
+            setSelectSearchInput(itemToString(a));
+        }
         onInputBlur();
     }
 

@@ -164,7 +164,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
             const newTask : TaskHookProps = {
                 taskConfig: {
                     identifier: identifierStart,
-                    site: Site.Amazon,
+                    site: selectSiteInput,
                     size: [Size.OS], // completely forgot about this shit lmao will add
     
                     // @ts-ignore
@@ -180,7 +180,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
             let newTaskClass : AmazonTaskClass = new AmazonTaskClass(
                 identifierStart,
-                Site.Amazon,
+                selectSiteInput,
                 profile,
                 [Size.OS],
                 addTasksProxies!,
@@ -205,7 +205,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
         setTasks2([...tasks2, ...toAddTasks2])
         dispatch(saveTaskGroupOnAdd({
             name: taskGroupName,
-            site: Site.Amazon,
+            site: selectSiteInput,
             tasks: [...tasks, ...toAddTasks],
             delays: {
                 error: errorDelay,
@@ -220,7 +220,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
         if (index === -1) {
             await electron.ipcRenderer.invoke('writejson', 'tasks.json', [...res, {
                 name: taskGroupName,
-                site: Site.Amazon,
+                site: selectSiteInput,
                 tasks: [...tasks, ...toAddTasks],
                 delays: {
                     error: errorDelay, monitor: monitorDelay
@@ -230,7 +230,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
         else {
             res[index] = {
                 name: taskGroupName,
-                site: Site.Amazon,
+                site: selectSiteInput,
                 tasks: [...tasks, ...toAddTasks],
                 delays: {
                     error: errorDelay, monitor: monitorDelay
@@ -275,10 +275,93 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
         dispatch(activateNumberCommander(taskGroupName, "startAll"))
     }
 
+    const [confirmChangeSiteModal, setConfirmChangeSiteModal] = useState<boolean>(false);
+    const [attemptChangeValue, setAttemptChangeValue] = useState<Site>(Site.Amazon)
+
+    const setSiteOnChange = async (s : Site) => {
+        if (s === selectSiteInput) {
+            return;
+        }
+        else if (tasks2.length > 0) {
+            setConfirmChangeSiteModal(true)
+            setAttemptChangeValue(s)
+        }
+        else {
+            setSelectSiteInput(s);
+        }
+
+    }
+
+    const changeSiteModalYes = async () => {
+        setSelectSiteInput(attemptChangeValue)
+        setConfirmChangeSiteModal(false)
+
+        // Delete tasks
+        setTasks([])
+        setTasks2([])
+
+        // Redux
+        dispatch(saveTaskGroupOnAdd({
+            name: taskGroupName,
+            site: attemptChangeValue,
+            tasks: [],
+            delays: {
+                error: errorDelay,
+                monitor: monitorDelay
+            }
+        }))
+
+        // Storage
+        let t = await electron.ipcRenderer.invoke("readjson", 'tasks.json')
+        let removeIndex = t.findIndex((tg : any) => tg.name === taskGroupName)
+        t[removeIndex].tasks = [];
+        t[removeIndex].site = Site[attemptChangeValue]
+        await electron.ipcRenderer.invoke('writejson', 'tasks.json', t)
+    }
+
+    const changeSiteModalCancel = () => {
+        setSelectSiteInput(selectSiteInput)
+        setConfirmChangeSiteModal(false)
+    }
+
 
 
     return (
         <ScreenWrapper hidden={hidden}>
+            <ScreenWrapperModal 
+            isEnabled={confirmChangeSiteModal}
+            setIsEnabled={setConfirmChangeSiteModal}>
+                <div className="w-auto h-auto rounded-lg shadow-lg bg-theta-bg flex justify-start items-center flex-col focus:outline-none p-4"
+                onClick={(e) => e.stopPropagation()}
+                >
+                        <div className="w-full text-2xl text-theta-white font-medium">
+                            Change site to {attemptChangeValue}?
+                        </div>
+                        <div className="w-full text-xl text-theta-gray-2 leading-5">
+                            Your tasks will be deleted.
+                        </div>
+                        <div className="flex flex-row justify-center items-center space-x-4 mt-2">
+                            <button className="focus:outline-none shadow-md w-32 h-8 rounded-md bg-theta-sidebar-dark border-2 border-theta-tasks-taskcomponent-delete flex justify-center items-center text-xl font-medium text-theta-gray-2"
+                            onClick={() => changeSiteModalCancel()}
+                            >
+                                Cancel
+                                {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg> */}
+                            </button>
+                            <button className="focus:outline-none shadow-md w-32 h-8 rounded-md bg-theta-sidebar-dark border-2 border-theta-tasks-taskcomponent-start flex justify-center items-center text-xl font-medium text-theta-gray-2"
+                            onClick={() => changeSiteModalYes()}
+                            >
+                                Yes
+                                {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg> */}
+                            </button>
+
+                        </div>
+
+                </div>
+            </ScreenWrapperModal>
             <ScreenWrapperModal 
             isEnabled={addTasksEnabled}
             setIsEnabled={setAddTasksEnabled}>
@@ -426,7 +509,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
                             {/* Input part */}
                             <DropdownSelect
                                 selection={selectSiteInput}
-                                setSelection={setSelectSiteInput}
+                                // setSelection={setSelectSiteInput}
+                                onlySetSelection={true}
+                                setSelection={setSiteOnChange}
                                 selectionArray={Object.keys(Site)}
                                 bg={'bg-theta-bg'}
                                 placeholder={'Select a site'}

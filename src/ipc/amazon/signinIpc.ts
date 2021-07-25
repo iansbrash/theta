@@ -154,9 +154,9 @@ const signinIpc = () => {
         }, proxy, license, session)
 
         // If we get hit with a captcha
-        // if (POSTSubLoginPageRetryResponse.data.indexOf('To better protect your account, please re-enter your password and then enter the characters as they are shown in the image below.') !== -1) {
-        //     throw Error("Login Error")
-        // }
+        if (POSTSubLoginPageRetryResponse.data.indexOf('To better protect your account, please re-enter your password and then enter the characters as they are shown in the image below.') !== -1) {
+            throw Error("Login Captcha Detected")
+        }
 
         allCookies = accumulateCookies(
             allCookies,

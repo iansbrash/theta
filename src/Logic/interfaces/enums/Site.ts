@@ -1,5 +1,6 @@
 enum Site {
-    "Amazon" = "Amazon"
+    "Amazon" = "Amazon",
+    "Walmart" = "Walmart"
 }
 
 export default Site;
