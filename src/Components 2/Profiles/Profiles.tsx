@@ -15,6 +15,7 @@ import DropdownSelect from '../Component Library/DropdownSelect';
 import electron from 'electron';
 import { Country, State, City }  from 'country-state-city';
 import { ICountry, IState } from 'country-state-city/dist/lib/interface';
+import CheckBox from '../Component Library/CheckBox';
 
 const Profiles : FC = () => {
 
@@ -137,6 +138,8 @@ const Profiles : FC = () => {
         setPaymentExpYear(expiryYear)
         setPaymentNumber(number)
 
+        setSameBillingAsShip(selectedProfile.settings.sameBillingAsShip)
+
     }, [selectedProfile])
 
 
@@ -189,6 +192,7 @@ const Profiles : FC = () => {
 
     const beginAddProfile = () => {
         setSelectedProfile(undefined);
+        setSameBillingAsShip(false)
 
         const toEmpty : ((s : string) => void)[] = [
             setProfileName,
@@ -272,7 +276,8 @@ const Profiles : FC = () => {
                 cvv: paymentCVV
             },
             settings: {
-                favorite: false
+                favorite: false,
+                sameBillingAsShip: sameBillingAsShip
             }
         }
         try {
@@ -329,6 +334,30 @@ const Profiles : FC = () => {
         }
     }
 
+    // Gonna have to load this
+    const [sameBillingAsShip, setSameBillingAsShip] = useState<boolean>(false);
+
+    useEffect(() => {
+        // Update all billing to shipping
+        if (sameBillingAsShip) {
+            setBillFname(shipFname)
+            setBillLname(shipLname)
+            setBillAddr1(shipAddr1)
+            setBillAddr2(shipAddr2)
+            setBillCountry(shipCountry)
+            setBillState(shipState)
+            setBillCity(shipCity)
+            setBillZip(shipZip)
+        }
+    }, [sameBillingAsShip])
+    useEffect(() => {sameBillingAsShip ? setBillFname(shipFname) : null}, [shipFname])
+    useEffect(() => {sameBillingAsShip ? setBillLname(shipLname) : null}, [shipLname])
+    useEffect(() => {sameBillingAsShip ? setBillAddr1(shipAddr1) : null}, [shipAddr1])
+    useEffect(() => {sameBillingAsShip ? setBillAddr2(shipAddr2) : null}, [shipAddr2])
+    useEffect(() => {sameBillingAsShip ? setBillCountry(shipCountry) : null}, [shipCountry])
+    useEffect(() => {sameBillingAsShip ? setBillState(shipState) : null}, [shipState])
+    useEffect(() => {sameBillingAsShip ? setBillCity(shipCity) : null}, [shipCity])
+    useEffect(() => {sameBillingAsShip ? setBillZip(shipZip) : null}, [shipZip])
 
 
     return (
@@ -585,6 +614,7 @@ const Profiles : FC = () => {
                                             </div>
                                             <div className="w-full h-10">
                                                 <DropdownSelect 
+                                                    selection={shipCountry}
                                                     setSelection={setShipCountry}
                                                     selectionArray={Country.getAllCountries()}
                                                     bg={'bg-theta-bg'}
@@ -603,7 +633,8 @@ const Profiles : FC = () => {
                                                 State
                                             </div>
                                             <div className="w-full h-10">
-                                                <DropdownSelect 
+                                                <DropdownSelect
+                                                    selection={shipState} 
                                                     setSelection={setShipState}
                                                     selectionArray={shipCountry === '' ? [] : State.getStatesOfCountry(Country.getAllCountries().find(cr => cr.name === shipCountry)!.isoCode)}
                                                     bg={'bg-theta-bg'}
@@ -667,8 +698,26 @@ const Profiles : FC = () => {
 
                                 {/* Information */}
                                 <div className="w-full justify-start items-start flex flex-col space-y-2">
-                                    <div className="ml-2 text-theta-gray-2 font-medium text-2xl mt-4">
-                                        Billing
+                                    <div className="flex flex-row justify-between items-center w-full">
+                                        <div className="ml-2 text-theta-gray-2 font-medium text-2xl mt-4">
+                                            Billing
+                                        </div>
+                                        <div className="flex flex-row justify-center items-center mt-4">
+                                            <div className="ml-2 text-theta-gray-7 font-medium text-xl mr-2">
+                                                Same Billing as Shipping
+                                            </div>
+                                            <CheckBox 
+                                                widthheight={'w-8 h-8'}
+                                                checked={sameBillingAsShip}
+                                                setChecked={setSameBillingAsShip}
+                                                checkColorChecked={'text-theta-white'}
+                                                checkColorUnchecked={'text-theta-gray-7'}
+                                                bgChecked={'bg-theta-logo'}
+                                                bgUnchecked={'bg-theta-sidebar'}
+                                                borderColor={'border-theta-logo'}
+                                            />
+                                        </div>                                    
+
                                     </div>
                                     <div className="flex flex-row justify-start items-center w-full">
                                         <div className="w-1/2 pr-3 flex flex-col justify-start items-center">
@@ -689,6 +738,7 @@ const Profiles : FC = () => {
                                                     }
                                                     textSize={'text-2xl'}
                                                     offsetWidth={'w-7'}
+                                                    disabled={sameBillingAsShip}
                                                 />
                                             </div>
                                         </div>
@@ -710,6 +760,7 @@ const Profiles : FC = () => {
                                                     }
                                                     textSize={'text-2xl'}
                                                     offsetWidth={'w-7'}
+                                                    disabled={sameBillingAsShip}
                                                 />
                                             </div>
                                         </div>
@@ -734,6 +785,7 @@ const Profiles : FC = () => {
                                                     }
                                                     textSize={'text-2xl'}
                                                     offsetWidth={'w-7'}
+                                                    disabled={sameBillingAsShip}
                                                 />
                                             </div>
                                         </div>
@@ -756,6 +808,7 @@ const Profiles : FC = () => {
                                                     }
                                                     textSize={'text-2xl'}
                                                     offsetWidth={'w-7'}
+                                                    disabled={sameBillingAsShip}
                                                 />
                                             </div>
                                         </div>
@@ -767,6 +820,7 @@ const Profiles : FC = () => {
                                             </div>
                                             <div className="w-full h-10">
                                                 <DropdownSelect 
+                                                    selection={billCountry}
                                                     setSelection={setBillCountry}
                                                     selectionArray={Country.getAllCountries()}
                                                     bg={'bg-theta-bg'}
@@ -777,6 +831,8 @@ const Profiles : FC = () => {
                                                     border={'border-theta-sidebar'}
                                                     noShadow={true}
                                                     transformBack={true}
+                                                    disabled={sameBillingAsShip}
+                                                    disabledBg={'bg-theta-sidebar'}
                                                 />
                                             </div>
                                         </div>
@@ -786,6 +842,7 @@ const Profiles : FC = () => {
                                             </div>
                                             <div className="w-full h-10">
                                                 <DropdownSelect 
+                                                    selection={billState}
                                                     setSelection={setBillState}
                                                     selectionArray={billCountry === '' ? [] : State.getStatesOfCountry(Country.getAllCountries().find(cr => cr.name === billCountry)!.isoCode)}
                                                     bg={'bg-theta-bg'}
@@ -795,6 +852,8 @@ const Profiles : FC = () => {
                                                     maxRowsBeforeOverflow={5}
                                                     border={'border-theta-sidebar'}
                                                     noShadow={true}
+                                                    disabled={sameBillingAsShip}
+                                                    disabledBg={'bg-theta-sidebar'}
                                                 />
                                             </div>
                                         </div>
@@ -819,6 +878,7 @@ const Profiles : FC = () => {
                                                     }
                                                     textSize={'text-2xl'}
                                                     offsetWidth={'w-7'}
+                                                    disabled={sameBillingAsShip}
                                                 />
                                             </div>
                                         </div>
@@ -841,6 +901,7 @@ const Profiles : FC = () => {
                                                     }
                                                     textSize={'text-2xl'}
                                                     offsetWidth={'w-7'}
+                                                    disabled={sameBillingAsShip}
                                                 />
                                             </div>
                                         </div>

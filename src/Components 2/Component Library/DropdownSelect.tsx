@@ -25,6 +25,7 @@ interface DrowndownSelectProps {
     noShadow?: boolean,
     transformBack?: boolean,
     disabled?: boolean,
+    disabledBg?: string,
     onlySetSelection?: boolean
 }
 
@@ -42,6 +43,7 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
     noShadow,
     transformBack,
     disabled,
+    disabledBg,
     onlySetSelection
 } : DrowndownSelectProps) => {
 
@@ -50,7 +52,7 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
 
     const relativeRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => { selection ? setSelectSearchInput(itemToString(selection)) : null}, [selection])
+    // useEffect(() => { selection !== undefined && selection !== null ? setSelectSearchInput(itemToString(selection)) : null; console.log(selection)}, [selection])
 
     const handleSiteChange = (a : any) => {
         if (onlySetSelection) {
@@ -94,7 +96,7 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
             <div className="h-full w-full flex flex-col pointer-events-none" ref={relativeRef}>
         
                 {/* Input part */}
-                <button className={`border-t border-l border-r border-theta-sidebar relative focus:outline-none w-full h-full rounded-t-lg rounded-b-lg border-b ${bg} flex flex-col justify-start items-center`}
+                <button className={`border-t border-l border-r border-theta-sidebar relative focus:outline-none w-full h-full rounded-t-lg rounded-b-lg border-b ${disabledBg ? disabledBg : bg} flex flex-col justify-start items-center`}
                 onClick={() => null}
                 >
                     <div className="h-full flex flex-row justify-start items-center w-full">
@@ -104,7 +106,7 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
                             onChange={(e) => null}
                             onFocus={() => null}
                             placeholder={placeholder}
-                            className={`rounded-r-xl h-full w-full ${bg} focus:outline-none placeholder-theta-gray-7 text-theta-gray-7 ${textSize ? textSize : 'text-2xl'}`}
+                            className={`rounded-r-xl h-full w-full ${disabledBg ? disabledBg : bg} focus:outline-none placeholder-theta-gray-7 text-theta-gray-7 ${textSize ? textSize : 'text-2xl'}`}
                         />
                     </div>
                     <div className="text-theta-gray-7 absolute left-0 top-0 bottom-0 flex justify-center items-center">

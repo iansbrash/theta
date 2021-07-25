@@ -26,7 +26,6 @@ import { TaskSaveState, saveTaskGroupOnAdd, activateNumberCommander, updateTaskG
 import electron from 'electron';
 import AmazonTaskClass from '../../Logic/sites/Amazon/classes/AmazonTaskClass';
 import TaskClass from '../../Logic/sites/classes/TaskClass';
-import store from '../../redux/store'
 
 
 interface TextInputProps {
@@ -156,9 +155,9 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
         let toAddTasks : TaskHookProps[] = [];
         let toAddTasks2 : AmazonTaskClass[] = []
 
-        console.log('Accounts and AccountGroups')
-        console.log(addTasksAccount)
-        console.log(addTasksAccountGroup)
+        // console.log('Accounts and AccountGroups')
+        // console.log(addTasksAccount)
+        // console.log(addTasksAccountGroup)
 
         addTasksProfiles.forEach((profile : ProfileObject, i : number) => {
             const newTask : TaskHookProps = {

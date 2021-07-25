@@ -155,24 +155,24 @@ const DropdownSelectMulti : FC<DrowndownSelectMultiProps> = ({
             >
                 <div className={`${dropdownDown ? '' : 'hidden'} focus:outline-none border-b border-l border-r border-theta-gray-7 rounded-bl-lg rounded-br-lg ${bg} h-auto w-full absolute top-0 left-0 right-0 flex flex-col justify-start items-center`}
                 >
-                    {selectionArray.filter(i => itemToString(i).toLowerCase().includes(selectSearchInput.toLowerCase())).map(item => (
+                    {selectionArray.filter(i => itemToString(i)?.toLowerCase().includes(selectSearchInput.toLowerCase())).map(item => (
                         <SelectOption 
                             item={item}
                             handleSelectChange={handleSelectionChange}
                             textSize={textSize}
                             selection={selection}
-                            key={item}
+                            key={itemToString(item)}
                             itemToString={itemToString}
                         />
                     ))}
                     {/* Adding this adds the ones that don't match the criteria below */}
-                    {selectionArray.filter(i => !itemToString(i).toLowerCase().includes(selectSearchInput.toLowerCase())).map(item => (
+                    {selectionArray.filter(i => !itemToString(i)?.toLowerCase().includes(selectSearchInput.toLowerCase())).map(item => (
                         <SelectOption 
                             item={item}
                             handleSelectChange={handleSelectionChange}
                             textSize={textSize}
                             selection={selection}
-                            key={item}
+                            key={itemToString(item)}
                             itemToString={itemToString}
                         />
                     ))}
