@@ -3,7 +3,7 @@ import AddToCart from '../../Logic/sites/Amazon/flow/atc/atc';
 import GETProduct from '../../Logic/sites/Amazon/flow/atc/GETProduct';
 import POSTAddToCart from '../../Logic/sites/Amazon/flow/atc/POSTAmazonATC';
 import timestampLogger from '../../Logic/logger';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import {
     accumulateCookies,
     returnParsedCookies,
@@ -13,6 +13,20 @@ import {
 import CookieObject from '../../Logic/interfaces/CookieObject';
 
 const atcIpc = () => {
+
+    electron.ipcMain.handle('gettest', async (event, ...args) => {
+
+        let hed = args[0]
+
+        let res = await axios({
+            method: 'get',
+            url: 'https://www.amazon.com/Mkeke-Compatible-iPhone-11-Clear/dp/B07W4FMQ5Y/',
+            headers: hed
+        })
+
+        console.log(res.headers)
+    })
+
     electron.ipcMain.handle('AmazonATC', async (event, ...args) => {
         // args:
         // allCookies, product, proxy

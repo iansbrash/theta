@@ -228,6 +228,10 @@ class AmazonTaskClass extends TaskClass {
             return returnCycleStatus
         }
         catch (err) {
+            
+            console.log("tryCatchWrapper: got this error")
+            console.log(err)
+
             throw {
                 status: "Error",
                 message: err
@@ -307,6 +311,11 @@ class AmazonTaskClass extends TaskClass {
 
     /** SignIn Flow via IPC */
 
+    async BIGTEST() : Promise<void> {
+
+        await electron.ipcRenderer.invoke('TESTSHIT', this.allCookies, this.currentProxy);
+    }
+
     async GETMainLoginPage() : Promise<cycleStatus> {
 
         return await this.tryCatchWrapper(async () => {
@@ -351,6 +360,12 @@ class AmazonTaskClass extends TaskClass {
     }
 
     /** SignIn Flow via IPC */
+
+    async signIn() : Promise<void> {
+
+        const res = await electron.ipcRenderer.invoke('AmazonSignIn', this.config.account.username, this.config.account.password, this.currentProxy);
+        this.allCookies = res;
+    }
 
     async addToCart() : Promise<void> {
         // allCookies, product, proxy

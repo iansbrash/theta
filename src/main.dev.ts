@@ -14,33 +14,8 @@ import path from 'path';
 import { app, BrowserWindow, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import MenuBuilder from './menu';
-import authBundle from './ipc/auth/auth';
 import ipcBundle from './ipc/ipcBundle';
-import electron, {
-    Menu
-} from 'electron';
-// import contextMenu from 'electron-context-menu';
-
-
-// contextMenu({
-//     prepend: (defaultActions, parameters, browserWindow) => [
-// 		{
-// 			label: 'Rainbow',
-// 			// Only show it when right-clicking images
-// 			visible: parameters.mediaType === 'image'
-// 		},
-// 		{
-// 			label: 'Search Google for “{selection}”',
-// 			// Only show it when right-clicking text
-// 			visible: parameters.selectionText.trim().length > 0,
-// 			click: () => {
-// 				shell.openExternal(`https://google.com/search?q=${encodeURIComponent(parameters.selectionText)}`);
-// 			}
-// 		}
-// 	]
-// })
-
+import electron from 'electron';
 
 export default class AppUpdater {
   constructor() {
@@ -104,6 +79,7 @@ const createWindow = async () => {
     transparent: true, // lets us have rounded window 
     webPreferences: {
         nodeIntegration: true,
+        webSecurity: false
     },
   });
 
@@ -198,6 +174,20 @@ app.on('window-all-closed', () => {
   }
 });
 
+// app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
+// app.commandLine.appendSwitch('allow-insecure-localhost', 'true')
+// // SSL/TSL: this is the self signed certificate support
+// app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+//     // On certificate error we disable default behaviour (stop loading the page)
+//     // and we then say "it is all fine - true" to the callback
+//     event.preventDefault();
+//     callback(true);
+// });
+// if (process.env.NODE_ENV === 'DEV') {
+
+//     // @ts-ignore
+//     process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+//   }
 app.whenReady().then(() => {
 
     
@@ -212,10 +202,6 @@ app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) createWindow();
-
-  
-    
-
 });
 
 

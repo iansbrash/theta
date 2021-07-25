@@ -12,6 +12,19 @@ import {
 } from '../../Logic/requestFunctions';
 
 const signinIpc = () => {
+    electron.ipcMain.handle('TESTSHIT', async (event, ...args) => {
+        // args:
+        // user, pass, proxy
+        const user = args[0];
+        const pass = args[1];
+        const proxy = args[2];
+    
+        // res is cookies
+        // const res = await testRawFlow2();
+
+        // return res;
+    });
+
     electron.ipcMain.handle('AmazonSignIn', async (event, ...args) => {
         // args:
         // user, pass, proxy
@@ -86,10 +99,16 @@ const signinIpc = () => {
             email
         }, proxy);
 
+        // If we get hit with a captcha
+        if (POSTMainLoginPageResponse.data.indexOf('To better protect your account, please re-enter your password and then enter the characters as they are shown in the image below.') !== -1) {
+            throw Error("Login Captcha Detected")
+        }
+
         allCookies = accumulateCookies(allCookies,
             returnParsedCookies(POSTMainLoginPageResponse.headers['set-cookie'])    
         );
 
+        console.log("Post main login page data")
         console.log(POSTMainLoginPageResponse.data)
 
 
@@ -133,6 +152,11 @@ const signinIpc = () => {
             email,
             password
         }, proxy, license, session)
+
+        // If we get hit with a captcha
+        // if (POSTSubLoginPageRetryResponse.data.indexOf('To better protect your account, please re-enter your password and then enter the characters as they are shown in the image below.') !== -1) {
+        //     throw Error("Login Error")
+        // }
 
         allCookies = accumulateCookies(
             allCookies,

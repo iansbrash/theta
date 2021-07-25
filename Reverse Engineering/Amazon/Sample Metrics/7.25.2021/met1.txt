@@ -1,0 +1,345 @@
+{"metrics":{"el":0,"script":1,"h":0,"batt":0,"perf":0,"auto":0,"tz":0,"fp2":0,"lsubid":0,"browser":0,"capabilities":0,"gpu":0,"dnt":0,"math":0,"tts":0,"input":0,"canvas":0,"captchainput":0,"pow":0},"start":1627191685912,"interaction":{"clicks":0,"touches":0,"keyPresses":0,"cuts":0,"copies":0,"pastes":0,"keyPressTimeIntervals":[],"mouseClickPositions":[],"keyCycles":[],"mouseCycles":[],"touchCycles":[]},"scripts":{"dynamicUrls":["https://c.amazon-adsystem.com/bao-csm/forensics/a9-tq-forensics-incremental.min.js","https://images-na.ssl-images-amazon.com/images/I/31YXrY93hfL.js","https://images-na.ssl-images-amazon.com/images/I/61-6nKPKyWL._RC|11Y+5x+kkTL.js,51KMV3Cz2XL.js,31x4ENTlVIL.js,31f4+QIEeqL.js,01N6xzIJxbL.js,518BI433aLL.js,01rpauTep4L.js,31QZSjMuoeL.js,61ofwvddDeL.js,01KsMxlPtzL.js_.js?AUIClients/AmazonUI","https://images-na.ssl-images-amazon.com/images/I/21G215oqvfL._RC|21OJDARBhQL.js,218GJg15I8L.js,31lucpmF4CL.js,2119M3Ks9rL.js,51pHXSL0+8L.js_.js?AUIClients/AuthenticationPortalAssets","https://images-na.ssl-images-amazon.com/images/I/01wGDSlxwdL.js?AUIClients/AuthenticationPortalInlineAssets","https://images-na.ssl-images-amazon.com/images/I/31wFiUhQ5CL.js?AUIClients/CVFAssets","https://images-na.ssl-images-amazon.com/images/I/81oDzXaLrLL.js?AUIClients/SiegeClientSideEncryptionAUI","https://images-na.ssl-images-amazon.com/images/I/716U66oCsOL.js?AUIClients/FWCIMAssets","https://images-na.ssl-images-amazon.com/images/I/716U66oCsOL.js?AUIClients/FWCIMAssets","https://static.siege-amazon.com/prod/profiles/AuthenticationPortalSigninNA.js"],"inlineHashes":[-1746719145,1965178982,-416949995,-314038750,-682620762,216868775,1424856663,-464169843,318224283,-1820104440,2073308497,4606827,-1611905557,1800521327,2118020403,1532181211,1436011368,325719332],"elapsed":8,"dynamicUrlCount":10,"inlineHashesCount":18},"history":{"length":4},"battery":{},"performance":{"timing":{"connectStart":1627191681119,"navigationStart":1627191681118,"loadEventEnd":1627191685430,"domLoading":1627191681359,"secureConnectionStart":0,"fetchStart":1627191681119,"domContentLoadedEventStart":1627191681557,"responseStart":1627191681348,"responseEnd":1627191681436,"domInteractive":1627191681556,"domainLookupEnd":1627191681119,"redirectStart":0,"requestStart":1627191681123,"unloadEventEnd":1627191681358,"unloadEventStart":1627191681357,"domComplete":1627191685412,"domainLookupStart":1627191681119,"loadEventStart":1627191685412,"domContentLoadedEventEnd":1627191681558,"redirectEnd":0,"connectEnd":1627191681119}},"automation":{"wd":{"properties":{"document":[],"window":[],"navigator":[]}},"phantom":{"properties":{"window":[]}}},"end":1627191710991,"timeZone":-6,"flashVersion":null,"plugins":"Chrome PDF Plugin Chrome PDF Viewer Native Client ||1920-1200-1160-24-*-*-*","dupedPlugins":"Chrome PDF Plugin Chrome PDF Viewer Native Client ||1920-1200-1160-24-*-*-*","screenInfo":"1920-1200-1160-24-*-*-*","lsUbid":"X00-2790367-1677887:1627189813","referrer":"https://www.amazon.com/ap/signin?openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.amazon.com%2F%3Fref_%3Dnav_signin&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36","location":"https://www.amazon.com/ap/signin","webDriver":false,"capabilities":{"css":{"textShadow":1,"WebkitTextStroke":1,"boxShadow":1,"borderRadius":1,"borderImage":1,"opacity":1,"transform":1,"transition":1},"js":{"audio":true,"geolocation":true,"localStorage":"supported","touch":false,"video":true,"webWorker":true},"elapsed":0},"gpu":{"vendor":"Google Inc. (Intel)","model":"ANGLE (Intel, Intel(R) UHD Graphics Direct3D11 vs_5_0 ps_5_0, D3D11-27.20.100.9168)","extensions":["ANGLE_instanced_arrays","EXT_blend_minmax","EXT_color_buffer_half_float","EXT_disjoint_timer_query","EXT_float_blend","EXT_frag_depth","EXT_shader_texture_lod","EXT_texture_compression_bptc","EXT_texture_compression_rgtc","EXT_texture_filter_anisotropic","WEBKIT_EXT_texture_filter_anisotropic","EXT_sRGB","KHR_parallel_shader_compile","OES_element_index_uint","OES_fbo_render_mipmap","OES_standard_derivatives","OES_texture_float","OES_texture_float_linear","OES_texture_half_float","OES_texture_half_float_linear","OES_vertex_array_object","WEBGL_color_buffer_float","WEBGL_compressed_texture_s3tc","WEBKIT_WEBGL_compressed_texture_s3tc","WEBGL_compressed_texture_s3tc_srgb","WEBGL_debug_renderer_info","WEBGL_debug_shaders","WEBGL_depth_texture","WEBKIT_WEBGL_depth_texture","WEBGL_draw_buffers","WEBGL_lose_context","WEBKIT_WEBGL_lose_context","WEBGL_multi_draw"]},"dnt":1,"math":{"tan":"-1.4214488238747245","sin":"0.8178819121159085","cos":"-0.5753861119575491"},"form":{"ap-credential-autofill-hint":{"clicks":0,"touches":0,"keyPresses":0,"cuts":0,"copies":0,"pastes":0,"keyPressTimeIntervals":[],"mouseClickPositions":[],"keyCycles":[],"mouseCycles":[],"touchCycles":[],"width":0,"height":0,"totalFocusTime":0,"prefilled":true},"password":{"clicks":0,"touches":0,"keyPresses":0,"cuts":0,"copies":0,"pastes":0,"keyPressTimeIntervals":[],"mouseClickPositions":[],"keyCycles":[],"mouseCycles":[],"touchCycles":[],"width":296,"height":31,"totalFocusTime":0,"prefilled":false}},"canvas":{"hash":-1417521546,"emailHash":null,"histogramBins":[14624,42,20,33,47,52,17,37,27,43,41,27,15,37,60,23,17,25,79,39,26,35,14,27,59,10,27,30,46,18,47,26,39,16,24,8,31,24,16,28,30,15,16,50,43,21,9,50,24,22,11,40,19,13,11,34,19,25,16,68,30,25,23,13,20,21,31,31,11,19,16,27,41,18,42,11,24,12,28,39,24,19,17,26,15,26,37,52,18,26,12,44,21,18,13,17,30,22,30,83,67,34,529,52,86,36,18,15,17,22,12,16,14,20,36,15,18,15,25,17,24,19,19,21,12,41,69,18,18,83,37,22,35,16,18,13,17,54,13,16,18,21,15,15,25,31,69,27,19,4,53,21,7,104,14,25,14,12,17,16,20,27,16,8,55,11,4,13,30,51,15,14,49,9,18,19,39,22,45,14,14,12,18,76,36,15,15,11,9,54,6,20,12,11,19,53,25,13,65,8,49,13,34,17,52,31,50,38,58,39,12,52,82,12,19,11,20,25,16,33,26,19,18,47,29,27,14,119,56,41,11,54,42,14,33,24,72,14,34,13,41,128,39,24,59,23,69,37,82,34,36,95,39,30,38,13305]},"token":{"isCompatible":true,"pageHasCaptcha":0},"auth":{"form":{"method":"post"}},"errors":[],"version":"4.0.0"}
+
+
+{
+    "metrics": {
+        "el": 0,
+        "script": 1,
+        "h": 0,
+        "batt": 0,
+        "perf": 0,
+        "auto": 0,
+        "tz": 0,
+        "fp2": 0,
+        "lsubid": 0,
+        "browser": 0,
+        "capabilities": 0,
+        "gpu": 0,
+        "dnt": 0,
+        "math": 0,
+        "tts": 0,
+        "input": 0,
+        "canvas": 0,
+        "captchainput": 0,
+        "pow": 0
+    },
+    "start": 1627191685912,
+    "interaction": {
+        "clicks": 0,
+        "touches": 0,
+        "keyPresses": 0,
+        "cuts": 0,
+        "copies": 0,
+        "pastes": 0,
+        "keyPressTimeIntervals": [],
+        "mouseClickPositions": [],
+        "keyCycles": [],
+        "mouseCycles": [],
+        "touchCycles": []
+    },
+    "scripts": {
+        "dynamicUrls": ["https://c.amazon-adsystem.com/bao-csm/forensics/a9-tq-forensics-incremental.min.js", "https://images-na.ssl-images-amazon.com/images/I/31YXrY93hfL.js", "https://images-na.ssl-images-amazon.com/images/I/61-6nKPKyWL._RC|11Y+5x+kkTL.js,51KMV3Cz2XL.js,31x4ENTlVIL.js,31f4+QIEeqL.js,01N6xzIJxbL.js,518BI433aLL.js,01rpauTep4L.js,31QZSjMuoeL.js,61ofwvddDeL.js,01KsMxlPtzL.js_.js?AUIClients/AmazonUI", "https://images-na.ssl-images-amazon.com/images/I/21G215oqvfL._RC|21OJDARBhQL.js,218GJg15I8L.js,31lucpmF4CL.js,2119M3Ks9rL.js,51pHXSL0+8L.js_.js?AUIClients/AuthenticationPortalAssets", "https://images-na.ssl-images-amazon.com/images/I/01wGDSlxwdL.js?AUIClients/AuthenticationPortalInlineAssets", "https://images-na.ssl-images-amazon.com/images/I/31wFiUhQ5CL.js?AUIClients/CVFAssets", "https://images-na.ssl-images-amazon.com/images/I/81oDzXaLrLL.js?AUIClients/SiegeClientSideEncryptionAUI", "https://images-na.ssl-images-amazon.com/images/I/716U66oCsOL.js?AUIClients/FWCIMAssets", "https://images-na.ssl-images-amazon.com/images/I/716U66oCsOL.js?AUIClients/FWCIMAssets", "https://static.siege-amazon.com/prod/profiles/AuthenticationPortalSigninNA.js"],
+        "inlineHashes": [-1746719145, 1965178982, -416949995, -314038750, -682620762, 216868775, 1424856663, -464169843, 318224283, -1820104440, 2073308497, 4606827, -1611905557, 1800521327, 2118020403, 1532181211, 1436011368, 325719332],
+        "elapsed": 8,
+        "dynamicUrlCount": 10,
+        "inlineHashesCount": 18
+    },
+    "history": {
+        "length": 4
+    },
+    "battery": {},
+    "performance": {
+        "timing": {
+            "connectStart": 1627191681119,
+            "navigationStart": 1627191681118,
+            "loadEventEnd": 1627191685430,
+            "domLoading": 1627191681359,
+            "secureConnectionStart": 0,
+            "fetchStart": 1627191681119,
+            "domContentLoadedEventStart": 1627191681557,
+            "responseStart": 1627191681348,
+            "responseEnd": 1627191681436,
+            "domInteractive": 1627191681556,
+            "domainLookupEnd": 1627191681119,
+            "redirectStart": 0,
+            "requestStart": 1627191681123,
+            "unloadEventEnd": 1627191681358,
+            "unloadEventStart": 1627191681357,
+            "domComplete": 1627191685412,
+            "domainLookupStart": 1627191681119,
+            "loadEventStart": 1627191685412,
+            "domContentLoadedEventEnd": 1627191681558,
+            "redirectEnd": 0,
+            "connectEnd": 1627191681119
+        }
+    },
+    "automation": {
+        "wd": {
+            "properties": {
+                "document": [],
+                "window": [],
+                "navigator": []
+            }
+        },
+        "phantom": {
+            "properties": {
+                "window": []
+            }
+        }
+    },
+    "end": 1627191710991,
+    "timeZone": -6,
+    "flashVersion": null,
+    "plugins": "Chrome PDF Plugin Chrome PDF Viewer Native Client ||1920-1200-1160-24-*-*-*",
+    "dupedPlugins": "Chrome PDF Plugin Chrome PDF Viewer Native Client ||1920-1200-1160-24-*-*-*",
+    "screenInfo": "1920-1200-1160-24-*-*-*",
+    "lsUbid": "X00-2790367-1677887:1627189813",
+    "referrer": "https://www.amazon.com/ap/signin?openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.amazon.com%2F%3Fref_%3Dnav_signin&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36",
+    "location": "https://www.amazon.com/ap/signin",
+    "webDriver": false,
+    "capabilities": {
+        "css": {
+            "textShadow": 1,
+            "WebkitTextStroke": 1,
+            "boxShadow": 1,
+            "borderRadius": 1,
+            "borderImage": 1,
+            "opacity": 1,
+            "transform": 1,
+            "transition": 1
+        },
+        "js": {
+            "audio": true,
+            "geolocation": true,
+            "localStorage": "supported",
+            "touch": false,
+            "video": true,
+            "webWorker": true
+        },
+        "elapsed": 0
+    },
+    "gpu": {
+        "vendor": "Google Inc. (Intel)",
+        "model": "ANGLE (Intel, Intel(R) UHD Graphics Direct3D11 vs_5_0 ps_5_0, D3D11-27.20.100.9168)",
+        "extensions": ["ANGLE_instanced_arrays", "EXT_blend_minmax", "EXT_color_buffer_half_float", "EXT_disjoint_timer_query", "EXT_float_blend", "EXT_frag_depth", "EXT_shader_texture_lod", "EXT_texture_compression_bptc", "EXT_texture_compression_rgtc", "EXT_texture_filter_anisotropic", "WEBKIT_EXT_texture_filter_anisotropic", "EXT_sRGB", "KHR_parallel_shader_compile", "OES_element_index_uint", "OES_fbo_render_mipmap", "OES_standard_derivatives", "OES_texture_float", "OES_texture_float_linear", "OES_texture_half_float", "OES_texture_half_float_linear", "OES_vertex_array_object", "WEBGL_color_buffer_float", "WEBGL_compressed_texture_s3tc", "WEBKIT_WEBGL_compressed_texture_s3tc", "WEBGL_compressed_texture_s3tc_srgb", "WEBGL_debug_renderer_info", "WEBGL_debug_shaders", "WEBGL_depth_texture", "WEBKIT_WEBGL_depth_texture", "WEBGL_draw_buffers", "WEBGL_lose_context", "WEBKIT_WEBGL_lose_context", "WEBGL_multi_draw"]
+    },
+    "dnt": 1,
+    "math": {
+        "tan": "-1.4214488238747245",
+        "sin": "0.8178819121159085",
+        "cos": "-0.5753861119575491"
+    },
+    "form": {
+        "ap-credential-autofill-hint": {
+            "clicks": 0,
+            "touches": 0,
+            "keyPresses": 0,
+            "cuts": 0,
+            "copies": 0,
+            "pastes": 0,
+            "keyPressTimeIntervals": [],
+            "mouseClickPositions": [],
+            "keyCycles": [],
+            "mouseCycles": [],
+            "touchCycles": [],
+            "width": 0,
+            "height": 0,
+            "totalFocusTime": 0,
+            "prefilled": true
+        },
+        "password": {
+            "clicks": 0,
+            "touches": 0,
+            "keyPresses": 0,
+            "cuts": 0,
+            "copies": 0,
+            "pastes": 0,
+            "keyPressTimeIntervals": [],
+            "mouseClickPositions": [],
+            "keyCycles": [],
+            "mouseCycles": [],
+            "touchCycles": [],
+            "width": 296,
+            "height": 31,
+            "totalFocusTime": 0,
+            "prefilled": false
+        }
+    },
+    "canvas": {
+        "hash": -1417521546,
+        "emailHash": null,
+        "histogramBins": [14624, 42, 20, 33, 47, 52, 17, 37, 27, 43, 41, 27, 15, 37, 60, 23, 17, 25, 79, 39, 26, 35, 14, 27, 59, 10, 27, 30, 46, 18, 47, 26, 39, 16, 24, 8, 31, 24, 16, 28, 30, 15, 16, 50, 43, 21, 9, 50, 24, 22, 11, 40, 19, 13, 11, 34, 19, 25, 16, 68, 30, 25, 23, 13, 20, 21, 31, 31, 11, 19, 16, 27, 41, 18, 42, 11, 24, 12, 28, 39, 24, 19, 17, 26, 15, 26, 37, 52, 18, 26, 12, 44, 21, 18, 13, 17, 30, 22, 30, 83, 67, 34, 529, 52, 86, 36, 18, 15, 17, 22, 12, 16, 14, 20, 36, 15, 18, 15, 25, 17, 24, 19, 19, 21, 12, 41, 69, 18, 18, 83, 37, 22, 35, 16, 18, 13, 17, 54, 13, 16, 18, 21, 15, 15, 25, 31, 69, 27, 19, 4, 53, 21, 7, 104, 14, 25, 14, 12, 17, 16, 20, 27, 16, 8, 55, 11, 4, 13, 30, 51, 15, 14, 49, 9, 18, 19, 39, 22, 45, 14, 14, 12, 18, 76, 36, 15, 15, 11, 9, 54, 6, 20, 12, 11, 19, 53, 25, 13, 65, 8, 49, 13, 34, 17, 52, 31, 50, 38, 58, 39, 12, 52, 82, 12, 19, 11, 20, 25, 16, 33, 26, 19, 18, 47, 29, 27, 14, 119, 56, 41, 11, 54, 42, 14, 33, 24, 72, 14, 34, 13, 41, 128, 39, 24, 59, 23, 69, 37, 82, 34, 36, 95, 39, 30, 38, 13305]
+    },
+    "token": {
+        "isCompatible": true,
+        "pageHasCaptcha": 0
+    },
+    "auth": {
+        "form": {
+            "method": "post"
+        }
+    },
+    "errors": [],
+    "version": "4.0.0"
+}
+
+
+
+{"metrics":{"el":0,"script":1,"h":0,"batt":0,"perf":0,"auto":0,"tz":0,"fp2":0,"lsubid":0,"browser":0,"capabilities":0,"gpu":0,"dnt":0,"math":0,"tts":0,"input":0,"canvas":0,"captchainput":0,"pow":0},"start":1627191685912,"interaction":{"clicks":0,"touches":0,"keyPresses":0,"cuts":0,"copies":0,"pastes":0,"keyPressTimeIntervals":[],"mouseClickPositions":[],"keyCycles":[],"mouseCycles":[],"touchCycles":[]},"scripts":{"dynamicUrls":["https://c.amazon-adsystem.com/bao-csm/forensics/a9-tq-forensics-incremental.min.js","https://images-na.ssl-images-amazon.com/images/I/31YXrY93hfL.js","https://images-na.ssl-images-amazon.com/images/I/61-6nKPKyWL._RC|11Y+5x+kkTL.js,51KMV3Cz2XL.js,31x4ENTlVIL.js,31f4+QIEeqL.js,01N6xzIJxbL.js,518BI433aLL.js,01rpauTep4L.js,31QZSjMuoeL.js,61ofwvddDeL.js,01KsMxlPtzL.js_.js?AUIClients/AmazonUI","https://images-na.ssl-images-amazon.com/images/I/21G215oqvfL._RC|21OJDARBhQL.js,218GJg15I8L.js,31lucpmF4CL.js,2119M3Ks9rL.js,51pHXSL0+8L.js_.js?AUIClients/AuthenticationPortalAssets","https://images-na.ssl-images-amazon.com/images/I/01wGDSlxwdL.js?AUIClients/AuthenticationPortalInlineAssets","https://images-na.ssl-images-amazon.com/images/I/31wFiUhQ5CL.js?AUIClients/CVFAssets","https://images-na.ssl-images-amazon.com/images/I/81oDzXaLrLL.js?AUIClients/SiegeClientSideEncryptionAUI","https://images-na.ssl-images-amazon.com/images/I/716U66oCsOL.js?AUIClients/FWCIMAssets","https://images-na.ssl-images-amazon.com/images/I/716U66oCsOL.js?AUIClients/FWCIMAssets","https://static.siege-amazon.com/prod/profiles/AuthenticationPortalSigninNA.js"],"inlineHashes":[-1746719145,1965178982,-416949995,-314038750,-682620762,216868775,1424856663,-464169843,318224283,-1820104440,2073308497,4606827,-1611905557,1800521327,2118020403,1532181211,1436011368,325719332],"elapsed":8,"dynamicUrlCount":10,"inlineHashesCount":18},"history":{"length":4},"battery":{},"performance":{"timing":{"connectStart":1627191681119,"navigationStart":1627191681118,"loadEventEnd":1627191685430,"domLoading":1627191681359,"secureConnectionStart":0,"fetchStart":1627191681119,"domContentLoadedEventStart":1627191681557,"responseStart":1627191681348,"responseEnd":1627191681436,"domInteractive":1627191681556,"domainLookupEnd":1627191681119,"redirectStart":0,"requestStart":1627191681123,"unloadEventEnd":1627191681358,"unloadEventStart":1627191681357,"domComplete":1627191685412,"domainLookupStart":1627191681119,"loadEventStart":1627191685412,"domContentLoadedEventEnd":1627191681558,"redirectEnd":0,"connectEnd":1627191681119}},"automation":{"wd":{"properties":{"document":[],"window":[],"navigator":[]}},"phantom":{"properties":{"window":[]}}},"end":1627191710991,"timeZone":-6,"flashVersion":null,"plugins":"Chrome PDF Plugin Chrome PDF Viewer Native Client ||1920-1200-1160-24-*-*-*","dupedPlugins":"Chrome PDF Plugin Chrome PDF Viewer Native Client ||1920-1200-1160-24-*-*-*","screenInfo":"1920-1200-1160-24-*-*-*","lsUbid":"X00-2790367-1677887:1627189813","referrer":"https://www.amazon.com/ap/signin?openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.amazon.com%2F%3Fref_%3Dnav_signin&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36","location":"https://www.amazon.com/ap/signin","webDriver":false,"capabilities":{"css":{"textShadow":1,"WebkitTextStroke":1,"boxShadow":1,"borderRadius":1,"borderImage":1,"opacity":1,"transform":1,"transition":1},"js":{"audio":true,"geolocation":true,"localStorage":"supported","touch":false,"video":true,"webWorker":true},"elapsed":0},"gpu":{"vendor":"Google Inc. (Intel)","model":"ANGLE (Intel, Intel(R) UHD Graphics Direct3D11 vs_5_0 ps_5_0, D3D11-27.20.100.9168)","extensions":["ANGLE_instanced_arrays","EXT_blend_minmax","EXT_color_buffer_half_float","EXT_disjoint_timer_query","EXT_float_blend","EXT_frag_depth","EXT_shader_texture_lod","EXT_texture_compression_bptc","EXT_texture_compression_rgtc","EXT_texture_filter_anisotropic","WEBKIT_EXT_texture_filter_anisotropic","EXT_sRGB","KHR_parallel_shader_compile","OES_element_index_uint","OES_fbo_render_mipmap","OES_standard_derivatives","OES_texture_float","OES_texture_float_linear","OES_texture_half_float","OES_texture_half_float_linear","OES_vertex_array_object","WEBGL_color_buffer_float","WEBGL_compressed_texture_s3tc","WEBKIT_WEBGL_compressed_texture_s3tc","WEBGL_compressed_texture_s3tc_srgb","WEBGL_debug_renderer_info","WEBGL_debug_shaders","WEBGL_depth_texture","WEBKIT_WEBGL_depth_texture","WEBGL_draw_buffers","WEBGL_lose_context","WEBKIT_WEBGL_lose_context","WEBGL_multi_draw"]},"dnt":1,"math":{"tan":"-1.4214488238747245","sin":"0.8178819121159085","cos":"-0.5753861119575491"},"form":{"ap-credential-autofill-hint":{"clicks":0,"touches":0,"keyPresses":0,"cuts":0,"copies":0,"pastes":0,"keyPressTimeIntervals":[],"mouseClickPositions":[],"keyCycles":[],"mouseCycles":[],"touchCycles":[],"width":0,"height":0,"totalFocusTime":0,"prefilled":true},"password":{"clicks":0,"touches":0,"keyPresses":0,"cuts":0,"copies":0,"pastes":0,"keyPressTimeIntervals":[],"mouseClickPositions":[],"keyCycles":[],"mouseCycles":[],"touchCycles":[],"width":296,"height":31,"totalFocusTime":0,"prefilled":false}},"canvas":{"hash":-1417521546,"emailHash":null,"histogramBins":[14624,42,20,33,47,52,17,37,27,43,41,27,15,37,60,23,17,25,79,39,26,35,14,27,59,10,27,30,46,18,47,26,39,16,24,8,31,24,16,28,30,15,16,50,43,21,9,50,24,22,11,40,19,13,11,34,19,25,16,68,30,25,23,13,20,21,31,31,11,19,16,27,41,18,42,11,24,12,28,39,24,19,17,26,15,26,37,52,18,26,12,44,21,18,13,17,30,22,30,83,67,34,529,52,86,36,18,15,17,22,12,16,14,20,36,15,18,15,25,17,24,19,19,21,12,41,69,18,18,83,37,22,35,16,18,13,17,54,13,16,18,21,15,15,25,31,69,27,19,4,53,21,7,104,14,25,14,12,17,16,20,27,16,8,55,11,4,13,30,51,15,14,49,9,18,19,39,22,45,14,14,12,18,76,36,15,15,11,9,54,6,20,12,11,19,53,25,13,65,8,49,13,34,17,52,31,50,38,58,39,12,52,82,12,19,11,20,25,16,33,26,19,18,47,29,27,14,119,56,41,11,54,42,14,33,24,72,14,34,13,41,128,39,24,59,23,69,37,82,34,36,95,39,30,38,13305]},"token":{"isCompatible":true,"pageHasCaptcha":0},"auth":{"form":{"method":"post"}},"errors":[],"version":"4.0.0"}
+
+
+{
+    "metrics": {
+        "el": 0,
+        "script": 1,
+        "h": 0,
+        "batt": 0,
+        "perf": 0,
+        "auto": 0,
+        "tz": 0,
+        "fp2": 0,
+        "lsubid": 0,
+        "browser": 0,
+        "capabilities": 0,
+        "gpu": 0,
+        "dnt": 0,
+        "math": 0,
+        "tts": 0,
+        "input": 0,
+        "canvas": 0,
+        "captchainput": 0,
+        "pow": 0
+    },
+    "interaction": {
+        "clicks": 0,
+        "touches": 0,
+        "keyPresses": 0,
+        "cuts": 0,
+        "copies": 0,
+        "pastes": 0,
+        "keyPressTimeIntervals": [],
+        "mouseClickPositions": [],
+        "keyCycles": [],
+        "mouseCycles": [],
+        "touchCycles": []
+    },
+    "scripts": {
+        "dynamicUrls": ["https://c.amazon-adsystem.com/bao-csm/forensics/a9-tq-forensics-incremental.min.js", "https://images-na.ssl-images-amazon.com/images/I/31YXrY93hfL.js", "https://images-na.ssl-images-amazon.com/images/I/61-6nKPKyWL._RC|11Y+5x+kkTL.js,51KMV3Cz2XL.js,31x4ENTlVIL.js,31f4+QIEeqL.js,01N6xzIJxbL.js,518BI433aLL.js,01rpauTep4L.js,31QZSjMuoeL.js,61ofwvddDeL.js,01KsMxlPtzL.js_.js?AUIClients/AmazonUI", "https://images-na.ssl-images-amazon.com/images/I/21G215oqvfL._RC|21OJDARBhQL.js,218GJg15I8L.js,31lucpmF4CL.js,2119M3Ks9rL.js,51pHXSL0+8L.js_.js?AUIClients/AuthenticationPortalAssets", "https://images-na.ssl-images-amazon.com/images/I/01wGDSlxwdL.js?AUIClients/AuthenticationPortalInlineAssets", "https://images-na.ssl-images-amazon.com/images/I/31wFiUhQ5CL.js?AUIClients/CVFAssets", "https://images-na.ssl-images-amazon.com/images/I/81oDzXaLrLL.js?AUIClients/SiegeClientSideEncryptionAUI", "https://images-na.ssl-images-amazon.com/images/I/716U66oCsOL.js?AUIClients/FWCIMAssets", "https://images-na.ssl-images-amazon.com/images/I/716U66oCsOL.js?AUIClients/FWCIMAssets", "https://static.siege-amazon.com/prod/profiles/AuthenticationPortalSigninNA.js"],
+        "inlineHashes": [-1746719145, 1965178982, -416949995, -314038750, -682620762, 216868775, 1424856663, -464169843, 318224283, -1820104440, 2073308497, 4606827, -1611905557, 1800521327, 2118020403, 1532181211, 1436011368, 325719332],
+        "elapsed": 8,
+        "dynamicUrlCount": 10,
+        "inlineHashesCount": 18
+    },
+    "history": {
+        "length": 4
+    },
+    "battery": {},
+    "automation": {
+        "wd": {
+            "properties": {
+                "document": [],
+                "window": [],
+                "navigator": []
+            }
+        },
+        "phantom": {
+            "properties": {
+                "window": []
+            }
+        }
+    },
+    "timeZone": -6,
+    "flashVersion": null,
+    "plugins": "Chrome PDF Plugin Chrome PDF Viewer Native Client ||1920-1200-1160-24-*-*-*",
+    "dupedPlugins": "Chrome PDF Plugin Chrome PDF Viewer Native Client ||1920-1200-1160-24-*-*-*",
+    "screenInfo": "1920-1200-1160-24-*-*-*",
+    "referrer": "https://www.amazon.com/ap/signin?openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.amazon.com%2F%3Fref_%3Dnav_signin&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36",
+    "location": "https://www.amazon.com/ap/signin",
+    "webDriver": false,
+    "capabilities": {
+        "css": {
+            "textShadow": 1,
+            "WebkitTextStroke": 1,
+            "boxShadow": 1,
+            "borderRadius": 1,
+            "borderImage": 1,
+            "opacity": 1,
+            "transform": 1,
+            "transition": 1
+        },
+        "js": {
+            "audio": true,
+            "geolocation": true,
+            "localStorage": "supported",
+            "touch": false,
+            "video": true,
+            "webWorker": true
+        },
+        "elapsed": 0
+    },
+    "gpu": {
+        "vendor": "Google Inc. (Intel)",
+        "model": "ANGLE (Intel, Intel(R) UHD Graphics Direct3D11 vs_5_0 ps_5_0, D3D11-27.20.100.9168)",
+        "extensions": ["ANGLE_instanced_arrays", "EXT_blend_minmax", "EXT_color_buffer_half_float", "EXT_disjoint_timer_query", "EXT_float_blend", "EXT_frag_depth", "EXT_shader_texture_lod", "EXT_texture_compression_bptc", "EXT_texture_compression_rgtc", "EXT_texture_filter_anisotropic", "WEBKIT_EXT_texture_filter_anisotropic", "EXT_sRGB", "KHR_parallel_shader_compile", "OES_element_index_uint", "OES_fbo_render_mipmap", "OES_standard_derivatives", "OES_texture_float", "OES_texture_float_linear", "OES_texture_half_float", "OES_texture_half_float_linear", "OES_vertex_array_object", "WEBGL_color_buffer_float", "WEBGL_compressed_texture_s3tc", "WEBKIT_WEBGL_compressed_texture_s3tc", "WEBGL_compressed_texture_s3tc_srgb", "WEBGL_debug_renderer_info", "WEBGL_debug_shaders", "WEBGL_depth_texture", "WEBKIT_WEBGL_depth_texture", "WEBGL_draw_buffers", "WEBGL_lose_context", "WEBKIT_WEBGL_lose_context", "WEBGL_multi_draw"]
+    },
+    "dnt": 1,
+    "math": {
+        "tan": "-1.4214488238747245",
+        "sin": "0.8178819121159085",
+        "cos": "-0.5753861119575491"
+    },
+    "form": {
+        "ap-credential-autofill-hint": {
+            "clicks": 0,
+            "touches": 0,
+            "keyPresses": 0,
+            "cuts": 0,
+            "copies": 0,
+            "pastes": 0,
+            "keyPressTimeIntervals": [],
+            "mouseClickPositions": [],
+            "keyCycles": [],
+            "mouseCycles": [],
+            "touchCycles": [],
+            "width": 0,
+            "height": 0,
+            "totalFocusTime": 0,
+            "prefilled": true
+        },
+        "password": {
+            "clicks": 0,
+            "touches": 0,
+            "keyPresses": 0,
+            "cuts": 0,
+            "copies": 0,
+            "pastes": 0,
+            "keyPressTimeIntervals": [],
+            "mouseClickPositions": [],
+            "keyCycles": [],
+            "mouseCycles": [],
+            "touchCycles": [],
+            "width": 296,
+            "height": 31,
+            "totalFocusTime": 0,
+            "prefilled": false
+        }
+    },
+    "canvas": {
+        "hash": -1417521546,
+        "emailHash": null,
+        "histogramBins": [14624, 42, 20, 33, 47, 52, 17, 37, 27, 43, 41, 27, 15, 37, 60, 23, 17, 25, 79, 39, 26, 35, 14, 27, 59, 10, 27, 30, 46, 18, 47, 26, 39, 16, 24, 8, 31, 24, 16, 28, 30, 15, 16, 50, 43, 21, 9, 50, 24, 22, 11, 40, 19, 13, 11, 34, 19, 25, 16, 68, 30, 25, 23, 13, 20, 21, 31, 31, 11, 19, 16, 27, 41, 18, 42, 11, 24, 12, 28, 39, 24, 19, 17, 26, 15, 26, 37, 52, 18, 26, 12, 44, 21, 18, 13, 17, 30, 22, 30, 83, 67, 34, 529, 52, 86, 36, 18, 15, 17, 22, 12, 16, 14, 20, 36, 15, 18, 15, 25, 17, 24, 19, 19, 21, 12, 41, 69, 18, 18, 83, 37, 22, 35, 16, 18, 13, 17, 54, 13, 16, 18, 21, 15, 15, 25, 31, 69, 27, 19, 4, 53, 21, 7, 104, 14, 25, 14, 12, 17, 16, 20, 27, 16, 8, 55, 11, 4, 13, 30, 51, 15, 14, 49, 9, 18, 19, 39, 22, 45, 14, 14, 12, 18, 76, 36, 15, 15, 11, 9, 54, 6, 20, 12, 11, 19, 53, 25, 13, 65, 8, 49, 13, 34, 17, 52, 31, 50, 38, 58, 39, 12, 52, 82, 12, 19, 11, 20, 25, 16, 33, 26, 19, 18, 47, 29, 27, 14, 119, 56, 41, 11, 54, 42, 14, 33, 24, 72, 14, 34, 13, 41, 128, 39, 24, 59, 23, 69, 37, 82, 34, 36, 95, 39, 30, 38, 13305]
+    },
+    "token": {
+        "isCompatible": true,
+        "pageHasCaptcha": 0
+    },
+    "auth": {
+        "form": {
+            "method": "post"
+        }
+    },
+    "errors": [],
+    "version": "4.0.0"
+}

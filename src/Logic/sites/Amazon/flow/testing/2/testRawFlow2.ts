@@ -10,8 +10,7 @@ import AmazonTaskConfig from "../../../../../interfaces/site_task_config/AmazonT
 import Task from "../../../../../interfaces/Task";
 import AmazonTask from "./AmazonTask2";
 
-(async () => {
-
+const testRawFlow2 = async () => {
     const t : Task = {
         identifier: 1,
         site: Site.Amazon,
@@ -27,6 +26,27 @@ import AmazonTask from "./AmazonTask2";
 
     const res = await AmazonTask(t, c, () => null)
     console.log(res)
+}
+
+(async () => {
+
+    await testRawFlow2();
+
+    // const t : Task = {
+    //     identifier: 1,
+    //     site: Site.Amazon,
+    //     profile: testProfile,
+    //     size: [Size.OS],
+    //     proxyList: testProxyList
+    // }
+
+    // const c : AmazonTaskConfig = {
+    //     mode: AmazonModes.Fast,
+    //     account: testAccount
+    // }
+
+    // const res = await AmazonTask(t, c, () => null)
+    // console.log(res)
 
 
 })();

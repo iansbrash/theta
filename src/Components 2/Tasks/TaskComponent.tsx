@@ -11,7 +11,7 @@ import axios from 'axios';
 import api from '../../Logic/api';
 import { TaskHookProps } from './TaskGroupInterface';
 import Site from '../../Logic/interfaces/enums/Site';
-
+import electron from 'electron'
 interface InterestingWrapperProps {
     children: ReactNode,
     width: string,
@@ -130,6 +130,12 @@ const TaskComponent : FC<TaskComponentProps> = ({
 
         let prPrice = 0;
 
+        // await (task as AmazonTaskClass).BIGTEST()
+        // await (task as AmazonTaskClass).addToCart()
+        // await (task as AmazonTaskClass).checkout()
+        // return;
+
+        // return;
         while (task.status === 'Active') {
             setStatusColor('text-blue-100');
             res = await task.cycle();
@@ -138,23 +144,25 @@ const TaskComponent : FC<TaskComponentProps> = ({
                 setStatus("Stopped")
                 return;
             }
-            setStatus(res.message);
+            else if (res.status === "Error") {
+                console.log('got an error!')
+                console.log(res)
+                // setStatus(res.message);
+                setStatus("Error"); // Guess we're doing this :|
 
-            if (res.extraData !== undefined) {
-                prTitle = res.extraData.productTitle;
-                setProductTitle(prTitle)
-
-                prImage = res.extraData.productImage
-                setProductImage(prImage)
-
-                prPrice = res.extraData.productPrice
-            }
-
-            if (res.status === "Error") {
                 setStatusColor('text-red-400');
                 await delay(task.delays.error);
                 setStatus(lastStatus);
+                continue;
             }
+            else if (res.extraData !== undefined) {
+                prTitle = res.extraData.productTitle;
+                setProductTitle(prTitle)
+                prImage = res.extraData.productImage
+                setProductImage(prImage)
+                prPrice = res.extraData.productPrice
+            }
+            setStatus(res.message);
             lastStatus = res.message;
         }
 
@@ -222,8 +230,10 @@ const TaskComponent : FC<TaskComponentProps> = ({
     }
 
     // COMING SOON!
-    const editTask = () => {
-
+    const editTask = async () => {
+        await electron.ipcRenderer.invoke('gettest', {
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Safari/537.36', 
+        })
     }
 
     const stopTask = () => {

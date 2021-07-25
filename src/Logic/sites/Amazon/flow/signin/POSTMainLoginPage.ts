@@ -54,6 +54,7 @@ const POSTMainLoginPage = async (allCookies : string[], sessionId: string, data 
             'accept-language': 'en-US,en;q=0.9', 
             cookie: joinCookies(allCookies),
         },
+        // withCredentials: true,
         httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
         data : POSTMainLoginPageData
     });
