@@ -52,7 +52,7 @@ const DropdownSelect : FC<DrowndownSelectProps> = ({
 
     const relativeRef = useRef<HTMLDivElement>(null);
 
-    // useEffect(() => { selection !== undefined && selection !== null ? setSelectSearchInput(itemToString(selection)) : null; console.log(selection)}, [selection])
+    useEffect(() => { (onlySetSelection && selection) ? setSelectSearchInput(itemToString(selection)) : null}, [selection])
 
     const handleSiteChange = (a : any) => {
         if (onlySetSelection) {

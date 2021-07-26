@@ -157,30 +157,55 @@ const Profiles : FC = () => {
 
         console.log("Beginning profile sanitization.")
 
-        const cantBeEmptyString : string[] = [
-            profileName,
-            email,
-            phone,
-            shipFname,
-            shipLname,
-            shipAddr1,
-            shipCity,
-            shipZip,
-            billFname,
-            billLname,
-            billAddr1,
-            billCity,
-            billZip,
-            paymentName,
-            paymentNumber,
-            paymentExpMonth,
-            paymentExpYear,
-            paymentCVV,
-            shipCountry,
-            shipState,
-            billCountry,
-            billState,    
-        ]
+        let cantBeEmptyString : string[];
+        
+        if (sameBillingAsShip) {
+            cantBeEmptyString = [
+                profileName,
+                email,
+                phone,
+                shipFname,
+                shipLname,
+                shipAddr1,
+                shipCity,
+                shipZip,
+                paymentName,
+                paymentNumber,
+                paymentExpMonth,
+                paymentExpYear,
+                paymentCVV,
+                shipCountry,
+                shipState, 
+            ]
+        }
+        else {
+            cantBeEmptyString = [
+                profileName,
+                email,
+                phone,
+                shipFname,
+                shipLname,
+                shipAddr1,
+                shipCity,
+                shipZip,
+                billFname,
+                billLname,
+                billAddr1,
+                billCity,
+                billZip,
+                paymentName,
+                paymentNumber,
+                paymentExpMonth,
+                paymentExpYear,
+                paymentCVV,
+                shipCountry,
+                shipState,
+                billCountry,
+                billState,    
+            ]
+        }
+        
+        
 
         for (const i in cantBeEmptyString) {
             if (cantBeEmptyString[i] === '') {

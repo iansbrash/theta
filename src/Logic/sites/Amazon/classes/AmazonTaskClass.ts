@@ -2,18 +2,16 @@ import Site from "../../../interfaces/enums/Site";
 import Size from "../../../interfaces/enums/Size";
 import ProfileObject from "../../../interfaces/ProfileObject";
 import ProxyList, { Proxy } from "../../../interfaces/ProxyList";
-import TaskClass, { internalStatus, cycleStatus } from "../../classes/TaskClass";
+import TaskClass, { cycleStatus, Storage } from "../../classes/TaskClass";
 import AmazonTaskConfig, { AmazonModes } from "../../../interfaces/site_task_config/AmazonTaskConfig";
 import electron from 'electron';
 import { convertCookieArrayToObject } from "../../../requestFunctions";
 
-interface storage {
-    [key: string]: string
-}
+
 
 interface ipcResponse {
     allCookies: string[],
-    storage: storage
+    storage: Storage
 }
 
 export enum AmazonStatus {
@@ -24,10 +22,7 @@ export enum AmazonStatus {
 class AmazonTaskClass extends TaskClass {
 
     config : AmazonTaskConfig;
-    allCookies : string[];
-    allCookiesObject : object = {};
-    storage : storage = {};
-    status : string = "Idle";
+
     flow : "normalFlow" | "fastFlow" | "preloadFlow";
     flowExtraData : "normalFlowExtraData" | "fastFlowExtraData" | "preloadFlowExtraData";
     currentProxy : Proxy;
@@ -210,97 +205,11 @@ class AmazonTaskClass extends TaskClass {
         }
     }
 
-    async tryCatchWrapper(fn : (() => Promise<any>), successMessage : string) : Promise<cycleStatus> {
-        try {
-            
-            const res = await fn();
+    
 
-            let returnCycleStatus : cycleStatus = {
-                status: "Success",
-                message: successMessage
-            }
 
-            if (res === null || res === undefined) {}
-            else if (res.extraData) {
-                returnCycleStatus.extraData = res.extraData;
-            }
 
-            return returnCycleStatus
-        }
-        catch (err) {
-            
-            console.log("tryCatchWrapper: got this error")
-            console.log(err)
-
-            throw {
-                status: "Error",
-                message: err
-            }
-        }
-    }
-
-    async start() : Promise<string> {
-        if (this.status !== "Active"){
-
-            this.nextFunctionIndex = 0;
-            this.internalStatus = internalStatus.Active;
-            this.status = "Active";
-            this.storage = {};
-            this.allCookies = [];
-
-            return "Ready";
-
-        }
-        else {
-            throw "Task is not idle"
-        }
-    }
-
-    async cycle() : Promise<cycleStatus> {
-        if (this.status === "Active") {
-            try {
-
-                console.log(`about to run ${this[this.flow][this.nextFunctionIndex]}`)
-
-                // @ts-ignore
-                const res = await this[this[this.flow][this.nextFunctionIndex]]();
-
-                let returnCycleStatus : cycleStatus = {
-                    status: 'Success',
-                    message: res.message
-                }
-
-                // @ts-ignore
-                if (this[this.flowExtraData][this.nextFunctionIndex].length > 0) {
-                    let extraData = {};
-                    // @ts-ignore
-                    this[this.flowExtraData][this.nextFunctionIndex].forEach(data => extraData = {...extraData, [data]: res.extraData[data]} )
-
-                    returnCycleStatus.extraData = extraData;
-                }
-
-                this.nextFunctionIndex += 1;
-
-                return returnCycleStatus;
-            }
-            // catches thrown error from nextFunction
-            catch (err) {
-                return err;
-            }
-        }
-        else if (this.status === "Checked Out") {
-            return {
-                status: "Stopped",
-                message: "Checked Out"
-            }
-        }
-        else {
-            return {
-                status: "Stopped", 
-                message: "Stopped"
-            }
-        }
-    }
+    
 
     /// thoughts:
     // each class has a "cycle" abstract method
@@ -311,10 +220,6 @@ class AmazonTaskClass extends TaskClass {
 
     /** SignIn Flow via IPC */
 
-    async BIGTEST() : Promise<void> {
-
-        await electron.ipcRenderer.invoke('TESTSHIT', this.allCookies, this.currentProxy);
-    }
 
     async GETMainLoginPage() : Promise<cycleStatus> {
 
@@ -535,11 +440,19 @@ class AmazonTaskClass extends TaskClass {
         const res = await electron.ipcRenderer.invoke('AmazonCheckout', this.allCookies, this.currentProxy);
     }
 
-
-    stop() : void {
-        this.status = "Stopped"
-        console.log('stopping !')
+    async sendLocalDiscordSuccess() : Promise<void> {
+        return;
     }
+    async getPublicDiscordSuccessHeaders() : Promise<{
+        license: string,
+        session: string,
+        [key : string]: string | number
+    }> {
+        return {
+            license: '1', session: '1'
+        }
+    } 
+
 
     /** Checkout Flow via IPC */
 }

@@ -22,10 +22,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 import Site from '../../Logic/interfaces/enums/Site';
 import Size from '../../Logic/interfaces/enums/Size';
-import { TaskSaveState, saveTaskGroupOnAdd, activateNumberCommander, updateTaskGroupDelay } from '../../redux/reducers/tasksSlice'
+import { saveTaskGroupOnAdd, activateNumberCommander, updateTaskGroupDelay } from '../../redux/reducers/tasksSlice'
 import electron from 'electron';
 import AmazonTaskClass from '../../Logic/sites/Amazon/classes/AmazonTaskClass';
-import TaskClass from '../../Logic/sites/classes/TaskClass';
 
 
 interface TextInputProps {
