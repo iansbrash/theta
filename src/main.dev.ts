@@ -90,7 +90,8 @@ const createWindow = async () => {
     transparent: true, // lets us have rounded window 
     webPreferences: {
         nodeIntegration: true,
-        webSecurity: false
+        webSecurity: false,
+        nodeIntegrationInWorker: true,
     },
   });
 

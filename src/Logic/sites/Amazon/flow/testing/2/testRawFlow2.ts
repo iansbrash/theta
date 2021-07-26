@@ -10,7 +10,7 @@ import AmazonTaskConfig from "../../../../../interfaces/site_task_config/AmazonT
 import Task from "../../../../../interfaces/Task";
 import AmazonTask from "./AmazonTask2";
 
-const testRawFlow2 = async () => {
+export const testRawFlow2 = async () => {
     const t : Task = {
         identifier: 1,
         site: Site.Amazon,

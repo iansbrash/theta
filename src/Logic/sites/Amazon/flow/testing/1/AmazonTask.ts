@@ -37,7 +37,7 @@ const AmazonTask = async (task : Task, taskConfig : AmazonTaskConfig, statusWatc
     tsLogger(`Starting task ${identifier} on ${Site[site]} using proxy ${printProxy(proxy)} on profile ${profile.information.name} for size ${size} with account ${taskConfig.account.username} using ${taskConfig.mode} mode`)
     statusWatcher('Signing in...')
     let allCookies = await signIn(taskConfig.account.username, taskConfig.account.password, proxy);
-    
+    // return;
     statusWatcher('Adding to cart...')
     allCookies = await AddToCart(allCookies, product, proxy);
 
