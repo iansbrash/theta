@@ -389,8 +389,6 @@ class AmazonTaskClass extends TaskClass {
     }
 
     async POSTAddPaymentMethod() : Promise<cycleStatus> {
-
-        console.log(this.storage)
         return await this.tryCatchWrapper(async () => {
             const res = await electron.ipcRenderer.invoke('POSTAddPaymentMethod', this.allCookies, this.storage, this.profile.payment, this.currentProxy);
 

@@ -170,6 +170,8 @@ abstract class TaskClass implements Task {
             
             console.log("tryCatchWrapper: got this error")
             console.log(err)
+            console.log(Object.keys(err))
+            console.log(err.isSleepy)
 
             throw {
                 status: "Error",

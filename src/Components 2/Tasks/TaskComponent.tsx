@@ -249,9 +249,16 @@ const TaskComponent : FC<TaskComponentProps> = ({
         //     console.log(JSON.parse(primes));
         // });
 
-        const worker = new Worker("./worker.js")
-        worker.postMessage("do work")
+        // const worker = new Worker("./worker.js")
+        // worker.postMessage("do work")
 
+        try {
+            throw "XD Error"
+        }
+        catch (err) {
+            console.log(err)
+            throw err;
+        }
         
     }
 

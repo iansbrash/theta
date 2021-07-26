@@ -51,7 +51,22 @@ const atcIpc = () => {
     
         let allCookiesObject : CookieObject = {}; 
 
-        const GETAmazonProductRes : AxiosResponse = await GETProduct(allCookies, product, proxy)
+        let GETAmazonProductRes  : AxiosResponse;
+        try {
+            GETAmazonProductRes = await GETProduct(allCookies, product, proxy)
+        }
+        catch (err) {
+            if (err.response.status === 404) {
+                console.log("Product not found")
+                // throw "Error" + 404
+                throw "FIUC THIS SHIT"
+            }
+            else {
+                console.log("Error " + err.response.status)
+                throw "Error " + err.response.status
+            }
+        }
+
 
         const FindCSRFData : string= GETAmazonProductRes.data;
         const CSRFDelimiter : string = '<input type="hidden" name="CSRF" value="';
