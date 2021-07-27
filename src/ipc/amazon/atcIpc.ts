@@ -11,6 +11,7 @@ import {
     getValueByDelimiters,
 } from '../../Logic/requestFunctions';
 import CookieObject from '../../Logic/interfaces/CookieObject';
+import constructError, { constructWarning } from '../errorConstructor';
 
 const atcIpc = () => {
 
@@ -59,11 +60,12 @@ const atcIpc = () => {
             if (err.response.status === 404) {
                 console.log("Product not found")
                 // throw "Error" + 404
-                throw "FIUC THIS SHIT"
+                return constructWarning(404, "Waiting for product")
             }
             else {
                 console.log("Error " + err.response.status)
-                throw "Error " + err.response.status
+                return constructError(0, "Unknown error")
+
             }
         }
 

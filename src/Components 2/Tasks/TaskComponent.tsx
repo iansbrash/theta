@@ -135,12 +135,6 @@ const TaskComponent : FC<TaskComponentProps> = ({
 
         let prPrice = 0;
 
-        // await (task as AmazonTaskClass).BIGTEST()
-        // await (task as AmazonTaskClass).addToCart()
-        // await (task as AmazonTaskClass).checkout()
-        // return;
-
-        // return;
         while (task.status === 'Active') {
             setStatusColor('text-blue-100');
             res = await task.cycle();
@@ -153,7 +147,7 @@ const TaskComponent : FC<TaskComponentProps> = ({
                 console.log('got an error!')
                 console.log(res)
                 // setStatus(res.message);
-                setStatus("Error"); // Guess we're doing this :|
+                setStatus(typeof res === 'string' ? res : (res.message ? res.message : "Unknown Error")); // Guess we're doing this :|
 
                 setStatusColor('text-red-400');
                 await delay(task.delays.error);
@@ -161,7 +155,17 @@ const TaskComponent : FC<TaskComponentProps> = ({
                 if (task.getStatus() === "Stopped") {
                     break;
                 }
-                setStatus(lastStatus);
+                // setStatus(lastStatus);
+                continue;
+            }
+            else  if (res.status === "Warning") {
+                setStatus(res.message); // Guess we're doing this :|
+                await delay(task.delays.monitor);
+
+                if (task.getStatus() === "Stopped") {
+                    break;
+                }
+                // setStatus(lastStatus);
                 continue;
             }
             else if (res.extraData !== undefined) {
@@ -251,15 +255,6 @@ const TaskComponent : FC<TaskComponentProps> = ({
 
         // const worker = new Worker("./worker.js")
         // worker.postMessage("do work")
-
-        try {
-            throw "XD Error"
-        }
-        catch (err) {
-            console.log(err)
-            throw err;
-        }
-        
     }
 
     const stopTask = () => {

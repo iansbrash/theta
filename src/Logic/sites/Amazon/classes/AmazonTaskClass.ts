@@ -291,6 +291,8 @@ class AmazonTaskClass extends TaskClass {
         return await this.tryCatchWrapper(async () => {
             const res = await electron.ipcRenderer.invoke('AmazonGETProduct', this.allCookies, this.input, this.currentProxy);
 
+            if (res.isError) throw res;
+
             this.allCookies = res.allCookies;
             this.storage = {
                 ...res.storage,

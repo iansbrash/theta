@@ -11,7 +11,7 @@ export interface Delay {
 }
 
 export interface cycleStatus {
-    status: "Success" | "Error" | "Stopped",
+    status: "Success" | "Warning" | "Error" | "Stopped",
     message: string,
     extraData?: any
 }
@@ -170,12 +170,12 @@ abstract class TaskClass implements Task {
             
             console.log("tryCatchWrapper: got this error")
             console.log(err)
-            console.log(Object.keys(err))
-            console.log(err.isSleepy)
+            // console.log(Object.keys(err))
+            // console.log(err.isSleepy)
 
             throw {
-                status: "Error",
-                message: err
+                status: err.isError,
+                message: err.message
             }
         }
     }
