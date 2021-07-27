@@ -73,6 +73,7 @@ export const accumulateCookies = (originalCookieArray : string | string[], setCo
         return cookie.substring(0, cookie.indexOf('=') + 1).toLowerCase(); 
     }
 
+    // @ts-ignore
     const makeLowerCase = (cookieArray : string[]) : string[] => {
         let toRet : string[] = [];
         cookieArray.forEach(ck => {
@@ -103,8 +104,8 @@ export const accumulateCookies = (originalCookieArray : string | string[], setCo
 
     let newCookieArray : string[] = [];
 
-    newOriginalCookieArray = makeLowerCase(newOriginalCookieArray);
-    newOrigCookieArray = makeLowerCase(newOrigCookieArray);
+    // newOriginalCookieArray = makeLowerCase(newOriginalCookieArray);
+    // newOrigCookieArray = makeLowerCase(newOrigCookieArray);
 
     newOrigCookieArray.forEach(newCookie => {
 
