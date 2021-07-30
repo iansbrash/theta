@@ -11233,6 +11233,8 @@
         // ProtectPANandCVV
         t.ProtectPANandCVV = function(e, t, r) {
             console.log("in ProtectPANandCVV")
+            console.log('PIE')
+            console.log(PIE)
 
             // e is 4111111111111111
             // t is CVV (unencrypted)
@@ -11255,9 +11257,11 @@
             // always is true
             if (1 == r) {
                 console.log('1 is indeed true!')
+                console.log("Here is o.encr"); 
+                console.log(o);
                 var u = n.luhn(a) // luhn is some basic encryption function
                   , s = a.substring(PIE.L + 1, a.length - PIE.E)
-                  , d = o.encrypt(s + i, c, PIE.K, 10) // chain of encryption functions
+                  ,  d = o.encrypt(s + i, c, PIE.K, 10) // chain of encryption functions
                   , l = a.substr(0, PIE.L) + "0" + d.substr(0, d.length - i.length) + a.substring(a.length - PIE.E)
 
                   // fixluhn calls luhn then does some encryption
@@ -11271,6 +11275,7 @@
             console.log(`1 is somehow not true. Probably some compatibility issue`)
             if (0 != n.luhn(a))
                 return null;
+
             s = a.substring(PIE.L + 1, a.length - PIE.E);
             var m, E = 23 - PIE.L - PIE.E, b = s + i, h = Math.floor((E * Math.log(62) - 34 * Math.log(2)) / Math.log(10)) - b.length - 1, _ = "11111111111111111111111111111".substr(0, h) + 2 * i.length, v = (d = "1" + o.encrypt(_ + b, c, PIE.K, 10),
             parseInt(PIE.key_id, 16)), y = new Array(d.length);
@@ -11492,6 +11497,7 @@
         ;
         var o = {
             alphabet: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
+            // e is PIE.K
             precompF: function(e, t, n, r) {
                 var a = new Array(4)
                   , i = n.length;
@@ -11499,6 +11505,7 @@
                 a[1] = (r >> 8 & 255) << 24 | (255 & r) << 16 | 2560 | 255 & Math.floor(t / 2),
                 a[2] = t,
                 a[3] = i,
+                // e is r.cipher.aes... so we're using aes encrypt here
                 e.encrypt(a)
             },
             precompb: function(e, t) {
@@ -11592,8 +11599,15 @@
                 return r
             },
             encryptWithCipher: function(e, t, n, r) {
+                console.log("in encryptWithCipher")
+                console.log(e);
+                // e is a string i.e. 11111123
+                // t is a string i.e. 4111111111
+                // n is the cipher.aes class
+                // r is 10
                 var a = e.length
                   , i = Math.floor(a / 2)
+                  // PIE.K, e.length, string, 10
                   , c = o.precompF(n, a, t, r)
                   , u = o.precompb(r, a)
                   , s = o.DigitToVal(e, i, r)
@@ -11619,8 +11633,16 @@
                 }
                 return o.ValToDigit(s, r) + o.ValToDigit(d, r)
             },
+            // string, string, PIE.K, 10
             encrypt: function(e, t, n, r) {
+                console.log("In o.encrypt(e, t, n, r")
+                // e: 11111123
+                // t: 4111111111
+                // n: 95067869B61F52C005885C45A8EE1AEC
+                // r: 10
                 var i = a.HexToKey(n); // A chain of encryption functions
+
+                // i is now a cipher.aes class
                 return null == i ? "" : o.encryptWithCipher(e, t, i, r) // ANother copy-pastable encyrpt function
             }
         }
