@@ -1,32 +1,13 @@
-let cipher = {};
-
-cipher.aes = function(e) {
-    this._tables[0][0][0] || this._precompute();
-    var t, n, a, i, o, c = this._tables[0][4], u = this._tables[1], s = e.length, d = 1;
-    if (4 !== s && 6 !== s && 8 !== s)
-        throw new r.exception.invalid("invalid aes key size");
-    for (this._key = [i = e.slice(0), o = []],
-    t = s; t < 4 * s + 28; t++)
-        a = i[t - 1],
-        (t % s == 0 || 8 === s && t % s == 4) && (a = c[a >>> 24] << 24 ^ c[a >> 16 & 255] << 16 ^ c[a >> 8 & 255] << 8 ^ c[255 & a],
-        t % s == 0 && (a = a << 8 ^ a >>> 24 ^ d << 24,
-        d = d << 1 ^ 283 * (d >> 7))),
-        i[t] = i[t - s] ^ a;
-    for (n = 0; t; n++,
-    t--)
-        a = i[3 & n ? t : t - 4],
-        o[n] = t <= 4 || n < 4 ? a : u[0][c[a >>> 24]] ^ u[1][c[a >> 16 & 255]] ^ u[2][c[a >> 8 & 255]] ^ u[3][c[255 & a]]
-}
-cipher.aes.prototype = {
+var cipher = {
     encrypt: function(e) {
-        return this._crypt(e, 0)
+        return cipher._crypt(e, 0)
     },
     decrypt: function(e) {
-        return this._crypt(e, 1)
+        return cipher._crypt(e, 1)
     },
     _tables: [[[], [], [], [], []], [[], [], [], [], []]],
     _precompute: function() {
-        var e, t, n, r, a, i, o, c, u = this._tables[0], s = this._tables[1], d = u[4], l = s[4], f = [], p = [];
+        var e, t, n, r, a, i, o, c, u = cipher._tables[0], s = cipher._tables[1], d = u[4], l = s[4], f = [], p = [];
         for (e = 0; e < 256; e++)
             p[(f[e] = e << 1 ^ 283 * (e >> 7)) ^ e] = e;
         for (t = n = 0; !d[t]; t ^= 0 == r ? 1 : r,
@@ -45,8 +26,8 @@ cipher.aes.prototype = {
     },
     _crypt: function(e, t) {
         if (4 !== e.length)
-            throw new r.exception.invalid("invalid aes block size");
-        var n, a, i, o, c = this._key[t], u = e[0] ^ c[0], s = e[t ? 3 : 1] ^ c[1], d = e[2] ^ c[2], l = e[t ? 1 : 3] ^ c[3], f = c.length / 4 - 2, p = 4, m = [0, 0, 0, 0], E = this._tables[t], b = E[0], h = E[1], _ = E[2], v = E[3], y = E[4];
+            throw "invalid aes block size";
+        var n, a, i, o, c = cipher._key[t], u = e[0] ^ c[0], s = e[t ? 3 : 1] ^ c[1], d = e[2] ^ c[2], l = e[t ? 1 : 3] ^ c[3], f = c.length / 4 - 2, p = 4, m = [0, 0, 0, 0], E = cipher._tables[t], b = E[0], h = E[1], _ = E[2], v = E[3], y = E[4];
         for (o = 0; o < f; o++)
             n = b[u >>> 24] ^ h[s >> 16 & 255] ^ _[d >> 8 & 255] ^ v[255 & l] ^ c[p],
             a = b[s >>> 24] ^ h[d >> 16 & 255] ^ _[l >> 8 & 255] ^ v[255 & u] ^ c[p + 1],
@@ -65,6 +46,32 @@ cipher.aes.prototype = {
             l = n;
         return m
     }
+};
+
+// cipher.
+cipher.aes = function(e) {
+    // this._tables[0][0][0] || 
+
+
+
+    // console.log(cipher._tables)
+
+    cipher._precompute();
+    // console.log(cipher._tables)
+    var t, n, a, i, o, c = cipher._tables[0][4], u = cipher._tables[1], s = e.length, d = 1;
+    if (4 !== s && 6 !== s && 8 !== s)
+        throw new r.exception.invalid("invalid aes key size");
+    for (cipher._key = [i = e.slice(0), o = []],
+    t = s; t < 4 * s + 28; t++)
+        a = i[t - 1],
+        (t % s == 0 || 8 === s && t % s == 4) && (a = c[a >>> 24] << 24 ^ c[a >> 16 & 255] << 16 ^ c[a >> 8 & 255] << 8 ^ c[255 & a],
+        t % s == 0 && (a = a << 8 ^ a >>> 24 ^ d << 24,
+        d = d << 1 ^ 283 * (d >> 7))),
+        i[t] = i[t - s] ^ a;
+    for (n = 0; t; n++,
+    t--)
+        a = i[3 & n ? t : t - 4],
+        o[n] = t <= 4 || n < 4 ? a : u[0][c[a >>> 24]] ^ u[1][c[a >> 16 & 255]] ^ u[2][c[a >> 8 & 255]] ^ u[3][c[255 & a]]
 };
 
 module.exports = {

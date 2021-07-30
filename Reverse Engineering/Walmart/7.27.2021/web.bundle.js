@@ -11247,6 +11247,9 @@
             var a = n.distill(e)
               , i = n.distill(t);
 
+              console.log(`a: ${a}`)
+              console.log(`i: ${i}`)
+
             // Seems to validate card number and CVV
             if (a.length < 13 || a.length > 19 || i.length > 4 || 1 == i.length || 2 == i.length)
                 return null;
@@ -11270,6 +11273,8 @@
                   , p = n.reformat(d.substring(d.length - i.length), t);
 
 
+                  console.log("THIS IS WHAT PROTECTPANANDCVV IS RETURNING")
+                  console.log([f, p, n.integrity(PIE.K, f, p)])
                 return [f, p, n.integrity(PIE.K, f, p)]
             }
             console.log(`1 is somehow not true. Probably some compatibility issue`)
@@ -11601,6 +11606,9 @@
             encryptWithCipher: function(e, t, n, r) {
                 console.log("in encryptWithCipher")
                 console.log(e);
+                console.log(t)
+                console.log(n);
+                // console.log(n)
                 // e is a string i.e. 11111123
                 // t is a string i.e. 4111111111
                 // n is the cipher.aes class
@@ -11631,6 +11639,9 @@
                         f = 1)
                     }
                 }
+                console.log('o:')
+                console.log(o)
+
                 return o.ValToDigit(s, r) + o.ValToDigit(d, r)
             },
             // string, string, PIE.K, 10
@@ -11641,6 +11652,7 @@
                 // n: 95067869B61F52C005885C45A8EE1AEC
                 // r: 10
                 var i = a.HexToKey(n); // A chain of encryption functions
+                console.log(`i: ${i}`)
 
                 // i is now a cipher.aes class
                 return null == i ? "" : o.encryptWithCipher(e, t, i, r) // ANother copy-pastable encyrpt function

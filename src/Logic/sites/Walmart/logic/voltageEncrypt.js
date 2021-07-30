@@ -9,7 +9,22 @@ const cipher = require('./aes.js').cipher;
 //         t[n] = parseInt(e.substr(8 * n, 8), 16);
 //     return t
 // };
+let nbase10 = "0123456789";
+let nbase62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+let alphabet = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
+
+const cbcmacq =  function(e, t, n, r) {
+    for (var a = new Array(4), i = 0; i < 4; ++i)
+        a[i] = e[i];
+    for (var o = 0; 4 * o < n; ) {
+        for (i = 0; i < 4; ++i)
+            a[i] = a[i] ^ (t[4 * (o + i)] << 24 | t[4 * (o + i) + 1] << 16 | t[4 * (o + i) + 2] << 8 | t[4 * (o + i) + 3]);
+        a = r.encrypt(a),
+        o += 4
+    }
+    return a
+}
 
 // Looks like we want to return e at the end because they are using global vars so no return statement is needed
 var bnAdd = (e, t, n) => {
@@ -34,31 +49,85 @@ const bnMultiply = (e, t, n) => {
     return e;
 }
 
+const precompF = function(e, t, n, r) {
+    var a = new Array(4)
+      , i = n.length;
+    return a[0] = 16908544 | r >> 16 & 255,
+    a[1] = (r >> 8 & 255) << 24 | (255 & r) << 16 | 2560 | 255 & Math.floor(t / 2),
+    a[2] = t,
+    a[3] = i,
+    // e is r.cipher.aes... so we're using aes encrypt here
+    e.encrypt(a)
+}
+
+const precompb = function(e, t) {
+    for (var n = Math.ceil(t / 2), r = 0, a = 1; n > 0; )
+        --n,
+        (a *= e) >= 256 && (a /= 256,
+        ++r);
+    return a > 1 && ++r,
+    r
+}
+
 
 // o.encrypt
 const encrypt = (e, t, n, r) => {
+    console.log(e);
+    console.log(t)
+    // console.log(n)
     var i = HexToKey(n); // A chain of encryption functions
-    return null == i ? "" : o.encryptWithCipher(e, t, i, r) // ANother copy-pastable encyrpt function
+    console.log(`i below`)
+    console.log(i)
+    return null == i ? "" : encryptWithCipher(e, t, i, r) // ANother copy-pastable encyrpt function
+}
+
+const F = function(e, t, n, r, a, i, c, u, s) {
+    var d = Math.ceil(s / 4) + 1
+      , l = n.length + s + 1 & 15;
+    l > 0 && (l = 16 - l);
+    var f, p = new Array(n.length + l + s + 1);
+    for (f = 0; f < n.length; f++)
+        p[f] = n.charCodeAt(f);
+    for (; f < l + n.length; f++)
+        p[f] = 0;
+    p[p.length - s - 1] = t;
+    for (var m = convertRadix(r, a, u, s, 256), E = 0; E < s; E++)
+        p[p.length - s + E] = m[E];
+    var b, h = cbcmacq(c, p, p.length, e), _ = h, v = new Array(2 * d);
+    for (f = 0; f < d; ++f)
+        f > 0 && 0 == (3 & f) && (b = f >> 2 & 255,
+        b |= b << 8 | b << 16 | b << 24,
+        _ = e.encrypt([h[0] ^ b, h[1] ^ b, h[2] ^ b, h[3] ^ b])),
+        v[2 * f] = _[3 & f] >>> 16,
+        v[2 * f + 1] = 65535 & _[3 & f];
+    return convertRadix(v, 2 * d, 65536, i, u)
 }
 
 const encryptWithCipher = (e, t, n, r) => {
+    console.log('in encryptWithCipher')
+    console.log(e);
+    console.log(t)
+    console.log(n);
     var a = e.length
       , i = Math.floor(a / 2)
-      , c = o.precompF(n, a, t, r)
-      , u = o.precompb(r, a)
-      , s = o.DigitToVal(e, i, r)
-      , d = o.DigitToVal(e.substr(i), a - i, r);
-    if ("" == s || "" == d)
+      , c = precompF(n, a, t, r)
+      , u = precompb(r, a)
+      , s = DigitToVal(e, i, r)
+      , d = DigitToVal(e.substr(i), a - i, r);
+    if ("" == s || "" == d){
+        console.log("We got fucked")
         return "";
+
+    }
     for (var l = 0; l < 5; l++) {
-        var f, p = o.F(n, 2 * l, t, d, d.length, s.length, c, r, u);
+        var f, p = F(n, 2 * l, t, d, d.length, s.length, c, r, u);
         f = 0;
         for (var m = s.length - 1; m >= 0; --m) {
             (E = s[m] + p[m] + f) < r ? (s[m] = E,
             f = 0) : (s[m] = E - r,
             f = 1)
         }
-        p = o.F(n, 2 * l + 1, t, s, s.length, d.length, c, r, u);
+        p = F(n, 2 * l + 1, t, s, s.length, d.length, c, r, u);
         f = 0;
         for (m = d.length - 1; m >= 0; --m) {
             var E;
@@ -67,12 +136,43 @@ const encryptWithCipher = (e, t, n, r) => {
             f = 1)
         }
     }
-    return o.ValToDigit(s, r) + o.ValToDigit(d, r)
-},
+    console.log('o:')
+    return ValToDigit(s, r) + ValToDigit(d, r)
+}
+
+const DigitToVal = function(e, t, n) {
+    var r = new Array(t);
+    if (256 == n) {
+        for (var a = 0; a < t; a++)
+            r[a] = e.charCodeAt(a);
+        return r
+    }
+    for (var i = 0; i < t; i++) {
+        var o = parseInt(e.charAt(i), n);
+        if (NaN == o || !(o < n))
+            return "";
+        r[i] = o
+    }
+    return r
+}
+
+const ValToDigit = function(e, t) {
+    var n, r = "";
+    if (256 == t)
+        for (n = 0; n < e.length; n++)
+            r += String.fromCharCode(e[n]);
+    else
+        for (n = 0; n < e.length; n++)
+            r += alphabet[e[n]];
+    return r
+}
 
 // a.HexToKey
 const HexToKey = (e) => {
-    return new r.cipher.aes(a.HexToWords(e))
+    // return new cipher.aes(HexToWords(e))
+    let ci = cipher;
+    ci.aes(HexToWords(e))
+    return ci;
 }
 
 // a. HexToWords
@@ -115,7 +215,7 @@ const integrity = (e, t, n) => {
     var u = new cipher.aes(c)
 
         // computate takes a cipherAES as an argument
-      , s = i.compute(u, o);
+      , s = compute(u, o);
     return a.WordToHex(s[0]) + a.WordToHex(s[1])
 }
 
@@ -155,7 +255,6 @@ const compute = (e, t) => {
     n[3] ^= r[3],
     e.encrypt(n)
 }
-
 // const aesEncrypt = (e) => {
 //     const _crypt = (e, t) => {
 //         if (4 !== e.length)
@@ -238,6 +337,32 @@ const compute = (e, t) => {
     
 // };
 
+const luhn = function(e) {
+    for (var t = e.length - 1, n = 0; t >= 0; )
+        n += parseInt(e.substr(t, 1), 10),
+        t -= 2;
+    for (t = e.length - 2; t >= 0; ) {
+        var r = 2 * parseInt(e.substr(t, 1), 10);
+        n += r < 10 ? r : r - 9,
+        t -= 2
+    }
+    return n % 10
+}
+
+const reformat = function(e, t) {
+    for (var r = "", a = 0, i = 0; i < t.length; ++i)
+        a < e.length && nbase10.indexOf(t.charAt(i)) >= 0 ? (r += e.substr(a, 1),
+        ++a) : r += t.substr(i, 1);
+    return r
+}
+
+const fixluhn = function(e, t, r) {
+    var a = luhn(e);
+    return a < r ? a += 10 - r : a -= r,
+    0 != a ? (a = (e.length - t) % 2 != 0 ? 10 - a : a % 2 == 0 ? 5 - a / 2 : (9 - a) / 2 + 5,
+    e.substr(0, t) + a + e.substr(t + 1)) : e
+}
+
 
 const ProtectPANandCVV = (e, t, r)  =>{
 
@@ -250,12 +375,11 @@ const ProtectPANandCVV = (e, t, r)  =>{
         phase: 1
     }
 
-    let nbase10 = "0123456789";
-    let nbase62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
 
     const distill = (e) => {
         for (var t = "", r = 0; r < e.length; ++r)
-            n.base10.indexOf(e.charAt(r)) >= 0 && (t += e.substr(r, 1));
+            nbase10.indexOf(e.charAt(r)) >= 0 && (t += e.substr(r, 1));
         return t
     }
     // e is 4111111111111111
@@ -266,6 +390,9 @@ const ProtectPANandCVV = (e, t, r)  =>{
     var a = distill(e)
       , i = distill(t);
 
+      console.log(`a: ${a}`)
+      console.log(`i: ${i}`)
+
     // Seems to validate card number and CVV
     if (a.length < 13 || a.length > 19 || i.length > 4 || 1 == i.length || 2 == i.length)
         return null;
@@ -274,20 +401,22 @@ const ProtectPANandCVV = (e, t, r)  =>{
     var c = a.substr(0, PIE.L) + a.substring(a.length - PIE.E);
 
     // always is true
-    // if (1 == r) {
-    //     var u = n.luhn(a) // luhn is some basic encryption function
-    //       , s = a.substring(PIE.L + 1, a.length - PIE.E)
-    //       , d = o.encrypt(s + i, c, PIE.K, 10) // chain of encryption functions
-    //       , l = a.substr(0, PIE.L) + "0" + d.substr(0, d.length - i.length) + a.substring(a.length - PIE.E)
+    if (1 == r) {
+        console.log("1 is true")
+        var u = luhn(a) // luhn is some basic encryption function
+          , s = a.substring(PIE.L + 1, a.length - PIE.E)
+          , d = encrypt(s + i, c, PIE.K, 10) // chain of encryption functions
+          , l = a.substr(0, PIE.L) + "0" + d.substr(0, d.length - i.length) + a.substring(a.length - PIE.E)
 
-    //       // fixluhn calls luhn then does some encryption
-    //       // reformat changes string to base10 then does some switching
-    //       , f = n.reformat(n.fixluhn(l, PIE.L, u), e)
-    //       , p = n.reformat(d.substring(d.length - i.length), t);
+          // fixluhn calls luhn then does some encryption
+          // reformat changes string to base10 then does some switching
+          , f = reformat(fixluhn(l, PIE.L, u), e)
+          , p = reformat(d.substring(d.length - i.length), t);
 
 
-    //     return [f, p, n.integrity(PIE.K, f, p)]
-    // }
+          console.log([f, p])
+        return //[f, p, n.integrity(PIE.K, f, p)]
+    }
     // console.log(`1 is somehow not true. Probably some compatibility issue`)
     // if (0 != n.luhn(a))
     //     return null;
@@ -296,7 +425,7 @@ const ProtectPANandCVV = (e, t, r)  =>{
     //d = "1" + o.encrypt(_ + b, c, PIE.K, 10)
 
     s = a.substring(PIE.L + 1, a.length - PIE.E);
-    var m, E = 23 - PIE.L - PIE.E, b = s + i, h = Math.floor((E * Math.log(62) - 34 * Math.log(2)) / Math.log(10)) - b.length - 1, _ = "11111111111111111111111111111".substr(0, h) + 2 * i.length, v = (d = "1" + o.encrypt(_ + b, c, PIE.K, 10),
+    var m, E = 23 - PIE.L - PIE.E, b = s + i, h = Math.floor((E * Math.log(62) - 34 * Math.log(2)) / Math.log(10)) - b.length - 1, _ = "11111111111111111111111111111".substr(0, h) + 2 * i.length, v = (d = "1" + encrypt(_ + b, c, PIE.K, 10),
     parseInt(PIE.key_id, 16)), y = new Array(d.length);
     for (m = 0; m < d.length; ++m)
         y[m] = parseInt(d.substr(m, 1), 10);
@@ -304,13 +433,13 @@ const ProtectPANandCVV = (e, t, r)  =>{
     g = bnMultiply(g, 62, 131072),
     g = bnMultiply(g, 62, 65536),
     g = bnAdd(g, 62, v),
-    1 == PIE.phase && g = bnAdd(g, 62, 4294967296);
+    1 == PIE.phase && (g = bnAdd(g, 62, 4294967296));
     var O = "";
     for (m = 0; m < E; ++m)
         O += nbase62.substr(g[m], 1);
     f = a.substr(0, PIE.L) + O.substr(0, E - 4) + a.substring(a.length - PIE.E),
     p = O.substring(E - 4);
-    console.log([f, p, n.integrity(PIE.K, f, p)])
+    return console.log([f, p]), 0;
 
     // This is the encrypted information we need
     return [f, p, n.integrity(PIE.K, f, p)]
@@ -319,5 +448,10 @@ const ProtectPANandCVV = (e, t, r)  =>{
 
 (() => {
     let r = new cipher.aes("ASDD");
-    console.log(r)
+    // console.log(r)
+
+    // e is 4111111111111111
+    // t is CVV (unencrypted)
+    // r is true
+    ProtectPANandCVV('4111111111111111', '123', true)
 })();
