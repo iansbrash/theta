@@ -80,6 +80,7 @@ const flow = async () => {
         data : data
     });
 
+    console.log(JSON.stringify(ATCResponse.data))
 
     allCookies = accumulateCookies(allCookies, returnParsedCookies(ATCResponse.headers['set-cookie']) )
 
@@ -154,7 +155,8 @@ const flow = async () => {
         },
         data : GETCheckoutResponseData,
     })
-
+    let itemId = GETCheckoutResponse.data.items[0].id
+    console.log(JSON.stringify(GETCheckoutResponse.data))
     // https://www.walmart.com/px/PXu6b0qd2S/captcha/captcha.js?a=c&m=0&u=79b804b0-ef05-11eb-87c9-37b2ea7c0201__79b804b0-ef05-11eb-87c9-37b2ea7c0201&v=&g=b
 
     // console.log(GETCheckoutResponse)
@@ -193,6 +195,7 @@ const flow = async () => {
         },
         data : ContinueAsGuestData
     })
+    console.log(JSON.stringify(ContinueAsGuestResponse.data))
 
     allCookies = accumulateCookies(allCookies, returnParsedCookies(ContinueAsGuestResponse.headers['set-cookie']))
 
@@ -203,7 +206,7 @@ const flow = async () => {
               // "Ship to house" this probably doesn't change
             "fulfillmentOption": "S2H",
             "itemIds": [
-              "fc3280fe-af0a-4e3b-9fdf-b89935d3359f"
+                itemId
             ],
             // this comes from the loaded page
             // it has like 'automation-id="shipMethod-RUSH"'
@@ -213,7 +216,7 @@ const flow = async () => {
       });
 
       timestampLogger("Selecting delivery method")
-      const SelectDeliveryMethodResponse = await axios({
+    const SelectDeliveryMethodResponse = await axios({
         method: 'post',
         url: 'https://www.walmart.com/api/checkout/v3/contract/:PCID/fulfillment',
         headers: {
@@ -240,8 +243,60 @@ const flow = async () => {
     })
     allCookies = accumulateCookies(allCookies, returnParsedCookies(SelectDeliveryMethodResponse.headers['set-cookie']))
 
-    console.log(SelectDeliveryMethodResponse)
+    // console.log(SelectDeliveryMethodResponse)
     
+    timestampLogger("Adding address")
+    var AddShippingAddressData = JSON.stringify({
+        "address": {
+          "addressLineOne": "1105 Holly Tree Farms Road",
+          "addressLineTwo": "1234",
+          "city": "Brentwood",
+          "postalCode": "37027",
+          "stateOrProvinceCode": "TN",
+          "countryCode": "USA"
+        },
+        "options": {
+          "maxResultSize": "10"
+        },
+        "geoHint": "US"
+    });
+
+    const AddShippingAddressReponse = await axios({
+        method: 'post',
+        url: 'https://www.walmart.com/api/checkout-avs?version=v2',
+        headers: {
+            'authority': 'www.walmart.com', 
+            'pragma': 'no-cache', 
+            'cache-control': 'no-cache', 
+            'sec-ch-ua': '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"', 
+            'accept': 'application/json, text/javascript, */*; q=0.01', 
+            'dnt': '1', 
+            'sec-ch-ua-mobile': '?0', 
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36', 
+            'content-type': 'application/json', 
+            'origin': 'https://www.walmart.com', 
+            'sec-fetch-site': 'same-origin', 
+            'sec-fetch-mode': 'cors', 
+            'sec-fetch-dest': 'empty', 
+            'referer': 'https://www.walmart.com/checkout/', 
+            'accept-language': 'en-US,en;q=0.9',
+            cookie: joinCookies(allCookies)
+        },
+        data : AddShippingAddressData
+    })
+
+    console.log(AddShippingAddressReponse.data)
+
+    // Aka Walmart prompts us to update address
+    if (AddShippingAddressReponse.data.avsStatus === 'FAILURE') {
+
+    }
+
+    
+
+
+    allCookies = accumulateCookies(allCookies, returnParsedCookies(AddShippingAddressReponse.headers['set-cookie']))
+
 
 };
 

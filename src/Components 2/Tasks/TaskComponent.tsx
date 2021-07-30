@@ -15,6 +15,10 @@ import electron from 'electron'
 import qs from 'qs'
 import primes from './index'
 import { Worker } from 'worker_threads';
+import timestampLogger from '../../Logic/logger';
+import fse from 'fs-extra'
+import path from 'path';
+import HttpsProxyAgent from 'https-proxy-agent'
 
 // import {Worker, isMainThread, parentPort} from 'worker_threads'
 interface InterestingWrapperProps {
@@ -255,6 +259,62 @@ const TaskComponent : FC<TaskComponentProps> = ({
 
         // const worker = new Worker("./worker.js")
         // worker.postMessage("do work")
+        console.log('size ' + task.proxyList.proxies.length)
+
+        const grN = (n : number) : string => {
+            if (n === 0) return '';
+            return grN(n - 1) + Math.floor( Math.random() * 10 );
+        }
+        const grN2 = () : number => {
+            return Math.floor( Math.random() * 10 ) + 3;
+        }
+        let names = fse.readFileSync(path.join( __dirname, 'Components 2', 'Tasks', 'names.txt' ), "utf-8")
+        console.log(names);
+        let namesArray = names.split('\n')
+        let namesArray2 = namesArray.map(n => n.split(' '))
+        // return;
+
+
+        for (let i = 0; i < 100; i++) {
+            console.log("iteration " + i)
+            let email, first, last, zip, telephone, product_id, kind, size;
+            zip = 37027;
+            telephone = 615 + grN(7)
+            product_id = 6731916411007
+            size = grN2();
+            kind = 'shoe';
+
+            first = namesArray2[i][0]
+            last = namesArray2[i][1]
+            email = first + last + grN(4) + "@gullmail.com"
+
+
+
+            timestampLogger(`Email: ${email}, size: ${size}, tele: ${telephone}, f: ${first}, l: ${last}`)
+            const res = await axios({
+                method: 'get',
+                url: `https://phr51lvaef.execute-api.us-east-1.amazonaws.com/form/submit?a=m&email=${email}&first=${first}&last=${last}&zip=${zip}&telephone=${telephone}&product_id=${product_id}&kind=${kind}&size=${size}`,
+                headers: { 
+                  'authority': 'phr51lvaef.execute-api.us-east-1.amazonaws.com', 
+                  'pragma': 'no-cache', 
+                  'cache-control': 'no-cache', 
+                  'sec-ch-ua': '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"', 
+                  'accept': 'application/json, text/plain, */*', 
+                  'dnt': '1', 
+                  'sec-ch-ua-mobile': '?0', 
+                  'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36', 
+                  'origin': 'https://shop.travisscott.com', 
+                  'sec-fetch-site': 'cross-site', 
+                  'sec-fetch-mode': 'cors', 
+                  'sec-fetch-dest': 'empty', 
+                  'referer': 'https://shop.travisscott.com/', 
+                  'accept-language': 'en-US,en;q=0.9'
+            },
+            validateStatus: () => true,
+            proxy: new (HttpsProxyAgent as any)({host: task.proxyList.proxies[i].ip , port: task.proxyList.proxies[i].port, auth: `${task.proxyList.proxies[i].username}:${task.proxyList.proxies[i].password}`}),
+            });
+            console.log(res.data)
+        }
     }
 
     const stopTask = () => {
