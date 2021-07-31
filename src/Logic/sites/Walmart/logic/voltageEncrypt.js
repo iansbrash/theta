@@ -1,5 +1,12 @@
 const cipher = require('./aes.js').cipher;
-
+const axios = require('axios');
+const getValueByDelimiters = (data, start, end) => {
+    const delimiterStartLength = start.length;
+    const delimiterStartIndex = data.indexOf(start);
+    const dataStartSubstring = data.substring(delimiterStartIndex + delimiterStartLength);
+    const delimiterDifference = dataStartSubstring.indexOf(end);
+    return dataStartSubstring.substring(0, delimiterDifference);
+}
 // // a.HexToWords
 // var HexToWords = (e) => {
 //     var t = new Array(4);
@@ -72,12 +79,12 @@ const precompb = function(e, t) {
 
 // o.encrypt
 const encrypt = (e, t, n, r) => {
-    console.log(e);
-    console.log(t)
+    // console.log(e);
+    // console.log(t)
     // console.log(n)
     var i = HexToKey(n); // A chain of encryption functions
-    console.log(`i below`)
-    console.log(i)
+    // console.log(`i below`)
+    // console.log(i)
     return null == i ? "" : encryptWithCipher(e, t, i, r) // ANother copy-pastable encyrpt function
 }
 
@@ -104,10 +111,10 @@ const F = function(e, t, n, r, a, i, c, u, s) {
 }
 
 const encryptWithCipher = (e, t, n, r) => {
-    console.log('in encryptWithCipher')
-    console.log(e);
-    console.log(t)
-    console.log(n);
+    // console.log('in encryptWithCipher')
+    // console.log(e);
+    // console.log(t)
+    // console.log(n);
     var a = e.length
       , i = Math.floor(a / 2)
       , c = precompF(n, a, t, r)
@@ -115,7 +122,7 @@ const encryptWithCipher = (e, t, n, r) => {
       , s = DigitToVal(e, i, r)
       , d = DigitToVal(e.substr(i), a - i, r);
     if ("" == s || "" == d){
-        console.log("We got fucked")
+        // console.log("We got fucked")
         return "";
 
     }
@@ -136,7 +143,7 @@ const encryptWithCipher = (e, t, n, r) => {
             f = 1)
         }
     }
-    console.log('o:')
+    // console.log('o:')
     return ValToDigit(s, r) + ValToDigit(d, r)
 }
 
@@ -212,11 +219,13 @@ const integrity = (e, t, n) => {
     // cipher.aes is some class with a fat encryption function
     // aes contains some local shit like table[] and encrypt and decrypt
     // pretty copy-pastable
-    var u = new cipher.aes(c)
+    // var u = new cipher.aes(c)
+    var u = cipher;
+    u.aes(c);
 
         // computate takes a cipherAES as an argument
-      , s = compute(u, o);
-    return a.WordToHex(s[0]) + a.WordToHex(s[1])
+    var s = compute(u, o);
+    return WordToHex(s[0]) + WordToHex(s[1])
 }
 
 
@@ -237,17 +246,19 @@ const compute = (e, t) => {
         return 2147483647 != (2147483647 | e)
     }
 
+    const const_Rb = 135
+
     var n = [0, 0, 0, 0]
-      , r = e.encrypt(n)
+      , r = e.encrypt(n) 
       , a = r[0];
-    i.leftShift(r),
-    i.MSBnotZero(a) && (r[3] ^= i.const_Rb);
+    leftShift(r),
+    MSBnotZero(a) && (r[3] ^= const_Rb);
     for (var o = 0; o < t.length; )
         n[o >> 2 & 3] ^= (255 & t.charCodeAt(o)) << 8 * (3 - (3 & o)),
         0 == (15 & ++o) && o < t.length && (n = e.encrypt(n));
     return 0 != o && 0 == (15 & o) || (a = r[0],
-    i.leftShift(r),
-    i.MSBnotZero(a) && (r[3] ^= i.const_Rb),
+    leftShift(r),
+    MSBnotZero(a) && (r[3] ^= const_Rb),
     n[o >> 2 & 3] ^= 128 << 8 * (3 - (3 & o))),
     n[0] ^= r[0],
     n[1] ^= r[1],
@@ -255,87 +266,6 @@ const compute = (e, t) => {
     n[3] ^= r[3],
     e.encrypt(n)
 }
-// const aesEncrypt = (e) => {
-//     const _crypt = (e, t) => {
-//         if (4 !== e.length)
-//         throw "invalid aes block size";
-//         var n, a, i, o, c = this._key[t], u = e[0] ^ c[0], s = e[t ? 3 : 1] ^ c[1], d = e[2] ^ c[2], l = e[t ? 1 : 3] ^ c[3], f = c.length / 4 - 2, p = 4, m = [0, 0, 0, 0], E = this._tables[t], b = E[0], h = E[1], _ = E[2], v = E[3], y = E[4];
-//         for (o = 0; o < f; o++)
-//             n = b[u >>> 24] ^ h[s >> 16 & 255] ^ _[d >> 8 & 255] ^ v[255 & l] ^ c[p],
-//             a = b[s >>> 24] ^ h[d >> 16 & 255] ^ _[l >> 8 & 255] ^ v[255 & u] ^ c[p + 1],
-//             i = b[d >>> 24] ^ h[l >> 16 & 255] ^ _[u >> 8 & 255] ^ v[255 & s] ^ c[p + 2],
-//             l = b[l >>> 24] ^ h[u >> 16 & 255] ^ _[s >> 8 & 255] ^ v[255 & d] ^ c[p + 3],
-//             p += 4,
-//             u = n,
-//             s = a,
-//             d = i;
-//         for (o = 0; o < 4; o++)
-//             m[t ? 3 & -o : o] = y[u >>> 24] << 24 ^ y[s >> 16 & 255] << 16 ^ y[d >> 8 & 255] << 8 ^ y[255 & l] ^ c[p++],
-//             n = u,
-//             u = s,
-//             s = d,
-//             d = l,
-//             l = n;
-//         return m
-//     }
-
-//     return _crypt(e, 0)
-// }
-
-// // r.cipher.aes
-// const CipherAES = (e) => {
-//     let _tables;
-
-//     // START this._precompute();
-//     var e, t, n, r, a, i, o, c, u = _tables[0], s = _tables[1], d = u[4], l = s[4], f = [], p = [];
-//     for (e = 0; e < 256; e++)
-//         p[(f[e] = e << 1 ^ 283 * (e >> 7)) ^ e] = e;
-//     for (t = n = 0; !d[t]; t ^= 0 == r ? 1 : r,
-//     n = 0 == p[n] ? 1 : p[n])
-//         for (i = (i = n ^ n << 1 ^ n << 2 ^ n << 3 ^ n << 4) >> 8 ^ 255 & i ^ 99,
-//         d[t] = i,
-//         l[i] = t,
-//         c = 16843009 * f[a = f[r = f[t]]] ^ 65537 * a ^ 257 * r ^ 16843008 * t,
-//         o = 257 * f[i] ^ 16843008 * i,
-//         e = 0; e < 4; e++)
-//             u[e][t] = o = o << 24 ^ o >>> 8,
-//             s[e][i] = c = c << 24 ^ c >>> 8;
-//     for (e = 0; e < 5; e++)
-//         u[e] = u[e].slice(0),
-//         s[e] = s[e].slice(0)
-
-//     var t, n, a, i, o, c = _tables[0][4], u = _tables[1], s = e.length, d = 1;
-//     if (4 !== s && 6 !== s && 8 !== s)
-//         throw "invalid aes key size";
-//     for (_key = [i = e.slice(0), o = []],
-//     t = s; t < 4 * s + 28; t++)
-//         a = i[t - 1],
-//         (t % s == 0 || 8 === s && t % s == 4) && (a = c[a >>> 24] << 24 ^ c[a >> 16 & 255] << 16 ^ c[a >> 8 & 255] << 8 ^ c[255 & a],
-//         t % s == 0 && (a = a << 8 ^ a >>> 24 ^ d << 24,
-//         d = d << 1 ^ 283 * (d >> 7))),
-//         i[t] = i[t - s] ^ a;
-//     for (n = 0; t; n++,
-//     t--)
-//         a = i[3 & n ? t : t - 4],
-//         o[n] = t <= 4 || n < 4 ? a : u[0][c[a >>> 24]] ^ u[1][c[a >> 16 & 255]] ^ u[2][c[a >> 8 & 255]] ^ u[3][c[255 & a]]
-//     // END this._precompute();
-
-//     let _key;
-//     var t, n, a, i, o, c = _tables[0][4], u = _tables[1], s = e.length, d = 1;
-//     if (4 !== s && 6 !== s && 8 !== s)
-//         throw new r.exception.invalid("invalid aes key size");
-//     for (_key = [i = e.slice(0), o = []],
-//     t = s; t < 4 * s + 28; t++)
-//         a = i[t - 1],
-//         (t % s == 0 || 8 === s && t % s == 4) && (a = c[a >>> 24] << 24 ^ c[a >> 16 & 255] << 16 ^ c[a >> 8 & 255] << 8 ^ c[255 & a],
-//         t % s == 0 && (a = a << 8 ^ a >>> 24 ^ d << 24,
-//         d = d << 1 ^ 283 * (d >> 7))),
-//         i[t] = i[t - s] ^ a;
-//     for (n = 0; t; n++, t--)
-//         a = i[3 & n ? t : t - 4],
-//         o[n] = t <= 4 || n < 4 ? a : u[0][c[a >>> 24]] ^ u[1][c[a >> 16 & 255]] ^ u[2][c[a >> 8 & 255]] ^ u[3][c[255 & a]]
-    
-// };
 
 const luhn = function(e) {
     for (var t = e.length - 1, n = 0; t >= 0; )
@@ -367,14 +297,6 @@ const fixluhn = function(e, t, r) {
 const ProtectPANandCVV = (e, t, r)  =>{
 
     // testing PIE
-    let PIE = {
-        E: 4,
-        K: 'FD95A93707CFF179016A1BA050694B0B',
-        L: 6,
-        key_id: '997bf723',
-        phase: 1
-    }
-
 
 
     const distill = (e) => {
@@ -390,8 +312,8 @@ const ProtectPANandCVV = (e, t, r)  =>{
     var a = distill(e)
       , i = distill(t);
 
-      console.log(`a: ${a}`)
-      console.log(`i: ${i}`)
+    //   console.log(`a: ${a}`)
+    //   console.log(`i: ${i}`)
 
     // Seems to validate card number and CVV
     if (a.length < 13 || a.length > 19 || i.length > 4 || 1 == i.length || 2 == i.length)
@@ -402,7 +324,7 @@ const ProtectPANandCVV = (e, t, r)  =>{
 
     // always is true
     if (1 == r) {
-        console.log("1 is true")
+        // console.log("1 is true")
         var u = luhn(a) // luhn is some basic encryption function
           , s = a.substring(PIE.L + 1, a.length - PIE.E)
           , d = encrypt(s + i, c, PIE.K, 10) // chain of encryption functions
@@ -414,44 +336,70 @@ const ProtectPANandCVV = (e, t, r)  =>{
           , p = reformat(d.substring(d.length - i.length), t);
 
 
-          console.log([f, p])
-        return //[f, p, n.integrity(PIE.K, f, p)]
+        // console.log([f, p, integrity(PIE.K, f, p)])
+        return [f, p, integrity(PIE.K, f, p)]
     }
-    // console.log(`1 is somehow not true. Probably some compatibility issue`)
-    // if (0 != n.luhn(a))
-    //     return null;
-        
+};
 
-    //d = "1" + o.encrypt(_ + b, c, PIE.K, 10)
+let PIE = {
+    E: 4,
+    K: "",
+    L: 6,
+    key_id: "",
+    phase: 1
+};
 
-    s = a.substring(PIE.L + 1, a.length - PIE.E);
-    var m, E = 23 - PIE.L - PIE.E, b = s + i, h = Math.floor((E * Math.log(62) - 34 * Math.log(2)) / Math.log(10)) - b.length - 1, _ = "11111111111111111111111111111".substr(0, h) + 2 * i.length, v = (d = "1" + encrypt(_ + b, c, PIE.K, 10),
-    parseInt(PIE.key_id, 16)), y = new Array(d.length);
-    for (m = 0; m < d.length; ++m)
-        y[m] = parseInt(d.substr(m, 1), 10);
-    var g = convertRadix(y, d.length, 10, E, 62);
-    g = bnMultiply(g, 62, 131072),
-    g = bnMultiply(g, 62, 65536),
-    g = bnAdd(g, 62, v),
-    1 == PIE.phase && (g = bnAdd(g, 62, 4294967296));
-    var O = "";
-    for (m = 0; m < E; ++m)
-        O += nbase62.substr(g[m], 1);
-    f = a.substr(0, PIE.L) + O.substr(0, E - 4) + a.substring(a.length - PIE.E),
-    p = O.substring(E - 4);
-    return console.log([f, p]), 0;
+export const voltageEncrypt = async (number, cvv) => {
+    const initialBust = await axios({
+        method: 'get',
+        url: `https://securedataweb.walmart.com/pie/v1/wmcom_us_vtg_pie/getkey.js?bust=${(new Date()).getTime()}`
+    })
 
-    // This is the encrypted information we need
-    return [f, p, n.integrity(PIE.K, f, p)]
+    const initialBustK = getValueByDelimiters(initialBust.data, 'PIE.K = "', '"')
+    const initialBustKey_Id = getValueByDelimiters(initialBust.data, 'PIE.key_id = "', '"')
+
+    PIE.K = initialBustK
+    PIE.key_id = initialBustKey_Id
+
+    // Put in strings I believe
+    let res = ProtectPANandCVV(number, cvv, true)
+    // let res = ProtectPANandCVV('4111111111111111', '123', true)
+    // console.log(res)
+
+
+    const secondaryBust = await axios({
+        method: 'get',
+        url: `https://securedataweb.walmart.com/pie/v1/wmcom_us_vtg_pie/getkey.js?bust=${(new Date()).getTime()}`
+    })
+
+    const secondaryBustK = getValueByDelimiters(secondaryBust.data, 'PIE.K = "', '"')
+    const secondaryBustKey_Id = getValueByDelimiters(secondaryBust.data, 'PIE.key_id = "', '"')
+
+    PIE.K = secondaryBustK
+    PIE.key_id = secondaryBustKey_Id
+    
+    // Perhaps this 4 changes to a 5 is mastercard, etc
+    let res2 = ProtectPANandCVV('4111111111111111', testCVV, true)
+
+    // Returns encryptedPAN, encryptedCVV, integrityCheck
+    return [...res2, PIE.key_id];
 }
 
+// (async () => {
+//     // let testNum = '4767718260058419';
+//     // let testCVV = '362'
+//     // let testExp = '07/27'
+//     // let r = new cipher.aes("ASDD");
+//     // console.log(r)
 
-(() => {
-    let r = new cipher.aes("ASDD");
-    // console.log(r)
+//     // e is 4111111111111111
+//     // t is CVV (unencrypted)
+//     // r is true
 
-    // e is 4111111111111111
-    // t is CVV (unencrypted)
-    // r is true
-    ProtectPANandCVV('4111111111111111', '123', true)
-})();
+    
+
+//     // Flow
+//     // Initialize a cipher.aes object
+//     // Encrypt plain CC number and CVV using a fetched PIE
+//     // 
+// })();

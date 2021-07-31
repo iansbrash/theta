@@ -10,9 +10,7 @@ export const getValueByDelimiters = (data: string, start : string, end : string)
     const delimiterStartIndex = data.indexOf(start);
     const dataStartSubstring = data.substring(delimiterStartIndex + delimiterStartLength);
     const delimiterDifference = dataStartSubstring.indexOf(end);
-
     return dataStartSubstring.substring(0, delimiterDifference);
-
 }
 
 // takes a cookie or cookie[] that is unparsed

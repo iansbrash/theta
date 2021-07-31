@@ -7,6 +7,9 @@ var cipher = {
     },
     _tables: [[[], [], [], [], []], [[], [], [], [], []]],
     _precompute: function() {
+
+        console.log("Precomputing.")
+
         var e, t, n, r, a, i, o, c, u = cipher._tables[0], s = cipher._tables[1], d = u[4], l = s[4], f = [], p = [];
         for (e = 0; e < 256; e++)
             p[(f[e] = e << 1 ^ 283 * (e >> 7)) ^ e] = e;
@@ -51,12 +54,9 @@ var cipher = {
 // cipher.
 cipher.aes = function(e) {
     // this._tables[0][0][0] || 
+    (cipher._tables[0] && cipher._tables[0][0] && cipher._tables[0][0][0]) ? null : cipher._precompute(); 
 
-
-
-    // console.log(cipher._tables)
-
-    cipher._precompute();
+    // cipher._precompute();
     // console.log(cipher._tables)
     var t, n, a, i, o, c = cipher._tables[0][4], u = cipher._tables[1], s = e.length, d = 1;
     if (4 !== s && 6 !== s && 8 !== s)

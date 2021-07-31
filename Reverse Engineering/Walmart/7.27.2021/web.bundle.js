@@ -9841,18 +9841,25 @@
               , d = e.bypassValidation
               , p = (0,
             a.default)(e, ["creditCard", "cvv", "bypassValidation"])
-              , E = function(e) {
+              , E = function(e) { // this is the callback for encr2
                 return (0,
                 c.default)((0,
-                l.postJson)(f.default.baseUrl(), Object.assign({}, e, (0,
+                l.postJson)(f.default.baseUrl(), Object.assign({}, e, (0, 
                 m.sanitize)(p))), function(n) {
                     var r, a = t ? _({}, e) : {};
-                    return r = _({
+                    return 
+                    // u: CVV
+                    // e: Contains encryptedPan, CVV, integrityCheck, keyId, phase
+                    // n: contains address info, expiryDate/Month, piHash, paymentType, dbSessionTokenMap, cardType, etc
+                    // a: Seems to contain the same as e
+                    r = _({
                         cvv: u,
                         encryptedCvv: e.encryptedCvv
                     }, n, {}, a),
-                    [w(r), k(!1)]
-                }, ie(function(e) {
+                    [w(r), k(!1)] // w(r) returns an object with billing addr, unencrupted info, encrupted info, piHash, etc
+                }, console.log('ie'), ie(function(e) {
+                    console.log("e in callback")
+                    console.log(e)
                     return e && e.blockScript ? [k(!1), z(), N(e), Z(e)] : [k(!1), z(), N(e)]
                 }))
             }
@@ -9863,6 +9870,10 @@
                 return console.log("Encr2"), (0,
                 s.voltageEncrypt)((0,
                 o.default)(i), u, n, r, !0).then(function(e) {
+                    console.log('d')
+                    console.log(d)
+                    console.log(e)
+                    console.log(E)
                     return d ? E(e) : fe(E(e), p)
                 }).catch(ie(function(e) {
                     return [k(!1), N(e)]
@@ -11239,9 +11250,10 @@
             // e is 4111111111111111
             // t is CVV (unencrypted)
             // r is true
-            // console.log(e)
-            // console.log(t)
-            // console.log(r)
+            console.log(`PROTECTPANANDCVV ARGUMENTS`)
+            console.log(e)
+            console.log(t)
+            console.log(r)
 
             // Some base 10 char maniupation, just changes it up a lil bit
             var a = n.distill(e)
@@ -11407,6 +11419,7 @@
             },
             _tables: [[[], [], [], [], []], [[], [], [], [], []]],
             _precompute: function() {
+                console.log(`About to _precompute()`)
                 var e, t, n, r, a, i, o, c, u = this._tables[0], s = this._tables[1], d = u[4], l = s[4], f = [], p = [];
                 for (e = 0; e < 256; e++)
                     p[(f[e] = e << 1 ^ 283 * (e >> 7)) ^ e] = e;
@@ -20657,6 +20670,7 @@
         }
         ;
         t.validatePIE = function(e, t, n, r, a) {
+            console.log("in validatePIE")
             void 0 === a && (a = window),
             (n && !r || !n) && a.PIE && a.PIE.key_id ? e({
                 key: a.PIE.key_id.toString(),
