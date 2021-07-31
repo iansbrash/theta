@@ -379,10 +379,10 @@ export const voltageEncrypt = async (number, cvv) => {
     PIE.key_id = secondaryBustKey_Id
     
     // Perhaps this 4 changes to a 5 is mastercard, etc
-    let res2 = ProtectPANandCVV('4111111111111111', testCVV, true)
+    let res2 = ProtectPANandCVV('4111111111111111', cvv, true)
 
     // Returns encryptedPAN, encryptedCVV, integrityCheck
-    return [...res2, PIE.key_id];
+    return [ [...res, initialBustKey_Id], [...res2, secondaryBustKey_Id] ];
 }
 
 // (async () => {

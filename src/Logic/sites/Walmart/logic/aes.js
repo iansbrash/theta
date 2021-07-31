@@ -8,7 +8,7 @@ var cipher = {
     _tables: [[[], [], [], [], []], [[], [], [], [], []]],
     _precompute: function() {
 
-        console.log("Precomputing.")
+        // console.log("Precomputing.")
 
         var e, t, n, r, a, i, o, c, u = cipher._tables[0], s = cipher._tables[1], d = u[4], l = s[4], f = [], p = [];
         for (e = 0; e < 256; e++)

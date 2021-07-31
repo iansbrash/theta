@@ -9841,25 +9841,28 @@
               , d = e.bypassValidation
               , p = (0,
             a.default)(e, ["creditCard", "cvv", "bypassValidation"])
-              , E = function(e) { // this is the callback for encr2
+              , E = function(e) {
                 return (0,
                 c.default)((0,
-                l.postJson)(f.default.baseUrl(), Object.assign({}, e, (0, 
+                l.postJson)(f.default.baseUrl(), Object.assign({}, e, (0,
                 m.sanitize)(p))), function(n) {
                     var r, a = t ? _({}, e) : {};
-                    return 
+
                     // u: CVV
                     // e: Contains encryptedPan, CVV, integrityCheck, keyId, phase
                     // n: contains address info, expiryDate/Month, piHash, paymentType, dbSessionTokenMap, cardType, etc
                     // a: Seems to contain the same as e
-                    r = _({
+
+                    console.log("n")
+                    console.log(n)
+                    console.log(this)
+
+                    return r = _({
                         cvv: u,
                         encryptedCvv: e.encryptedCvv
                     }, n, {}, a),
-                    [w(r), k(!1)] // w(r) returns an object with billing addr, unencrupted info, encrupted info, piHash, etc
-                }, console.log('ie'), ie(function(e) {
-                    console.log("e in callback")
-                    console.log(e)
+                    [w(r), k(!1)]
+                }, ie(function(e) {
                     return e && e.blockScript ? [k(!1), z(), N(e), Z(e)] : [k(!1), z(), N(e)]
                 }))
             }
@@ -9870,10 +9873,6 @@
                 return console.log("Encr2"), (0,
                 s.voltageEncrypt)((0,
                 o.default)(i), u, n, r, !0).then(function(e) {
-                    console.log('d')
-                    console.log(d)
-                    console.log(e)
-                    console.log(E)
                     return d ? E(e) : fe(E(e), p)
                 }).catch(ie(function(e) {
                     return [k(!1), N(e)]
@@ -11250,10 +11249,9 @@
             // e is 4111111111111111
             // t is CVV (unencrypted)
             // r is true
-            console.log(`PROTECTPANANDCVV ARGUMENTS`)
-            console.log(e)
-            console.log(t)
-            console.log(r)
+            // console.log(e)
+            // console.log(t)
+            // console.log(r)
 
             // Some base 10 char maniupation, just changes it up a lil bit
             var a = n.distill(e)
@@ -11419,7 +11417,6 @@
             },
             _tables: [[[], [], [], [], []], [[], [], [], [], []]],
             _precompute: function() {
-                console.log(`About to _precompute()`)
                 var e, t, n, r, a, i, o, c, u = this._tables[0], s = this._tables[1], d = u[4], l = s[4], f = [], p = [];
                 for (e = 0; e < 256; e++)
                     p[(f[e] = e << 1 ^ 283 * (e >> 7)) ^ e] = e;
@@ -12212,7 +12209,7 @@
           , s = n("2srY")
           , d = n.n(s)
           , l = n("liDg")
-          , f = a.a.createElement("span", null, "• ")
+          , f = a.a.createElement("span", null, "• ")
           , p = function() {
             return f
         }
@@ -20670,7 +20667,6 @@
         }
         ;
         t.validatePIE = function(e, t, n, r, a) {
-            console.log("in validatePIE")
             void 0 === a && (a = window),
             (n && !r || !n) && a.PIE && a.PIE.key_id ? e({
                 key: a.PIE.key_id.toString(),
@@ -21611,7 +21607,7 @@
           , de = {
             "continue-shipping": function(e) {
                 return function() {
-                    return o.a.createElement("span", null, "Click ", e.continue, " to remove ", e.items, " from your order, or go back  and change your address.")
+                    return o.a.createElement("span", null, "Click ", e.continue, " to remove ", e.items, " from your order, or go back  and change your address.")
                 }
             },
             "continue-zip": function(e) {
@@ -21936,7 +21932,7 @@
         He.defaultProps = {
             modalStyle: Ue.a
         };
-        var We, Be, Ye, Ke = Object(A.connect)()(He), Xe = n("0FP2"), qe = n("JnmZ"), ze = n("sj0U"), Qe = o.a.createElement("span", null, "• "), Ze = o.a.createElement("div", {
+        var We, Be, Ye, Ke = Object(A.connect)()(He), Xe = n("0FP2"), qe = n("JnmZ"), ze = n("sj0U"), Qe = o.a.createElement("span", null, "• "), Ze = o.a.createElement("div", {
             className: "wgd-modal-add-on-services-label"
         }, o.a.createElement("span", {
             className: "font-bold"
@@ -22162,7 +22158,7 @@
                     return e && "string" == typeof e ? e.trim() : ""
                 }) : []
             }(e)[1]
-        }, rt = n("Vrjz"), at = n("FtA+"), it = n("uRv6"), ot = o.a.createElement("span", null, "• "), ct = function(e) {
+        }, rt = n("Vrjz"), at = n("FtA+"), it = n("uRv6"), ot = o.a.createElement("span", null, "• "), ct = function(e) {
             function t(t) {
                 return e.call(this, t) || this
             }
@@ -41009,7 +41005,7 @@
             className: "copy-small persisten-footer-est-label"
         }, u.a.createElement("span", {
             "aria-hidden": "true"
-        }, "Est. total"), " ", u.a.createElement("span", {
+        }, "Est. total"), " ", u.a.createElement("span", {
             className: "aria-hidden-content"
         }, "estimated total"))
           , an = function(e) {
@@ -41273,7 +41269,7 @@
                 return u.a.createElement("div", {
                     className: h,
                     style: b
-                }, d || " ")
+                }, d || " ")
             }
             ,
             t
