@@ -5,7 +5,6 @@ import {
     accumulateCookies,
     getValueByDelimiters
 } from '../../../requestFunctions'
-import axios from 'axios';
 import timestampLogger from '../../../logger';
 import { voltageEncrypt } from '../logic/voltageEncrypt';
 // import testProfile from '../../../sensitive/testInterfaces/testProfile';
@@ -16,6 +15,15 @@ import WalmartGETCheckout from './checkout/initialize/WalmartGETCheckout';
 import WalmartContinueAsGuest from './checkout/initialize/WalmartContinueAsGuest';
 import WalmartGETDeliveryOptions from './checkout/shipping/WalmartGETDeliveryOptions';
 import WalmartPOSTFulfillment from './checkout/shipping/WalmartPOSTFulfillment';
+import testProfile from '../../../sensitive/testInterfaces/testProfile';
+import WalmartAddShippingAddress from './checkout/shipping/WalmartAddShippingAddress';
+import WalmartPUTLocationResponse from './checkout/shipping/WalmartPUTLocationResponse';
+import WalmartPOSTShippingAddress from './checkout/shipping/WalmartPOSTShippingAddress';
+
+// @ts-ignore
+import WalmartPOSTCreditCard from './checkout/payment/WalmartPOSTCreditCard';
+import WalmartPOSTPayment from './checkout/payment/WalmartPOSTPayment';
+import WalmartSubmitOrder from './checkout/payment/WalmartSubmitOrder';
 
 const flow = async () => {
     let productUrl = 'https://www.walmart.com/ip/Starbucks-Dark-Roast-Whole-Bean-Coffee-Sumatra-100-Arabica-1-bag-12-oz/20709874'
@@ -31,7 +39,14 @@ const flow = async () => {
     const offerId = getValueByDelimiters(GETProductResponse.data, '"offerId":"', '"');
     let stores : any = getValueByDelimiters(GETProductResponse.data, '"stores":[{', '}]')
     // console.log(stores)
-    const storesObject : object[] = JSON.parse(`[{${stores}}]`)
+    let storesObject : object[];
+    try {
+        storesObject = JSON.parse(`[{${stores}}]`)
+    }
+    catch (err) {
+        console.error("Error parsing " + `[{${stores}}]`);
+        return;
+    }
     // console.log(storesObject);
     timestampLogger(`Found product: ${productTitle}`)
     timestampLogger(`Found offerId: ${offerId}`)
@@ -95,45 +110,9 @@ const flow = async () => {
 
     // console.log(SelectDeliveryMethodResponse)
     
-    timestampLogger("Adding address")
-    var AddShippingAddressData = JSON.stringify({
-        "address": {
-          "addressLineOne": "1105 Holly Tree Farms Road",
-          "addressLineTwo": "",
-          "city": "Brentwood",
-          "postalCode": "37027",
-          "stateOrProvinceCode": "TN",
-          "countryCode": "USA"
-        },
-        "options": {
-          "maxResultSize": "10"
-        },
-        "geoHint": "US"
-    });
-
-    const AddShippingAddressReponse = await axios({
-        method: 'post',
-        url: 'https://www.walmart.com/api/checkout-avs?version=v2',
-        headers: {
-            'authority': 'www.walmart.com', 
-            'pragma': 'no-cache', 
-            'cache-control': 'no-cache', 
-            'sec-ch-ua': '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"', 
-            'accept': 'application/json, text/javascript, */*; q=0.01', 
-            'dnt': '1', 
-            'sec-ch-ua-mobile': '?0', 
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36', 
-            'content-type': 'application/json', 
-            'origin': 'https://www.walmart.com', 
-            'sec-fetch-site': 'same-origin', 
-            'sec-fetch-mode': 'cors', 
-            'sec-fetch-dest': 'empty', 
-            'referer': 'https://www.walmart.com/checkout/', 
-            'accept-language': 'en-US,en;q=0.9',
-            cookie: joinCookies(allCookies)
-        },
-        data : AddShippingAddressData
-    })
+    // We need to somehow standardize profiles because this is fucked up
+    timestampLogger("Adding shipping address (1)")
+    const AddShippingAddressReponse = await WalmartAddShippingAddress(allCookies, testProfile.shipping, proxy)
 
     // console.log(AddShippingAddressReponse.data)
 
@@ -145,40 +124,9 @@ const flow = async () => {
 
 
     // add location
-    var PUTLocationData = JSON.stringify({
-        "postalCode": "37027",
-        "responseGroup": "STOREMETAPLUS",
-        "includePickUpLocation": true,
-        "persistLocation": true,
-        "clientName": "Web-Checkout-ShippingAddress",
-        "storeMeta": true,
-        "plus": true
-    });
-      
-    const PUTLocationResponse = await axios({
-        method: 'put',
-        url: 'https://www.walmart.com/account/api/location',
-        headers: { 
-          'Connection': 'keep-alive', 
-          'Pragma': 'no-cache', 
-          'Cache-Control': 'no-cache', 
-          'sec-ch-ua': '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"', 
-          'accept': 'application/json, text/javascript, */*; q=0.01', 
-          'DNT': '1', 
-          'sec-ch-ua-mobile': '?0', 
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36', 
-          'content-type': 'application/json', 
-          'Origin': 'https://www.walmart.com', 
-          'Sec-Fetch-Site': 'same-origin', 
-          'Sec-Fetch-Mode': 'cors', 
-          'Sec-Fetch-Dest': 'empty', 
-          'Referer': 'https://www.walmart.com/checkout/', 
-          'Accept-Language': 'en-US,en;q=0.9', 
-          'Cookie': joinCookies(allCookies)
-        },
-        data : PUTLocationData,
-        // validateStatus: () => true
-    });
+    
+    timestampLogger("Adding shipping address (2)")
+    const PUTLocationResponse = await WalmartPUTLocationResponse(allCookies, testProfile.shipping, proxy)
 
     allCookies = accumulateCookies(allCookies, returnParsedCookies(PUTLocationResponse.headers['set-cookie']))
     // console.log(PUTLocationResponse.data)
@@ -220,187 +168,38 @@ const flow = async () => {
         }
     }
 
-
-    // console.log("StoreList:")
-    // console.log(storeList)
-
     
+    timestampLogger("Adding shipping address (3)")
 
-    var POSTShippingAddressData = JSON.stringify({
-        "addressLineOne": "1105 Holly Tree Farms Rd",
-        "city": "Brentwood",
-        "firstName": "Ian",
-        "lastName": "Brash",
-        "phone": "6158922385",
-        "email": "iansbrash@gmail.com",
-        "marketingEmailPref": true,
-        "postalCode": "37027",
-        "state": "TN",
-        "countryCode": "USA",
-        "addressType": "RESIDENTIAL",
-        "changedFields": [],
-        "storeList": storeList
-      });
-      
-    const POSTShippingAddressResponse = await axios({
-        method: 'post',
-        url: 'https://www.walmart.com/api/checkout/v3/contract/:PCID/shipping-address',
-        headers: { 
-          'Connection': 'keep-alive', 
-          'Pragma': 'no-cache', 
-          'Cache-Control': 'no-cache', 
-          'sec-ch-ua': '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"', 
-          'DNT': '1', 
-          'inkiru_precedence': 'false', 
-          'sec-ch-ua-mobile': '?0', 
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36', 
-          'content-type': 'application/json', 
-          'accept': 'application/json, text/javascript, */*; q=0.01', 
-          'wm_cvv_in_session': 'true', 
-          'wm_vertical_id': '0', 
-          'Origin': 'https://www.walmart.com', 
-          'Sec-Fetch-Site': 'same-origin', 
-          'Sec-Fetch-Mode': 'cors', 
-          'Sec-Fetch-Dest': 'empty', 
-          'Referer': 'https://www.walmart.com/checkout/', 
-          'Accept-Language': 'en-US,en;q=0.9', 
-          'Cookie': joinCookies(allCookies)
-        },
-        data : POSTShippingAddressData,
-        // validateStatus: () => true
-    });
-
-    // console.log(POSTShippingAddressResponse.data)
+    const POSTShippingAddressResponse = await WalmartPOSTShippingAddress(allCookies, testProfile, storeList, proxy)
 
     allCookies = accumulateCookies(allCookies, returnParsedCookies(POSTShippingAddressResponse.headers['set-cookie']))
 
 
-    let testCardNum = '4767718260058419'
-    let testCardCvv = '362'
-    let testCardExpMonth = '07' // use 0_ for 1 digit expirations
-    let testCardExpYear = '2027'
-
     timestampLogger("Encrypting payment")
-    // @ts-ignore
-    const voltageEncryptedData : string[][] = await voltageEncrypt(testCardNum, testCardCvv)
 
-    // We get piHash from this!
-    var POSTCreditCardData = JSON.stringify({
-        "encryptedPan": voltageEncryptedData[0][0],
-        "encryptedCvv": voltageEncryptedData[0][1],
-        "integrityCheck": voltageEncryptedData[0][2],
-        "keyId": voltageEncryptedData[0][3],
-        "phase": "0", // was 1????
-        "state": "TN",
-        "postalCode": "37027",
-        "addressLineOne": "1105 Holly Tree Farms Rd",
-        "addressLineTwo": "",
-        "city": "Brentwood",
-        "firstName": "Ian",
-        "lastName": "Brash",
-        "expiryMonth": testCardExpMonth,
-        "expiryYear": testCardExpYear,
-        "phone": "6158922385",
-        "cardType": "VISA",
-        "isGuest": true
-      });
 
-    // console.log(POSTCreditCardData)
-      
+    // make this an api call
+    const voltageEncryptedData : string[][] = await voltageEncrypt(testProfile.payment.number, testProfile.payment.cvv)
+
+
+
+
     timestampLogger("Adding payment (1)")
-    const POSTCreditCardResponse =  await axios({
-        method: 'post',
-        url: 'https://www.walmart.com/api/checkout-customer/:CID/credit-card',
-        headers: { 
-          'Connection': 'keep-alive', 
-          'Pragma': 'no-cache', 
-          'Cache-Control': 'no-cache', 
-          'sec-ch-ua': '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"', 
-          'accept': 'application/json', 
-          'DNT': '1', 
-          'sec-ch-ua-mobile': '?0', 
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36', 
-          'content-type': 'application/json', 
-          'Origin': 'https://www.walmart.com', 
-          'Sec-Fetch-Site': 'same-origin', 
-          'Sec-Fetch-Mode': 'cors', 
-          'Sec-Fetch-Dest': 'empty', 
-          'Referer': 'https://www.walmart.com/checkout/', 
-          'Accept-Language': 'en-US,en;q=0.9', 
-          'Cookie': joinCookies(allCookies)
-        },
-        data : POSTCreditCardData,
-        validateStatus: () => true
-    });
+    const POSTCreditCardResponse =  await WalmartPOSTCreditCard(allCookies, testProfile, voltageEncryptedData, proxy)
 
-    // console.log(POSTCreditCardResponse.data);
-    // return;
 
     allCookies = accumulateCookies(allCookies, returnParsedCookies(POSTCreditCardResponse.headers['set-cookie']))
-    
-    var POSTPaymentData = JSON.stringify({
-        "payments": [
-          {
-            "paymentType": POSTCreditCardResponse.data.paymentType,// in CC Response
-            "cardType": POSTCreditCardResponse.data.cardType,// in CC Response
-            "firstName": POSTCreditCardResponse.data.firstName,// in CC Response
-            "lastName": POSTCreditCardResponse.data.lastName, // in CC Response
-            "addressLineOne": POSTCreditCardResponse.data.addressLineOne, // in CC Response
-            "addressLineTwo": POSTCreditCardResponse.data.addressLineTwo, // in CC Response
-            "city": POSTCreditCardResponse.data.city, // in CC Response
-            "state": POSTCreditCardResponse.data.state,// in CC Response
-            "postalCode": POSTCreditCardResponse.data.postalCode,// in CC Response
-            "expiryMonth": testCardExpMonth, // is it 07 or 7?
-            "expiryYear": testCardExpYear, 
-            "email": "iansbrash@gmail.com", // change please
-            "phone": POSTCreditCardResponse.data.phone, // in CC Response
-            "encryptedPan": voltageEncryptedData[1][0],//#2
-            "encryptedCvv": voltageEncryptedData[1][1],//#2
-            "integrityCheck": voltageEncryptedData[1][2],//integrityCheck#2
-            "keyId": voltageEncryptedData[1][3],//keyId #2
-            "phase": "0",// assumed ... was 1 ???
-            "piHash": POSTCreditCardResponse.data.piHash// in CC Response
-          }
-        ],
-        "cvvInSession": true
-      });
-
-    //   console.log(POSTPaymentData)
       
     timestampLogger("Adding payment (2)")
-      const POSTPaymentResponse = await axios({
-        method: 'post',
-        url: 'https://www.walmart.com/api/checkout/v3/contract/:PCID/payment',
-        headers: { 
-          'Connection': 'keep-alive', 
-          'Pragma': 'no-cache', 
-          'Cache-Control': 'no-cache', 
-          'sec-ch-ua': '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"', 
-          'DNT': '1', 
-          'inkiru_precedence': 'false', 
-          'sec-ch-ua-mobile': '?0', 
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36', 
-          'content-type': 'application/json', 
-          'accept': 'application/json, text/javascript, */*; q=0.01', 
-          'wm_cvv_in_session': 'true', 
-          'wm_vertical_id': '0', 
-          'Origin': 'https://www.walmart.com', 
-          'Sec-Fetch-Site': 'same-origin', 
-          'Sec-Fetch-Mode': 'cors', 
-          'Sec-Fetch-Dest': 'empty', 
-          'Referer': 'https://www.walmart.com/checkout/', 
-          'Accept-Language': 'en-US,en;q=0.9', 
-          'Cookie': joinCookies(allCookies) 
-        },
-        data : POSTPaymentData
-      });
+      const POSTPaymentResponse = await WalmartPOSTPayment(allCookies, testProfile, voltageEncryptedData, POSTCreditCardResponse.data, proxy)
 
-    //   console.log(JSON.stringify(POSTPaymentResponse.data))
 
     allCookies = accumulateCookies(allCookies, returnParsedCookies(POSTPaymentResponse.headers['set-cookie']))
     
     // console.log(POSTPaymentResponse)
     // return;
+    timestampLogger("Submitting order")
 
     var SubmitOrderData : any = {
         "cvvInSession": true,
@@ -419,41 +218,32 @@ const flow = async () => {
 
       SubmitOrderData = JSON.stringify(SubmitOrderData)
       
-    timestampLogger("Submitting order")
 
     // 400 is error submitting order (could be bad CVV or Expiration Date)
       // @ts-ignore
-    const SubmitOrderResponse =  await axios({
-        method: 'put',
-        url: 'https://www.walmart.com/api/checkout/v3/contract/:PCID/order',
-        headers: { 
-          'Connection': 'keep-alive', 
-          'Pragma': 'no-cache', 
-          'Cache-Control': 'no-cache', 
-          'sec-ch-ua': '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"', 
-          'DNT': '1', 
-          'inkiru_precedence': 'false', 
-          'sec-ch-ua-mobile': '?0', 
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36', 
-          'content-type': 'application/json', 
-          'accept': 'application/json, text/javascript, */*; q=0.01', 
-          'wm_cvv_in_session': 'true', 
-          'wm_vertical_id': '0', 
-          'Origin': 'https://www.walmart.com', 
-          'Sec-Fetch-Site': 'same-origin', 
-          'Sec-Fetch-Mode': 'cors', 
-          'Sec-Fetch-Dest': 'empty', 
-          'Referer': 'https://www.walmart.com/checkout/', 
-          'Accept-Language': 'en-US,en;q=0.9', 
-          'Cookie': joinCookies(allCookies)
-        },
-        data : SubmitOrderData,
-        validateStatus: () => true
-    });
+    try {
+        const SubmitOrderResponse = await WalmartSubmitOrder(allCookies, POSTCreditCardResponse.data.paymentType, voltageEncryptedData, proxy)
+        console.log(SubmitOrderResponse)
+    }
+    catch (err) {
+        let errData = err.response.data;
 
-    console.log(SubmitOrderResponse.data)
-    // data.code payment_service_insufficient_funds
-    // data.code 
+        if (errData.code === 'payment_service_insufficient_funds') {
+            timestampLogger("Declined: Insufficient funds")
+        }
+        else if (errData.code === 'payment_service_authorization_decline') {
+            timestampLogger("Declined: Failed authorization")
+        }
+        else {
+            timestampLogger(`Declined: Unknown error ${err.response.data.code}`)
+        }
+        // statusCode
+        // error
+        // code -- this is what we want
+    }
+
+    // data.code payment_service_insufficient_funds (not enough money)
+    // data.code payment_service_authorization_decline (decline)
 
 
 };
