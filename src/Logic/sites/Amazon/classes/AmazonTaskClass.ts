@@ -14,10 +14,6 @@ interface ipcResponse {
     storage: Storage
 }
 
-export enum AmazonStatus {
-    CheckoutSuccess,
-    CheckoutError
-}
 
 class AmazonTaskClass extends TaskClass {
 

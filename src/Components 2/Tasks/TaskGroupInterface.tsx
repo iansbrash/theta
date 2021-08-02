@@ -27,6 +27,7 @@ import Size from '../../Logic/interfaces/enums/Size';
 import { saveTaskGroupOnAdd, activateNumberCommander, updateTaskGroupDelay } from '../../redux/reducers/tasksSlice'
 import electron from 'electron';
 import AmazonTaskClass from '../../Logic/sites/Amazon/classes/AmazonTaskClass';
+import TaskClass from '../../Logic/sites/classes/TaskClass';
 
 
 interface TextInputProps {
@@ -116,7 +117,7 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
 
     // our actual tasks!    
     const [tasks, setTasks] = useState<TaskHookProps[]>([]);
-    const [tasks2, setTasks2] = useState<AmazonTaskClass[]>([]);
+    const [tasks2, setTasks2] = useState<TaskClass[]>([]);
 
 
     // @ts-ignore

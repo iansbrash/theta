@@ -216,7 +216,7 @@ const flow = async () => {
       };
     //   console.log(SubmitOrderData)
 
-      SubmitOrderData = JSON.stringify(SubmitOrderData)
+    SubmitOrderData = JSON.stringify(SubmitOrderData)
       
 
     // 400 is error submitting order (could be bad CVV or Expiration Date)
