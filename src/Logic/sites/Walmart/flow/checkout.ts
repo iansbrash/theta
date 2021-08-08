@@ -26,7 +26,7 @@ import WalmartPOSTPayment from './checkout/payment/WalmartPOSTPayment';
 import WalmartSubmitOrder from './checkout/payment/WalmartSubmitOrder';
 
 const flow = async () => {
-    let productUrl = 'https://www.walmart.com/ip/Starbucks-Dark-Roast-Whole-Bean-Coffee-Sumatra-100-Arabica-1-bag-12-oz/20709874'
+    let productUrl = 'https://www.walmart.com/ip/Peet-s-Coffee-Major-Dickason-s-Blend-Dark-Roast-Whole-Bean-Coffee-10-5-oz-Bag/262003157?athcpid=262003157&athpgid=athenaItemPage&athcgid=null&athznid=PWVUB&athieid=v0&athstid=CS020&athguid=f622b1c8-007-17b2729be0476a&athancid=null&athena=true' //'https://www.walmart.com/ip/Starbucks-Dark-Roast-Whole-Bean-Coffee-Sumatra-100-Arabica-1-bag-12-oz/20709874'
     let allCookies : string[] = [];
     let proxy = testProxyList.proxies[0]
 
@@ -192,7 +192,7 @@ const flow = async () => {
     allCookies = accumulateCookies(allCookies, returnParsedCookies(POSTCreditCardResponse.headers['set-cookie']))
       
     timestampLogger("Adding payment (2)")
-      const POSTPaymentResponse = await WalmartPOSTPayment(allCookies, testProfile, voltageEncryptedData, POSTCreditCardResponse.data, proxy)
+    const POSTPaymentResponse = await WalmartPOSTPayment(allCookies, testProfile, voltageEncryptedData, POSTCreditCardResponse.data, proxy)
 
 
     allCookies = accumulateCookies(allCookies, returnParsedCookies(POSTPaymentResponse.headers['set-cookie']))
@@ -252,3 +252,6 @@ const flow = async () => {
 (async () => {
     await flow();
 })();
+
+
+export default flow;

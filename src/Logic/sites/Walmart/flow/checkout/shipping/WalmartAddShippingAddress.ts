@@ -3,6 +3,8 @@ import { Proxy } from '../../../../../interfaces/ProxyList';
 import {
     joinCookies
 } from '../../../../../requestFunctions';
+
+// @ts-ignore
 import HttpsProxyAgent from 'https-proxy-agent'
 import { ProfileShipping } from '../../../../../interfaces/ProfileObject';
 
@@ -46,7 +48,15 @@ const WalmartAddShippingAddress = async (allCookies : string[], shipping : Profi
             cookie: joinCookies(allCookies)
         },
         data : AddShippingAddressData,
-        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
+        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
+        proxy: {
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password
+            },
+        }
     })
 
     return AddShippingAddressReponse;

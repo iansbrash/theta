@@ -19,6 +19,7 @@ import timestampLogger from '../../Logic/logger';
 import fse from 'fs-extra'
 import path from 'path';
 import HttpsProxyAgent from 'https-proxy-agent'
+import WalmartTaskClass from '../../Logic/sites/Walmart/classes/WalmartTaskClass';
 
 // import {Worker, isMainThread, parentPort} from 'worker_threads'
 interface InterestingWrapperProps {
@@ -126,16 +127,16 @@ const TaskComponent : FC<TaskComponentProps> = ({
     
 
     const startTask = async () => {
-        task.start();
+        let startStatus = await task.start();
         setStatusColor('text-blue-200');
-        setStatus('Signing in (1)')
+        setStatus(startStatus.message)
 
         let res : cycleStatus = {message: 'Starting...', status: 'Success'};
 
         let prTitle = productTitle;
         let prImage = '';
 
-        let lastStatus = 'Signing in (1)';
+        let lastStatus = startStatus.message;
 
         let prPrice = 0;
 
@@ -248,7 +249,8 @@ const TaskComponent : FC<TaskComponentProps> = ({
 
     // COMING SOON!
     const editTask = async () => {
-        
+        // await (task as WalmartTaskClass).TestWalmartFlow();
+        await electron.ipcRenderer.invoke("WalmartTestFlow")
     }
 
     const stopTask = () => {

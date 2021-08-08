@@ -3,6 +3,8 @@ import { Proxy } from '../../../../../interfaces/ProxyList';
 import {
     joinCookies
 } from '../../../../../requestFunctions';
+
+// @ts-ignore
 import HttpsProxyAgent from 'https-proxy-agent'
 
 const WalmartContinueAsGuest = async (allCookies : string[], proxy : Proxy) : Promise<AxiosResponse> => {
@@ -36,7 +38,15 @@ const WalmartContinueAsGuest = async (allCookies : string[], proxy : Proxy) : Pr
             'accept-language': 'en-US,en;q=0.9', 
             cookie: joinCookies(allCookies)
         },
-        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
+        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
+        proxy: {
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password
+            },
+        },
         data : ContinueAsGuestData,
 
     })

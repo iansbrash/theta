@@ -71,8 +71,6 @@ const TextInput : FC<TextInputProps> = ({
     ) 
 }
 
-
-
 export interface TaskHookProps {
     taskConfig: {
         identifier: any,

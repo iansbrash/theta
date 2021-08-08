@@ -3,6 +3,8 @@ import { Proxy } from '../../../../interfaces/ProxyList';
 import {
     joinCookies
 } from '../../../../requestFunctions';
+
+// @ts-ignore
 import HttpsProxyAgent from 'https-proxy-agent'
 
 const WalmartGETProduct = async (allCookies : string[], productUrl : string, proxy : Proxy) : Promise<AxiosResponse> => {
@@ -30,7 +32,15 @@ const WalmartGETProduct = async (allCookies : string[], productUrl : string, pro
             // Actually might be good for waiting for product
             cookie: joinCookies(allCookies)
         },
-        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
+        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
+        proxy: {
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password
+            },
+        }
     })
 
     return WalmartGETProductResponse;

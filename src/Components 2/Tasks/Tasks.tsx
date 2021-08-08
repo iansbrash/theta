@@ -221,7 +221,7 @@ const Tasks = () => {
                 </div>
 
                 {/* Task Groups mapping */}
-                <div className="w-full flex flex-col justify-start items-center space-y-2">
+                <div className="w-full flex flex-col justify-start items-center space-y-2 overflow-y-scroll scrollbar-hide">
                     {taskGroups.map((tg) => {
 
                         // return React.cloneElement(tg, {

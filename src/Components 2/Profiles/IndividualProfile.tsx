@@ -3,9 +3,11 @@ import React, {
     FC,
     useEffect
 } from 'react';
+import electron from 'electron';
+import ProfileObject from '../../Logic/interfaces/ProfileObject';
 
 interface IndividualProfileProps {
-    item: any,
+    item: any, // ProfileObject
     selectedItem: any,
     setSelectedItem: (a : any) => void,
     bg?: string,
@@ -24,8 +26,19 @@ const IndividualProfile : FC<IndividualProfileProps> = ({
 
     const [isFavorite, setIsFavorite] = useState<boolean>(false)
 
-    const toggleFavorite = () => {
+    const toggleFavorite = async () => {
         setIsFavorite(!isFavorite)
+
+        // update redux and writejson
+        // let res = await electron.ipcRenderer.invoke('readjson', 'profiles.json')
+        // let ind = res.findIndex((pro : ProfileObject) => pro.information.name === itemToString(item));
+        // if (ind !== -1) {
+        //     res[ind].settings.favorite = !isFavorite;
+        //     await electron.ipcRenderer.invoke('writejson', 'profiles.json', res)
+        // } 
+        // else {
+        //     throw "Profile does not exist"
+        // }
     }
 
     const [isSelected, setIsSelected] = useState(comparator ? comparator(selectedItem, item) : selectedItem === item);

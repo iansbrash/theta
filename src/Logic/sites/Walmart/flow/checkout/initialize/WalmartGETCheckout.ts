@@ -3,6 +3,8 @@ import { Proxy } from '../../../../../interfaces/ProxyList';
 import {
     joinCookies
 } from '../../../../../requestFunctions';
+
+// @ts-ignore
 import HttpsProxyAgent from 'https-proxy-agent'
 
 const WalmartGETCheckout = async (allCookies : string[], proxy : Proxy) : Promise<AxiosResponse> => {
@@ -38,7 +40,15 @@ const WalmartGETCheckout = async (allCookies : string[], proxy : Proxy) : Promis
             cookie: joinCookies(allCookies)
         },
         data : GETCheckoutResponseData,
-        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
+        proxy: {
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password
+            },
+        }
+        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
     })
 
     return GETCheckoutResponse;

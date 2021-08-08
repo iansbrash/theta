@@ -163,6 +163,17 @@ class AmazonTaskClass extends TaskClass {
 
     nextFunctionIndex : number = 0;
 
+    async start() {
+        if (this.status !== "Active"){
+            this.resetTask();
+            return {
+                status: "Ready", message: "Signing in (1)"
+            };
+        }
+        else {
+            throw "Task is not idle"
+        }
+    }
 
     constructor (
         identifier : number, 

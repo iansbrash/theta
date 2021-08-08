@@ -3,6 +3,8 @@ import { Proxy } from '../../../../../interfaces/ProxyList';
 import {
     joinCookies
 } from '../../../../../requestFunctions';
+
+// @ts-ignore
 import HttpsProxyAgent from 'https-proxy-agent'
 import ProfileObject from '../../../../../interfaces/ProfileObject';
 
@@ -54,7 +56,15 @@ const WalmartPOSTCreditCard = async (allCookies : string[], profile : ProfileObj
         },
         data : POSTCreditCardData,
         // validateStatus: () => true,
-        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+        proxy: {
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password
+            },
+        }
 
     });
 

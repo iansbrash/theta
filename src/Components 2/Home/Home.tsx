@@ -119,44 +119,60 @@ const Home = () => {
     useEffect(() => {
         (async () => {
             if (updates.length === 0) {
-                const changelog = await axios({
-                    method: 'get',
-                    url: `${api}/public/changelog`
-                })
-
-                dispatch(addUpdates(changelog.data))
+                try {
+                    const changelog = await axios({
+                        method: 'get',
+                        url: `${api}/public/changelog`
+                    })
+    
+                    dispatch(addUpdates(changelog.data))
+                }
+                catch (err) {
+                    console.error("Error fetching updates")
+                }
             }
         })();
 
         (async () => {
             if (loadingCheckouts) {
                 console.log("LOADING CHECKOUTS")
-                const ch = await axios({
-                    method: 'get',
-                    url: `${api}/user/checkouts`,
-                    headers: {
-                        license: sessionObject.license,
-                        // startingKey: '',
-                        amount: 10
-                    }
-                })
-                dispatch(addCheckouts(ch.data))
+                try {
+                    const ch = await axios({
+                        method: 'get',
+                        url: `${api}/user/checkouts`,
+                        headers: {
+                            license: sessionObject.license,
+                            // startingKey: '',
+                            amount: 10
+                        }
+                    })
+                    dispatch(addCheckouts(ch.data))
+                }
+                catch (err) {
+                    console.error("Error loading checkouts")
+                }
+
                 setLoadingCheckouts(false)
             }
         })();
 
         (async () => {
             if (basic.checkouts === -1) {
-                const ch = await axios({
-                    method: 'get',
-                    url: `${api}/user/basic`,
-                    headers: {
-                        license: sessionObject.license,
-                    }
-                })
-                let basic = ch.data;
-
-                dispatch(addBasic(basic))
+                try {
+                    const ch = await axios({
+                        method: 'get',
+                        url: `${api}/user/basic`,
+                        headers: {
+                            license: sessionObject.license,
+                        }
+                    })
+                    let basic = ch.data;
+    
+                    dispatch(addBasic(basic))
+                }
+                catch (err) {
+                    console.error("Error getting user information")
+                }
             }
         })();
     }, [])

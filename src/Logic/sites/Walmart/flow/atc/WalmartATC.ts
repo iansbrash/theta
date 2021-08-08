@@ -3,29 +3,36 @@ import { Proxy } from '../../../../interfaces/ProxyList';
 import {
     joinCookies
 } from '../../../../requestFunctions';
+
+// @ts-ignore
 import HttpsProxyAgent from 'https-proxy-agent'
 
-const WalmartATC = async (allCookies : string[], productUrl : string, offerId : string, storeIds : string[], proxy : Proxy) : Promise<AxiosResponse> => {
+const WalmartATC = async (allCookies : string[], productUrl : string, offerId : string, storeIds : number[] | string[], proxy : Proxy) : Promise<AxiosResponse> => {
     
-    var data = JSON.stringify({
+    let data : any = {
         "offerId": offerId,
         "quantity": 1,
         "location": {
-            "postalCode": "37215",
-            "city": "Nashville",
-            "state": "TN",
+            "postalCode": "29928",
+            "city": "Hilton Head Island",
+            "state": "SC",
             "isZipLocated": true
         },
-        "shipMethodDefaultRule": "SHIP_RULE_1",
-        storeIds: storeIds
         // "storeIds": [
-        //     5616,
-        //     5119,
-        //     659,
-        //     3717,
-        //     688
-        // ]
-    });
+        //     728,
+        //     6395,
+        //     2832,
+        //     606,
+        //     1383
+        // ],
+        storeIds: storeIds,
+        "shipMethodDefaultRule": "SHIP_RULE_1",
+    };
+
+    console.log(storeIds)
+
+    data = JSON.stringify(data);
+
     // 400 = offerId is invalid
     const ATCResponse = await axios({
         method: 'post',
@@ -47,7 +54,17 @@ const WalmartATC = async (allCookies : string[], productUrl : string, offerId : 
             cookie: joinCookies(allCookies)
         },
         data : data,
-        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
+        proxy: {
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password
+            },
+        }
+        // proxy: false,
+        // httpsAgent: HttpsProxyAgent(`http://${proxy.ip}:${proxy.port}:${proxy.username}:${proxy.password}`),
+        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
     });
 
     return ATCResponse;

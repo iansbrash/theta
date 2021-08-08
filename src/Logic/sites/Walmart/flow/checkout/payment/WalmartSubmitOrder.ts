@@ -3,6 +3,8 @@ import { Proxy } from '../../../../../interfaces/ProxyList';
 import {
     joinCookies
 } from '../../../../../requestFunctions';
+
+// @ts-ignore
 import HttpsProxyAgent from 'https-proxy-agent'
 
 const WalmartSubmitOrder = async (allCookies : string[], paymentType : string, voltageEncryptedData : string[][], proxy : Proxy) : Promise<AxiosResponse> => {
@@ -50,7 +52,15 @@ const WalmartSubmitOrder = async (allCookies : string[], paymentType : string, v
             'Cookie': joinCookies(allCookies)
         },
         data : SubmitOrderData,
-        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+        proxy: {
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password
+            },
+        }
     });
 
     return SubmitOrderResponse;

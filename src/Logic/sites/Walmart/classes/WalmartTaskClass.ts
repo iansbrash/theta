@@ -51,6 +51,18 @@ class WalmartTaskClass extends TaskClass {
         []
     ]
 
+    async start() {
+        if (this.status !== "Active"){
+            this.resetTask();
+            return {
+                status: "Ready", message: "Getting product"
+            };
+        }
+        else {
+            throw "Task is not idle"
+        }
+    }
+
     constructor (
         identifier : number, 
         site : Site, 
@@ -80,6 +92,10 @@ class WalmartTaskClass extends TaskClass {
         }
     }
 
+    async TestWalmartFlow() : Promise<void> {
+        await electron.ipcRenderer.invoke("WalmartTestFlow");
+    }
+
     async WalmartGETProduct() : Promise<cycleStatus> {
         return await this.tryCatchWrapper(async () => {
             const res = await electron.ipcRenderer.invoke('WalmartGETProduct', this.allCookies, this.input, this.currentProxy);
@@ -98,7 +114,7 @@ class WalmartTaskClass extends TaskClass {
 
     async WalmartATC() : Promise<cycleStatus> {
         return await this.tryCatchWrapper(async () => {
-            const res = await electron.ipcRenderer.invoke('WalmartATC', this.allCookies, this.input, this.currentProxy);
+            const res = await electron.ipcRenderer.invoke('WalmartATC', this.allCookies, this.input, this.storage.offerId, this.storage.storesObject, this.currentProxy);
             this.allCookies = res.allCookies;
 
         }, "Getting checkout screen")

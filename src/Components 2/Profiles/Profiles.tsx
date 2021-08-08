@@ -215,10 +215,63 @@ const Profiles : FC = () => {
         return SanitizationStatus.Success;
     }
 
-    const beginAddProfile = () => {
-        setSelectedProfile(undefined);
-        setSameBillingAsShip(false)
+    const beginAddProfile = async () => {
 
+
+        let newName = "Profile";
+        let iter = 1;
+
+        // while the name isnt unique
+        while (loadedProfiles.findIndex(pro => pro.information.name === newName + " " + iter) !== -1) {
+            iter += 1; 
+        }
+
+        const newProfile : ProfileObject = {
+            information: {
+                name: newName + " " + iter,
+                email: '',
+                phone: ''
+            },
+            shipping: {
+                firstName: '',
+                lastName: '',
+                address1: '',
+                address2: '',
+                zip: '',
+                city: '',
+                state: '',
+                country: '',
+            },
+            billing: {
+                firstName: '',
+                lastName: '',
+                address1: '',
+                address2: '',
+                zip: '',
+                city: '',
+                state: '',
+                country: '',
+            },
+            payment: {
+                name: '',
+                number: '',
+                expiryMonth: '',
+                expiryYear: '',
+                cvv: ''
+            },
+            settings: {
+                favorite: false,
+                sameBillingAsShip: false
+            }
+        }
+
+
+        dispatch(addOrUpdateProfile(newProfile))
+        setSelectedProfile(newProfile);
+        setSameBillingAsShip(false)
+        await electron.ipcRenderer.invoke("writejson", "proxies.json", [...loadedProfiles, newProfile]);
+
+        return;
         const toEmpty : ((s : string) => void)[] = [
             setProfileName,
             setEmail,

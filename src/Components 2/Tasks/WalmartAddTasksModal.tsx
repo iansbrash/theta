@@ -173,9 +173,9 @@ const WalmartAddTasksModal : FC<WalmartAddTasksModalProps> = ({
         if (addTasksInput === '') {
             throw "Input is blank"
         }
-        else if (addTasksAccount.length === 0 && addTasksAccountGroup === undefined) {
-            throw "No Account or Account Group selected";
-        }
+        // else if (addTasksAccount.length === 0 && addTasksAccountGroup === undefined) {
+        //     throw "No Account or Account Group selected";
+        // }
         else if (addTasksMode === undefined) {
             throw "No mode selected"
         }

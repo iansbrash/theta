@@ -71,18 +71,14 @@ abstract class TaskClass implements Task {
         this.session = store.getState().session.session
     }
 
-    async start() : Promise<string> {
-        if (this.status !== "Active"){
-            this.nextFunctionIndex = 0;
-            this.status = "Active";
-            this.storage = {};
-            this.allCookies = [];
-            return "Ready";
-        }
-        else {
-            throw "Task is not idle"
-        }
+    resetTask() : void {
+        this.nextFunctionIndex = 0;
+        this.status = "Active";
+        this.storage = {};
+        this.allCookies = [];
     }
+
+    abstract start() : Promise<{"status": string, "message": string}>;
 
     stop() : void {
         this.status = "Stopped"
