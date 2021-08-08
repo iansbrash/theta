@@ -249,9 +249,9 @@ const flow = async () => {
 };
 
 
-(async () => {
-    await flow();
-})();
+// (async () => {
+//     await flow();
+// })();
 
 
 export default flow;

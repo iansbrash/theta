@@ -13,7 +13,9 @@ import WalmartPOSTShippingAddress from '../../../Logic/sites/Walmart/flow/checko
 import WalmartPUTLocationResponse from '../../../Logic/sites/Walmart/flow/checkout/shipping/WalmartPUTLocationResponse';
 import { voltageEncrypt } from '../../../Logic/sites/Walmart/logic/voltageEncrypt';
 import flow from '../../../Logic/sites/Walmart/flow/checkout';
-
+import WalmartPOSTPayment from '../../../Logic/sites/Walmart/flow/checkout/payment/WalmartPOSTPayment';
+import WalmartSubmitOrder from '../../../Logic/sites/Walmart/flow/checkout/payment/WalmartSubmitOrder';
+import constructError from '../../errorConstructor';
 const atc = () => {
 
     electron.ipcMain.handle('WalmartTestFlow', async (event, ...args) => {
@@ -317,8 +319,10 @@ const atc = () => {
         const shipping = args[1];
         const proxy = args[2];
  
+        timestampLogger("tHE FUCK IS GOING ON HERER")
     
         const PUTLocationResponse = await WalmartPUTLocationResponse(allCookies, shipping, proxy)
+        timestampLogger("wh")
 
         allCookies = accumulateCookies(allCookies, returnParsedCookies(PUTLocationResponse.headers['set-cookie']))
         // console.log(PUTLocationResponse.data)
@@ -407,25 +411,90 @@ const atc = () => {
         return {
             allCookies: allCookies,
             storage: {
+                voltageEncryptedData,
+                POSTCreditCardResponseData: POSTCreditCardResponse.data
+            }
+        }
+    })
+
+    electron.ipcMain.handle('WalmartPOSTPayment', async (event, ...args) => {
+        // args:
+        // allCookies, product, proxy
+        let allCookies = args[0];
+        const profile = args[1];
+        const voltageEncryptedData = args[2];
+        const POSTCreditCardResponseData = args[3];
+        const proxy = args[4];
+ 
+       // make this an api call
+        // const voltageEncryptedData : string[][] = await voltageEncrypt(profile.payment.number, profile.payment.cvv)
+
+
+        const POSTPaymentResponse = await WalmartPOSTPayment(allCookies, profile, voltageEncryptedData, POSTCreditCardResponseData, proxy)
+        allCookies = accumulateCookies(allCookies, returnParsedCookies(POSTPaymentResponse.headers['set-cookie']))
+        
+
+        return {
+            allCookies: allCookies,
+            storage: {
                 voltageEncryptedData
             }
         }
     })
 
-    electron.ipcMain.handle('WalmartPOasdasdasdSTCreditCardasdasdasdasdasd', async (event, ...args) => {
+    electron.ipcMain.handle('WalmartSubmitOrder', async (event, ...args) => {
         // args:
         // allCookies, product, proxy
         let allCookies = args[0];
-        const profile = args[1];
-        const proxy = args[2];
+        const POSTCreditCardResponseData = args[1];
+        const voltageEncryptedData = args[2];
+        const proxy = args[3];
  
-       // make this an api call
-        const voltageEncryptedData : string[][] = await voltageEncrypt(profile.payment.number, profile.payment.cvv)
+        var SubmitOrderData : any = {
+            "cvvInSession": true,
+            "voltagePayments": [
+              {
+                "paymentType": POSTCreditCardResponseData.paymentType,
+                "encryptedCvv": voltageEncryptedData[1][1],
+                "encryptedPan": voltageEncryptedData[1][0],
+                "integrityCheck": voltageEncryptedData[1][2],
+                "keyId": voltageEncryptedData[1][3],
+                "phase": "0"
+              }
+            ]
+          };
+        //   console.log(SubmitOrderData)
+    
+        SubmitOrderData = JSON.stringify(SubmitOrderData)
+          
+    
+        // 400 is error submitting order (could be bad CVV or Expiration Date)
+          // @ts-ignore
+        try {
+            const SubmitOrderResponse = await WalmartSubmitOrder(allCookies, POSTCreditCardResponseData.paymentType, voltageEncryptedData, proxy)
+            console.log(SubmitOrderResponse)
 
-
-        const POSTCreditCardResponse =  await WalmartPOSTCreditCard(allCookies, profile, voltageEncryptedData, proxy)
-
-        allCookies = accumulateCookies(allCookies, returnParsedCookies(POSTCreditCardResponse.headers['set-cookie']))
+            return {status: "Success", message: "Success"}
+        }
+        catch (err) {
+            let errData = err.response.data;
+    
+            if (errData.code === 'payment_service_insufficient_funds') {
+                timestampLogger("Declined: Insufficient funds")
+                return constructError(400, `Declined: Insufficient funds`)
+            }
+            else if (errData.code === 'payment_service_authorization_decline') {
+                timestampLogger("Declined: Failed authorization")
+                return constructError(400, `Declined: Declined: Failed authorization`)
+            }
+            else {
+                timestampLogger(`Declined: Unknown error ${err.response.data.code}`)
+                return constructError(400, `Declined: ${err.response.data.code}`)
+            }
+            // statusCode
+            // error
+            // code -- this is what we want
+        }
         
 
         return {

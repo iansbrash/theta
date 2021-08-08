@@ -28,6 +28,7 @@ import { saveTaskGroupOnAdd, activateNumberCommander, updateTaskGroupDelay } fro
 import electron from 'electron';
 import AmazonTaskClass from '../../Logic/sites/Amazon/classes/AmazonTaskClass';
 import TaskClass from '../../Logic/sites/classes/TaskClass';
+import WalmartTaskClass from '../../Logic/sites/Walmart/classes/WalmartTaskClass';
 
 
 interface TextInputProps {
@@ -123,8 +124,16 @@ const TaskGroupInterface : FC<TaskGroupInterfaceProps> = ({
     
     useEffect(() => {
         setTasks(taskGroupsSelector ? taskGroupsSelector.tasks : [])
-        setTasks2(taskGroupsSelector ? taskGroupsSelector.tasks.map((t : TaskHookProps) => 
-            new AmazonTaskClass(t.taskConfig.identifier, t.taskConfig.site, t.taskConfig.profile, t.taskConfig.size, t.taskConfig.proxies, t.taskConfig.input, t.siteConfig, taskGroupsSelector.delays.monitor, taskGroupsSelector.delays.error)
+        setTasks2(taskGroupsSelector ? taskGroupsSelector.tasks.map((t : TaskHookProps) => {
+            switch (t.taskConfig.site) {
+                case Site.Amazon:
+                    return new AmazonTaskClass(t.taskConfig.identifier, t.taskConfig.site, t.taskConfig.profile, t.taskConfig.size, t.taskConfig.proxies, t.taskConfig.input, t.siteConfig, taskGroupsSelector.delays.monitor, taskGroupsSelector.delays.error)
+                case Site.Walmart:
+                    return new WalmartTaskClass(t.taskConfig.identifier, t.taskConfig.site, t.taskConfig.profile, t.taskConfig.size, t.taskConfig.proxies, t.taskConfig.input, t.siteConfig, taskGroupsSelector.delays.monitor, taskGroupsSelector.delays.error)
+                default:
+                    return new AmazonTaskClass(t.taskConfig.identifier, t.taskConfig.site, t.taskConfig.profile, t.taskConfig.size, t.taskConfig.proxies, t.taskConfig.input, t.siteConfig, taskGroupsSelector.delays.monitor, taskGroupsSelector.delays.error)
+            }
+        }
         ) : [])
     }, [])
 

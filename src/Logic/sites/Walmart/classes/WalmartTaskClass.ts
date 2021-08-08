@@ -187,24 +187,35 @@ class WalmartTaskClass extends TaskClass {
             this.allCookies = res.allCookies;
             this.storage = res.storage
 
-        }, "AddShippingAddress (4)")
+        }, "Adding payment(2)")
     }
 
-    // async WalmartPOSTShippingAddress() : Promise<cycleStatus> {
-    //     return await this.tryCatchWrapper(async () => {
-    //         const res = await electron.ipcRenderer.invoke('WalmartPOSTShippingAddress', this.allCookies, this.profile, this.storage.storeList, this.currentProxy);
-    //         this.allCookies = res.allCookies;
+    async WalmartPOSTShippingAddress() : Promise<cycleStatus> {
+        return await this.tryCatchWrapper(async () => {
+            const res = await electron.ipcRenderer.invoke('WalmartPOSTShippingAddress', this.allCookies, this.profile, this.storage.storeList, this.currentProxy);
+            this.allCookies = res.allCookies;
 
-    //     }, "AddShippingAddress (5)")
-    // }
+        }, "Adding payment (1)")
+    }
 
-    // async WalmartPOSTShippingAddress() : Promise<cycleStatus> {
-    //     return await this.tryCatchWrapper(async () => {
-    //         const res = await electron.ipcRenderer.invoke('WalmartPOSTShippingAddress', this.allCookies, this.profile, this.storage.storeList, this.currentProxy);
-    //         this.allCookies = res.allCookies;
+    async WalmartPOSTPayment() : Promise<cycleStatus> {
+        return await this.tryCatchWrapper(async () => {
+            const res = await electron.ipcRenderer.invoke('WalmartPOSTPayment', this.allCookies, this.profile, this.storage.voltageEncryptedData, this.storage.POSTCreditCardResponseData, this.currentProxy);
+            this.allCookies = res.allCookies;
 
-    //     }, "AddShippingAddress (6)")
-    // }
+        }, "Submitting order")
+    }
+
+    async WalmartSubmitOrder() : Promise<cycleStatus> {
+        return await this.tryCatchWrapper(async () => {
+            const response = await electron.ipcRenderer.invoke('WalmartSubmitOrder', this.allCookies, this.storage.POSTCreditCardResponseData, this.storage.voltageEncryptedData, this.currentProxy);
+            if (response.isError) throw response;
+            else {
+                this.status = "Checked Out"
+            }
+
+        }, "Checked Out")
+    }
 
 
     async sendLocalDiscordSuccess() : Promise<void> {
