@@ -5,7 +5,7 @@ import React, {
     useRef
 } from 'react';
 import { useDispatch } from 'react-redux';
-import { activateNumberCommander, activateStringCommander, deleteTaskGroup as deleteTaskGroupAction, TaskGroup } from '../../redux/reducers/tasksSlice';
+import { activateNumberCommander, activateStringCommander, deleteTaskGroup as deleteTaskGroupAction, deleteTaskGroup2, TaskGroup } from '../../redux/reducers/tasksSlice';
 import { RightClickMenuTypes } from '../../App 2'
 import electron from 'electron'
 

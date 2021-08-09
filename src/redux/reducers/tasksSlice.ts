@@ -77,8 +77,31 @@ export const tasksSlice = createSlice({
                     tgName
                 } = action.payload;
 
-                state.taskGroups = state.taskGroups.filter(tg => tg.name !== tgName)
+                // this causes the 'Should have a queue' error
+                // let temp = state.taskGroups.filter(tg => tg.name !== tgName)
+                // state.taskGroups = temp
+                // delete state.taskGroupCommanders[tgName]
+                state.taskGroupCommanders[tgName].deleteAll = state.taskGroupCommanders[tgName].deleteAll + 1;
+            },
+            prepare (tgName) {
+                return {
+                    payload: {
+                        tgName,
+                    }
+                }
+            }
+        },
+        deleteTaskGroup2: {
+            reducer (state, action : PayloadAction<{tgName : string}>) { //; anotherProp: string; uuid: string
+                const {
+                    tgName
+                } = action.payload;
+
+                // this causes the 'Should have a queue' error
+                let temp = state.taskGroups.filter(tg => tg.name !== tgName)
+                state.taskGroups = temp
                 delete state.taskGroupCommanders[tgName]
+                // state.taskGroupCommanders[tgName].deleteAll = state.taskGroupCommanders[tgName].deleteAll + 1;
             },
             prepare (tgName) {
                 return {
@@ -92,7 +115,6 @@ export const tasksSlice = createSlice({
             reducer (state, action : PayloadAction<{numOfTaskGroup : number}>) {
                 state.savingOptions.saveState = TaskSaveState.Saving
                 state.savingOptions.numberToSave = action.payload.numOfTaskGroup
-
             },
             prepare (numOfTaskGroup) {
                 return {
@@ -228,6 +250,7 @@ export const tasksSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const { 
     deleteTaskGroup, 
+    deleteTaskGroup2,
     populateTasks, 
     saveTaskGroup, 
     beginSave, 

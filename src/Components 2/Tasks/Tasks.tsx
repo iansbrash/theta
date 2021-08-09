@@ -1,9 +1,9 @@
 import React, {
-    FC, useState, useEffect
+    FC, useState, useEffect, useRef
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { beginSave, TaskGroup as TaskGroupInterface, TaskSaveState } from '../../redux/reducers/tasksSlice';
+import { beginSave, deleteTaskGroup2, TaskGroup as TaskGroupInterface, TaskSaveState } from '../../redux/reducers/tasksSlice';
 import { RootState } from '../../redux/store';
 import { saveTaskGroup } from '../../redux/reducers/tasksSlice';
 import TaskGroupInterfaceRenderer from './TaskGroupInterfaceRenderer'
@@ -68,12 +68,16 @@ const LoadingIndicator : FC<LoadingIndicatorProps>= ({
 }
 
 interface TaskGroupProps {
+    taskGroups: string[],
+    setTaskGroups: (tg : string[]) => void,
     name: string,
     selectedTaskGroup: string,
     setSelectedTaskGroup: (s : string) => void
 }
 
 const TaskGroup : FC<TaskGroupProps> = ({
+    taskGroups,
+    setTaskGroups,
     name,
     selectedTaskGroup,
     setSelectedTaskGroup
@@ -82,6 +86,16 @@ const TaskGroup : FC<TaskGroupProps> = ({
     const handleClick = () => {
         setSelectedTaskGroup(name);
     }
+
+    // const dispatch = useDispatch()
+    const commander = useSelector((state : RootState) => state.tasks.taskGroupCommanders[name].deleteAll)
+    const initialRender1 = useRef(commander)
+    useEffect(() => {
+        if (initialRender1.current !== commander) {
+            // dispatch(deleteTaskGroup2(name))
+            setTaskGroups(taskGroups.filter(tg => tg !== name))
+        }
+    }, [commander])
 
 
     return (
@@ -171,10 +185,10 @@ const Tasks = () => {
 
     // Used to deleting a task group on front end
     useEffect(() => {
-        setTaskGroups(taskGroupsSelector.map(t => t.name))
-        if (taskGroupsSelector.length !== 0 && taskGroupsSelector.findIndex(t => t.name === selectedTaskGroup) === -1) {
-            setSelectedTaskGroup(taskGroupsSelector[0].name)
-        }
+        // setTaskGroups(taskGroupsSelector.map(t => t.name))
+        // if (taskGroupsSelector.length !== 0 && taskGroupsSelector.findIndex(t => t.name === selectedTaskGroup) === -1) {
+        //     setSelectedTaskGroup(taskGroupsSelector[0].name)
+        // }
     }, [taskGroupsSelector.length])
 
 
@@ -223,15 +237,9 @@ const Tasks = () => {
                 {/* Task Groups mapping */}
                 <div className="w-full flex flex-col justify-start items-center space-y-2 overflow-y-scroll scrollbar-hide">
                     {taskGroups.map((tg) => {
-
-                        // return React.cloneElement(tg, {
-                        //     // key: index,
-                        //     className: 'taskGroup',
-                        //     setSelectedTaskGroup: setSelectedTaskGroup,
-                        //     selectedTaskGroup: selectedTaskGroup,
-                        //     name: tg
-                        // });
                         return <TaskGroup 
+                            taskGroups={taskGroups}
+                            setTaskGroups={setTaskGroups}
                             setSelectedTaskGroup={setSelectedTaskGroup}
                             selectedTaskGroup={selectedTaskGroup}
                             name={tg}

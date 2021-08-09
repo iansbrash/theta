@@ -10,16 +10,7 @@ import { AmazonModes } from '../../Logic/interfaces/site_task_config/AmazonTaskC
 import axios from 'axios';
 import api from '../../Logic/api';
 import { TaskHookProps } from './TaskGroupInterface';
-import Site from '../../Logic/interfaces/enums/Site';
 import electron from 'electron'
-import qs from 'qs'
-import primes from './index'
-import { Worker } from 'worker_threads';
-import timestampLogger from '../../Logic/logger';
-import fse from 'fs-extra'
-import path from 'path';
-import HttpsProxyAgent from 'https-proxy-agent'
-import WalmartTaskClass from '../../Logic/sites/Walmart/classes/WalmartTaskClass';
 
 // import {Worker, isMainThread, parentPort} from 'worker_threads'
 interface InterestingWrapperProps {
@@ -103,7 +94,7 @@ const TaskComponent : FC<TaskComponentProps> = ({
     // updates the task's delays on update
     useEffect(() => {
         // call task.updateDelays() or someshiot
-        console.log("Task group delayus updated!" + taskGroupDelaysSelector?.error + ' ' + taskGroupDelaysSelector?.monitor)
+        console.log("Task group delays updated!" + taskGroupDelaysSelector?.error + ' ' + taskGroupDelaysSelector?.monitor)
 
         if (taskGroupDelaysSelector) {
             task.setDelays(taskGroupDelaysSelector.monitor, taskGroupDelaysSelector.monitor)
