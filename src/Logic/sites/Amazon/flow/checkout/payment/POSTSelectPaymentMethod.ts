@@ -48,16 +48,16 @@ const POSTSelectPaymentMethod = async (allCookies : string[], customerId : strin
             cookie: joinCookies(allCookies)
         },
         data : otherData,
-        proxy: {
-            protocol: 'http',
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password
-            }
-        },
-        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+        // proxy: {
+        //     protocol: 'http',
+        //     host: proxy.ip,
+        //     port: proxy.port,
+        //     auth: {
+        //         username: proxy.username,
+        //         password: proxy.password
+        //     }
+        // },
+        httpAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     })
 
     return POSTSelectPaymentMethodResponse;

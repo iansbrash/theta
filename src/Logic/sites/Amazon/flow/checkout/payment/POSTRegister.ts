@@ -64,16 +64,16 @@ const POSTRegister = async (allCookies : string[], params : POSTRegisterDynamicP
             cookie: joinCookies(allCookies)
         },
         data : POSTRegisterData,
-        proxy: {
-            protocol: 'http',
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password
-            }
-        },
-        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+        // proxy: {
+        //     protocol: 'http',
+        //     host: proxy.ip,
+        //     port: proxy.port,
+        //     auth: {
+        //         username: proxy.username,
+        //         password: proxy.password
+        //     }
+        // },
+        httpAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     })
 
     return POSTRegisterResponse

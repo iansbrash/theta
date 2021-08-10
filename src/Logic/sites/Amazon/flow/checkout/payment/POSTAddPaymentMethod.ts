@@ -56,16 +56,16 @@ const POSTAddPaymentMethod = async (allCookies : string[], customerId : string, 
             cookie: joinCookies(allCookies)
         },
         data : tempData2,
-        proxy: {
-            protocol: 'http',
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password
-            }
-        },
-        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+        // proxy: {
+        //     protocol: 'http',
+        //     host: proxy.ip,
+        //     port: proxy.port,
+        //     auth: {
+        //         username: proxy.username,
+        //         password: proxy.password
+        //     }
+        // },
+        httpAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     });
     return POSTAddPaymentMethodResponse;
 }

@@ -73,13 +73,13 @@ const POSTAddToCart = async (
         // 'sourceCustomerOrgListItemID': '',
         // 'wlPopCommand': '',
         // 'quantity': '1',
-        'triggerTurboWeblab': 'T2',
-        'triggerTurboWeblabName': 'RCX_CHECKOUT_TURBO_DESKTOP_PRIME_87783',
+        // 'triggerTurboWeblab': 'T2',
+        // 'triggerTurboWeblabName': 'RCX_CHECKOUT_TURBO_DESKTOP_PRIME_87783',
         'turboPageRequestId': '',
         'turboPageSessionId': '',
         'dropdown-selection': 'njsosvkplikq',
         'dropdown-selection-ubb': 'njsosvkplikq',
-        'itemCount': '2',
+        // 'itemCount': '2',
         'isDSSAjax': '1' 
     };
     console.log(data2)
@@ -111,17 +111,17 @@ const POSTAddToCart = async (
             'accept-language': 'en-US,en;q=0.9', 
             cookie: joinCookies(allCookies)
         },
-        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
-        proxy: false,
-        // proxy: {
-        //     protocol: 'http',
-        //     host: proxy.ip,
-        //     port: proxy.port,
-        //     auth: {
-        //         username: proxy.username,
-        //         password: proxy.password
-        //     },
-        // },
+        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
+        // proxy: false,
+        proxy: {
+            protocol: 'http',
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password
+            },
+        },
         data : data
     });
 

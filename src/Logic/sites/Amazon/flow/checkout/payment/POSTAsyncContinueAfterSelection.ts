@@ -85,16 +85,16 @@ const POSTAsyncContinueAfterSelection = async (allCookies : string[], params : P
             'accept-language': 'en-US,en;q=0.9', 
             cookie: joinCookies(allCookies)
         },
-        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
-        proxy: {
-            protocol: 'http',
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password
-            }
-        },
+        httpAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
+        // proxy: {
+        //     protocol: 'http',
+        //     host: proxy.ip,
+        //     port: proxy.port,
+        //     auth: {
+        //         username: proxy.username,
+        //         password: proxy.password
+        //     }
+        // },
         data : data2p1 + data2p2 //`ppw-widgetState=${ppwWidgetState}&` + a3.join('&') //testData
     })
 

@@ -30,10 +30,10 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
     // })
 
 
-    console.log('about to get metadata using these credentials')
-    console.log(`license: ${license}`)
-    console.log(`session: ${session}`)
-    console.log(`api: ${api}/sites/amazon/data`)
+    // console.log('about to get metadata using these credentials')
+    // console.log(`license: ${license}`)
+    // console.log(`session: ${session}`)
+    // console.log(`api: ${api}/sites/amazon/data`)
     let metaCracked = await axios({
         method: 'get',
         url: `${api}/sites/amazon/data`,
@@ -45,8 +45,6 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
 
     metaCracked = metaCracked.data.body;
 
-    // console.log(`metadata1: ${metaCracked}`)
-    // console.log(metaCracked)
 
     const POSTConfig = {
         appActionToken: appActionToken, 
@@ -58,7 +56,7 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
         password: password
     };
 
-    console.log(POSTConfig)
+    // console.log(POSTConfig)
 
 
     const POSTSubData = qs.stringify(POSTConfig);
@@ -88,7 +86,7 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
             'sec-fetch-user': '?1', 
             'sec-fetch-dest': 'document', 
             'accept-language': 'en-US,en;q=0.9', 
-
+            
             'referer': `https://www.amazon.com/ap/signin/${sessionId}`, 
             "cookie": joinCookies(allCookies)
         },
@@ -108,11 +106,11 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
         //     },
         // }
         // httpsAgent: new (HttpsProxyAgent as any)({host: '127.0.0.1', port: 8888}) //, auth: `${proxy.username}:${proxy.password}`})
-        // proxy: false,
-        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+        proxy: false,
+        httpAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     })
 
-    console.log(POSTSubLoginPageResponse)
+    // console.log(POSTSubLoginPageResponse)
 
     // console.log(POSTSubLoginPageResponse)
 
