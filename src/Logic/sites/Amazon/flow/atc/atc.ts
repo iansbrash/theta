@@ -10,9 +10,7 @@ import CookieObject from '../../../../interfaces/CookieObject';
 import {
     GETProductRetry
 } from './GETProduct';
-import {
-    POSTAddToCartRetry
-} from './POSTAmazonATC';
+import POSTAddToCart from './POSTAmazonATC';
 import timestampLogger from '../../../../logger';
 import { Proxy } from '../../../../interfaces/ProxyList';
 
@@ -39,12 +37,12 @@ const AddToCart = async (allCookies : string[], product : string = 'https://www.
     
  
 
-    const POSTAmazonATC : any = await POSTAddToCartRetry(
+    const POSTAmazonATC : any = await POSTAddToCart(
         allCookies,
         CSRFToken,
         offerListingID,
         allCookiesObject['session-id'],
-        product, // this needs to be the ASIN
+        'B07W4FMQ5Y', // this needs to be the ASIN
         allCookiesObject['session-id'],
         proxy
     )

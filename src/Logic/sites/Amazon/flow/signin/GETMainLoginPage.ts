@@ -4,6 +4,8 @@ import {
 } from '../../../../requestFunctions'
 import requestRetryWrapper from '../../../../requestRetryWrapper';
 import { Proxy } from '../../../../interfaces/ProxyList';
+
+// @ts-ignore
 import HttpsProxyAgent from 'https-proxy-agent'
 
 const GETMainLoginPage = async (allCookies : string[], proxy : Proxy) : Promise<AxiosResponse> => {
@@ -33,8 +35,16 @@ const GETMainLoginPage = async (allCookies : string[], proxy : Proxy) : Promise<
             // 'X-Requested-With': 'tcors',
             cookie: joinCookies(allCookies)
         },
+        proxy: {
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password
+            },
+        },
         // withCredentials: true,
-        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     });
 
     return GETAmazonSignInUser;

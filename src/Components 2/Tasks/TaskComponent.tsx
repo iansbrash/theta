@@ -240,8 +240,9 @@ const TaskComponent : FC<TaskComponentProps> = ({
 
     // COMING SOON!
     const editTask = async () => {
+        throw "Coming soon!"
         // await (task as WalmartTaskClass).TestWalmartFlow();
-        await electron.ipcRenderer.invoke("WalmartTestFlow")
+        // await electron.ipcRenderer.invoke("WalmartTestFlow")
     }
 
     const stopTask = () => {
@@ -274,7 +275,8 @@ const TaskComponent : FC<TaskComponentProps> = ({
                     >
                         <PlayIcon />
                     </button>
-                    <button className="text-blue-400 focus:outline-none"
+                    <button className="text-gray-600 focus:outline-none"
+                    disabled={true}
                     onClick={() => editTask()}
                     >
                         <EditIcon />

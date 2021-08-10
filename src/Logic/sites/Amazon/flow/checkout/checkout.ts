@@ -219,7 +219,9 @@ const Checkout = async (allCookies : string[], proxy : Proxy) => {
     )
 
 
+
     const fuckData = POSTAsyncContinueAfterSelectionResponse.data;
+    console.log(fuckData)
 
     const POSTAsyncContinueAfterSelectionResponseCollectedData = fuckData.panels.map((panel : object) => JSON.stringify(panel)).join(' ')
 

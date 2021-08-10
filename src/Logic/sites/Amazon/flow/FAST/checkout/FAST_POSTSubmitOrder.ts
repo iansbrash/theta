@@ -56,6 +56,8 @@ import axios from 'axios';
 import { joinCookies } from '../../../../../requestFunctions';
 import qs from 'qs';
 import { Proxy } from '../../../../../interfaces/ProxyList';
+
+// @ts-ignore
 import HttpsProxyAgent from 'https-proxy-agent'
 
 const FAST_POSTSubmitOrder = async (allCookies : string[], finalData : object, proxy : Proxy) => {
@@ -89,7 +91,15 @@ const FAST_POSTSubmitOrder = async (allCookies : string[], finalData : object, p
             cookie: joinCookies(allCookies)
         },
         data : POSTSubmitOrderData,
-        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+        proxy: {
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password
+            },
+        },
+        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     })
 
     return POSTSubmitOrderResponse;
