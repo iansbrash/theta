@@ -73,6 +73,7 @@ const FAST_AsyncContinue1 = async (allCookies : string[], storage : {purchaseId:
         // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
         data : data,
         proxy: {
+            protocol: 'http',
             host: proxy.ip,
             port: proxy.port,
             auth: {

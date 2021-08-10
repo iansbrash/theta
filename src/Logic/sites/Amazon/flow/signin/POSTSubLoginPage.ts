@@ -98,18 +98,21 @@ const POSTSubLoginPage = async (allCookies : string[], sessionId: string, data :
         validateStatus: function () {return true;},
 
         data : POSTSubData,
-        proxy: {
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password
-            },
-        }
+        // proxy: {
+        //     protocol: 'http',
+        //     host: proxy.ip,
+        //     port: proxy.port,
+        //     auth: {
+        //         username: proxy.username,
+        //         password: proxy.password
+        //     },
+        // }
         // httpsAgent: new (HttpsProxyAgent as any)({host: '127.0.0.1', port: 8888}) //, auth: `${proxy.username}:${proxy.password}`})
-
-        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+        // proxy: false,
+        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     })
+
+    console.log(POSTSubLoginPageResponse)
 
     // console.log(POSTSubLoginPageResponse)
 

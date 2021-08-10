@@ -52,6 +52,7 @@ const WalmartPOSTShippingAddress = async (allCookies : string[], profile : Profi
         data : POSTShippingAddressData,
         // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
         proxy: {
+            protocol: 'http',
             host: proxy.ip,
             port: proxy.port,
             auth: {

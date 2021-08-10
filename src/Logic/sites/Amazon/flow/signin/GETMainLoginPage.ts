@@ -35,16 +35,18 @@ const GETMainLoginPage = async (allCookies : string[], proxy : Proxy) : Promise<
             // 'X-Requested-With': 'tcors',
             cookie: joinCookies(allCookies)
         },
-        proxy: {
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password
-            },
-        },
+        // proxy: {
+        //     protocol: 'http',
+        //     host: proxy.ip,
+        //     port: proxy.port,
+        //     auth: {
+        //         username: proxy.username,
+        //         password: proxy.password
+        //     },
+        // },
         // withCredentials: true,
-        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
+        // proxy: false,
     });
 
     return GETAmazonSignInUser;

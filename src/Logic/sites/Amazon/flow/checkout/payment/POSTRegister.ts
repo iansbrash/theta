@@ -3,6 +3,8 @@ import { joinCookies } from '../../../../../requestFunctions';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
 import qs from 'qs';
 import { Proxy } from '../../../../../interfaces/ProxyList';
+
+// @ts-ignore
 import HttpsProxyAgent from 'https-proxy-agent'
 
 
@@ -43,25 +45,35 @@ const POSTRegister = async (allCookies : string[], params : POSTRegisterDynamicP
         url: POSTRegisterUrl,
         headers: {
             'Connection': 'keep-alive', 
-            'Cache-Control': 'max-age=0', 
-            'sec-ch-ua': '" Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"', 
+            'Pragma': 'no-cache', 
+            'Cache-Control': 'no-cache', 
+            'sec-ch-ua': '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"', 
             'sec-ch-ua-mobile': '?0', 
             'Origin': 'https://www.amazon.com', 
             'Upgrade-Insecure-Requests': '1', 
             'DNT': '1', 
             'Content-Type': 'application/x-www-form-urlencoded', 
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36', 
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36', 
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9', 
             'Sec-Fetch-Site': 'same-site', 
             'Sec-Fetch-Mode': 'navigate', 
             'Sec-Fetch-User': '?1', 
             'Sec-Fetch-Dest': 'iframe', 
+            'Referer': 'https://www.amazon.com/', 
             'Accept-Language': 'en-US,en;q=0.9', 
-            referrer: 'https://www.amazon.com/',
             cookie: joinCookies(allCookies)
         },
         data : POSTRegisterData,
-        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+        proxy: {
+            protocol: 'http',
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password
+            }
+        },
+        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     })
 
     return POSTRegisterResponse

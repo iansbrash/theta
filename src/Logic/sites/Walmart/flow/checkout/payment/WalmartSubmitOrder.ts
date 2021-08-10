@@ -54,6 +54,7 @@ const WalmartSubmitOrder = async (allCookies : string[], paymentType : string, v
         data : SubmitOrderData,
         // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
         proxy: {
+            protocol: 'http',
             host: proxy.ip,
             port: proxy.port,
             auth: {

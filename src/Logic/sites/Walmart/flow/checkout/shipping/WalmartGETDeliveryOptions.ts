@@ -31,6 +31,7 @@ const WalmartGETDeliveryOptions = async (allCookies : string[], storeIds : strin
         },
         // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
         proxy: {
+            protocol: 'http',
             host: proxy.ip,
             port: proxy.port,
             auth: {

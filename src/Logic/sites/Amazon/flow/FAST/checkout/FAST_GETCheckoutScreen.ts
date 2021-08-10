@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from "axios";
 import { joinCookies } from "../../../../../requestFunctions";
 import tsLogger from "../../../../../logger";
 import { Proxy } from "../../../../../interfaces/ProxyList";
+
+// @ts-ignore
 import HttpsProxyAgent from "https-proxy-agent";
 
 const FAST_GETCheckoutScreen = async (allCookies : string[], proxy : Proxy) : Promise<AxiosResponse> => {
@@ -15,7 +17,7 @@ const FAST_GETCheckoutScreen = async (allCookies : string[], proxy : Proxy) : Pr
             'authority': 'www.amazon.com', 
             'pragma': 'no-cache', 
             'cache-control': 'no-cache', 
-            'rtt': '50', 
+            'rtt': '0', 
             'downlink': '10', 
             'ect': '4g', 
             'sec-ch-ua': '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"', 
@@ -28,7 +30,7 @@ const FAST_GETCheckoutScreen = async (allCookies : string[], proxy : Proxy) : Pr
             'sec-fetch-mode': 'navigate', 
             'sec-fetch-user': '?1', 
             'sec-fetch-dest': 'document', 
-            'referer': 'https://www.amazon.com/gp/cart/view.html?ref_=nav_cart', 
+            'referer': 'https://www.amazon.com/gp/cart/view.html/ref=chk_logo_return_to_cart', 
             'accept-language': 'en-US,en;q=0.9', 
             cookie: joinCookies(allCookies)
         },

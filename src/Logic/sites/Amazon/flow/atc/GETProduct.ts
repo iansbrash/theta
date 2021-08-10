@@ -32,15 +32,17 @@ const GETProduct = async (allCookies : string[], product : string, proxy : Proxy
             cookie: joinCookies(allCookies)
         },
         // withCredentials: true,
-        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
-        proxy: {
-            host: proxy.ip,
-            port: proxy.port,
-            auth: {
-                username: proxy.username,
-                password: proxy.password
-            },
-        }
+        proxy: false,
+        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
+        // proxy: {
+        //     protocol: 'http',
+        //     host: proxy.ip,
+        //     port: proxy.port,
+        //     auth: {
+        //         username: proxy.username,
+        //         password: proxy.password
+        //     },
+        // }
 
         // httpsAgent: {rejectUnathored: false}
         // httpsAgent: new https.Agent({ rejectUnauthorized: false })

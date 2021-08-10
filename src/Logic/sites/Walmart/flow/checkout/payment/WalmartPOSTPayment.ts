@@ -71,6 +71,7 @@ const WalmartPOSTPayment = async (allCookies : string[], profile : ProfileObject
         data : POSTPaymentData,
         // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
         proxy: {
+            protocol: 'http',
             host: proxy.ip,
             port: proxy.port,
             auth: {

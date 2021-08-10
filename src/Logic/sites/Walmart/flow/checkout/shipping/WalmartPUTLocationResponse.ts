@@ -44,6 +44,7 @@ const WalmartPUTLocationResponse = async (allCookies : string[], shipping : Prof
         data : PUTLocationData,
         // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
         proxy: {
+            protocol: 'http',
             host: proxy.ip,
             port: proxy.port,
             auth: {

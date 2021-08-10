@@ -41,6 +41,7 @@ const WalmartGETCheckout = async (allCookies : string[], proxy : Proxy) : Promis
         },
         data : GETCheckoutResponseData,
         proxy: {
+            protocol: 'http',
             host: proxy.ip,
             port: proxy.port,
             auth: {

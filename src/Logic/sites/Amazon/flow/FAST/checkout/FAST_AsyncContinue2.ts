@@ -66,6 +66,7 @@ const FAST_AsyncContinue2 = async (allCookies : string[], superDynamicParams : o
             cookie: joinCookies(allCookies)
         },
         proxy: {
+            protocol: 'http',
             host: proxy.ip,
             port: proxy.port,
             auth: {

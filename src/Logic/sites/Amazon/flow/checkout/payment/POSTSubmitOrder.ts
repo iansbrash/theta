@@ -3,6 +3,8 @@ import { joinCookies } from '../../../../../requestFunctions';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
 import qs from 'qs';
 import { Proxy } from '../../../../../interfaces/ProxyList';
+
+// @ts-ignore
 import HttpsProxyAgent from 'https-proxy-agent'
 
 const POSTSubmitOrder = async (allCookies : string[], data : object, proxy : Proxy) => {
@@ -37,7 +39,16 @@ const POSTSubmitOrder = async (allCookies : string[], data : object, proxy : Pro
             cookie: joinCookies(allCookies)
         },
         data : POSTSubmitOrderData,
-        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
+        proxy: {
+            protocol: 'http',
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password
+            }
+        },
+        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`})
     })
 
     return POSTSubmitOrderResponse;

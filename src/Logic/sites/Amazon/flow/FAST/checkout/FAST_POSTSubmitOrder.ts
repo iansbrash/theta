@@ -92,6 +92,7 @@ const FAST_POSTSubmitOrder = async (allCookies : string[], finalData : object, p
         },
         data : POSTSubmitOrderData,
         proxy: {
+            protocol: 'http',
             host: proxy.ip,
             port: proxy.port,
             auth: {

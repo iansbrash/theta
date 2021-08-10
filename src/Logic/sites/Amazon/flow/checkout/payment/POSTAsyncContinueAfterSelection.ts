@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from 'axios';
 import { joinCookies } from '../../../../../requestFunctions';
 import requestRetryWrapper from '../../../../../requestRetryWrapper';
 import { Proxy } from '../../../../../interfaces/ProxyList';
+
+// @ts-ignore
 import HttpsProxyAgent from 'https-proxy-agent'
 
 export interface POSTAsyncContinueSuperDynamicParams {
@@ -72,7 +74,7 @@ const POSTAsyncContinueAfterSelection = async (allCookies : string[], params : P
             'content-type': 'application/x-www-form-urlencoded; charset=UTF-8;', 
             'accept': 'text/plain, */*; q=0.01', 
             'x-requested-with': 'XMLHttpRequest', 
-            'downlink': '8.4', 
+            'downlink': '10', 
             'ect': '4g', 
             'x-amz-checkout-transition': 'ajax', 
             'origin': 'https://www.amazon.com', 
@@ -83,7 +85,16 @@ const POSTAsyncContinueAfterSelection = async (allCookies : string[], params : P
             'accept-language': 'en-US,en;q=0.9', 
             cookie: joinCookies(allCookies)
         },
-        httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
+        // httpsAgent: new (HttpsProxyAgent as any)({host: proxy.ip , port: proxy.port, auth: `${proxy.username}:${proxy.password}`}),
+        proxy: {
+            protocol: 'http',
+            host: proxy.ip,
+            port: proxy.port,
+            auth: {
+                username: proxy.username,
+                password: proxy.password
+            }
+        },
         data : data2p1 + data2p2 //`ppw-widgetState=${ppwWidgetState}&` + a3.join('&') //testData
     })
 

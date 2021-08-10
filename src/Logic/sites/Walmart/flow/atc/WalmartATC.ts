@@ -55,6 +55,7 @@ const WalmartATC = async (allCookies : string[], productUrl : string, offerId : 
         },
         data : data,
         proxy: {
+            protocol: 'http',
             host: proxy.ip,
             port: proxy.port,
             auth: {
