@@ -30,7 +30,7 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
+    "productName": "Thaeta",
     "appId": "org.erb.ElectronReact",
     "files": [
       "dist/",
@@ -38,12 +38,18 @@
       "index.html",
       "main.prod.js",
       "main.prod.js.map",
-      "package.json"
+      "package.json",
+      "!../ReverseEngineering/*",
+      "!Logic/sensitive/*"
     ],
     "afterSign": ".erb/scripts/Notarize.js",
     "mac": {
       "target": [
         "dmg"
+      ],
+      "files": [
+        "!ReverseEngineering/*",
+        "!src/Logic/sensitive/*"
       ],
       "type": "distribution",
       "hardenedRuntime": true,
@@ -68,6 +74,10 @@
     "win": {
       "target": [
         "nsis"
+      ],
+      "files": [
+        "!ReverseEngineering/*",
+        "!src/Logic/sensitive/*"
       ]
     },
     "linux": {

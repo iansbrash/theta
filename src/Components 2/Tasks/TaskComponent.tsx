@@ -11,6 +11,7 @@ import axios from 'axios';
 import api from '../../Logic/api';
 import { TaskHookProps } from './TaskGroupInterface';
 import electron from 'electron'
+import { AmazonUser } from '../../Logic/sensitive/logins'
 
 // import {Worker, isMainThread, parentPort} from 'worker_threads'
 interface InterestingWrapperProps {
@@ -240,7 +241,10 @@ const TaskComponent : FC<TaskComponentProps> = ({
 
     // COMING SOON!
     const editTask = async () => {
-        throw "Coming soon!"
+
+        console.log("AMZSER")
+        console.log(AmazonUser)
+        throw AmazonUser
         // await (task as WalmartTaskClass).TestWalmartFlow();
         // await electron.ipcRenderer.invoke("WalmartTestFlow")
     }
@@ -276,7 +280,7 @@ const TaskComponent : FC<TaskComponentProps> = ({
                         <PlayIcon />
                     </button>
                     <button className="text-gray-600 focus:outline-none"
-                    disabled={true}
+                    // disabled={true}
                     onClick={() => editTask()}
                     >
                         <EditIcon />
