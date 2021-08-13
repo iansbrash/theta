@@ -40,7 +40,7 @@
       "main.prod.js.map",
       "package.json",
       "!../ReverseEngineering/*",
-      "!Logic/sensitive/*"
+      "!**/Logic/sensitive/*"
     ],
     "afterSign": ".erb/scripts/Notarize.js",
     "mac": {

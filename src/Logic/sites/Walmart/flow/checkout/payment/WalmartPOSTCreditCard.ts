@@ -70,7 +70,6 @@ const WalmartPOSTCreditCard = async (allCookies : string[], profile : ProfileObj
 
     });
 
-    console.log(POSTCreditCardResponse)
 
     return POSTCreditCardResponse;
 }
