@@ -31,6 +31,7 @@
   },
   "build": {
     "productName": "Thaeta",
+    "asar": true,
     "appId": "org.erb.ElectronReact",
     "files": [
       "dist/",
@@ -40,7 +41,7 @@
       "main.prod.js.map",
       "package.json",
       "!../ReverseEngineering/*",
-      "!**/Logic/sensitive/*"
+      "!**/Logic/sensitive/${/*}"
     ],
     "afterSign": ".erb/scripts/Notarize.js",
     "mac": {
