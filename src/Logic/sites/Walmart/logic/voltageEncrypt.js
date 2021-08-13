@@ -357,6 +357,7 @@ export const voltageEncrypt = async (number, cvv) => {
 
     const initialBustK = getValueByDelimiters(initialBust.data, 'PIE.K = "', '"')
     const initialBustKey_Id = getValueByDelimiters(initialBust.data, 'PIE.key_id = "', '"')
+    const initialBustPhase = getValueByDelimiters(initialBust.data, 'PIE.phase = ', ';')
 
     PIE.K = initialBustK
     PIE.key_id = initialBustKey_Id
@@ -374,6 +375,7 @@ export const voltageEncrypt = async (number, cvv) => {
 
     const secondaryBustK = getValueByDelimiters(secondaryBust.data, 'PIE.K = "', '"')
     const secondaryBustKey_Id = getValueByDelimiters(secondaryBust.data, 'PIE.key_id = "', '"')
+    const secondaryBustPhase = getValueByDelimiters(secondaryBust.data, 'PIE.phase = ', ';')
 
     PIE.K = secondaryBustK
     PIE.key_id = secondaryBustKey_Id
@@ -382,7 +384,7 @@ export const voltageEncrypt = async (number, cvv) => {
     let res2 = ProtectPANandCVV('4111111111111111', cvv, true)
 
     // Returns encryptedPAN, encryptedCVV, integrityCheck
-    return [ [...res, initialBustKey_Id], [...res2, secondaryBustKey_Id] ];
+    return [ [...res, initialBustKey_Id, initialBustPhase], [...res2, secondaryBustKey_Id, secondaryBustPhase] ];
 }
 
 // (async () => {

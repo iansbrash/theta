@@ -25,7 +25,6 @@ const Login : FC = () => {
         //     setAuthenticated(true)
         //     // await electron.ipcRenderer.invoke('authenticated');
         // })();
-        return 
         (async () => {
             console.log(`'in useEffect for authing:' ${licenseState + ', ' + sessionState}`)
             if (sessionStatus === SessionStatus.Populated && licenseState !== '' && sessionState !== '') {
@@ -35,7 +34,7 @@ const Login : FC = () => {
                 try {
                     const res = await axios({
                         method: 'post',
-                        url: `${api}Beta/auth/validate`,
+                        url: `${api}/auth/validate`,
                         headers: {
                             license: licenseState,
                             session: sessionState
@@ -65,8 +64,7 @@ const Login : FC = () => {
 
     const attemptAuth = async () => {
 
-        setAuthenticated(true)
-        electron.ipcRenderer.invoke('authenticated')
+        // setAuthenticated(true)
 
         /** FLOW:
          *  Auth via backend --> get new sessionId
@@ -81,7 +79,6 @@ const Login : FC = () => {
          *          and assign profile names and proxyList names to the real objects
          */
 
-        return;
         // return await electron.ipcRenderer.invoke('authenticated');
 
         try {
@@ -89,7 +86,7 @@ const Login : FC = () => {
 
             const res = await axios({
                 method: 'post',
-                url: `${api}Beta/auth/desktop`,
+                url: `${api}/auth/desktop`,
                 headers: {
                     license: license
                 }

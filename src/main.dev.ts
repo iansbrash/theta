@@ -78,9 +78,11 @@ const createWindow = async () => {
     ? path.join(process.resourcesPath, 'assets')
     : path.join(__dirname, '../assets');
 
-  const getAssetPath = (...paths: string[]): string => {
-    return path.join(RESOURCES_PATH, ...paths);
-  };
+
+    const getAssetPath = (...paths: string[]): string => {
+        return path.join(RESOURCES_PATH, ...paths);
+    };
+
 
   mainWindow = new BrowserWindow({
     show: false,
@@ -135,7 +137,9 @@ const createWindow = async () => {
     })
 
   // open dev tools
-  mainWindow.webContents.openDevTools({ mode: 'detach' });
+//   if (process.env.NODE_ENV === 'development') {
+    mainWindow.webContents.openDevTools({ mode: 'detach' });
+//   }
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -208,8 +212,12 @@ app.whenReady().then(() => {
 
     createWindow();
 
+
+
     
 }).catch(console.log);
+
+
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the

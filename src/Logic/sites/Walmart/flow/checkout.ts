@@ -179,8 +179,9 @@ const flow = async () => {
     timestampLogger("Encrypting payment")
 
 
-    // make this an api call
+    // make this an api call... length of 5 (index 4 being the PIE.phase)
     const voltageEncryptedData : string[][] = await voltageEncrypt(testProfile.payment.number, testProfile.payment.cvv)
+    console.log(voltageEncryptedData)
 
 
 
@@ -190,8 +191,8 @@ const flow = async () => {
 
 
     allCookies = accumulateCookies(allCookies, returnParsedCookies(POSTCreditCardResponse.headers['set-cookie']))
-      
     timestampLogger("Adding payment (2)")
+      
     const POSTPaymentResponse = await WalmartPOSTPayment(allCookies, testProfile, voltageEncryptedData, POSTCreditCardResponse.data, proxy)
 
 
@@ -210,11 +211,11 @@ const flow = async () => {
             "encryptedPan": voltageEncryptedData[1][0],
             "integrityCheck": voltageEncryptedData[1][2],
             "keyId": voltageEncryptedData[1][3],
-            "phase": "0"
+            "phase": voltageEncryptedData[1][4]
           }
         ]
       };
-    //   console.log(SubmitOrderData)
+      console.log(SubmitOrderData)
 
     SubmitOrderData = JSON.stringify(SubmitOrderData)
       
@@ -249,9 +250,9 @@ const flow = async () => {
 };
 
 
-// (async () => {
-//     await flow();
-// })();
+(async () => {
+    await flow();
+})();
 
 
 export default flow;

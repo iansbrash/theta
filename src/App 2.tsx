@@ -269,7 +269,7 @@ const AppTwo = () => {
                                 <div className="flex flex-col space-y-4 justify-between items-center">
                                     <div className="p-1 mt-2 mb-2 text-theta-logo rounded-lg">
                                         {/* <TempLogo /> */}
-                                        <img src={'./resources/logo/1000x1000.png'}/>
+                                        <img src={''}/>
                                     </div>
                                     {iconsArray.map((icon, index : number) => (
                                         <Link to={"/main" + toArray[index]}>

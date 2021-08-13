@@ -459,7 +459,7 @@ const atc = () => {
                 "encryptedPan": voltageEncryptedData[1][0],
                 "integrityCheck": voltageEncryptedData[1][2],
                 "keyId": voltageEncryptedData[1][3],
-                "phase": "0"
+                "phase": voltageEncryptedData[1][4]
               }
             ]
           };

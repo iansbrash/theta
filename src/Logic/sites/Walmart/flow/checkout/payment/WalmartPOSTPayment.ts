@@ -33,14 +33,14 @@ const WalmartPOSTPayment = async (allCookies : string[], profile : ProfileObject
             "encryptedCvv": voltageEncryptedData[1][1],//#2
             "integrityCheck": voltageEncryptedData[1][2],//integrityCheck#2
             "keyId": voltageEncryptedData[1][3],//keyId #2
-            "phase": "0",// assumed ... was 1 ???
+            "phase": voltageEncryptedData[1][4],// assumed ... was 1 ???
             "piHash": POSTCreditCardResponseData.piHash// in CC Response
           }
         ],
         "cvvInSession": true
       };
 
-      console.log(POSTPaymentData)
+    //   console.log(POSTPaymentData)
 
     POSTPaymentData = JSON.stringify(POSTPaymentData)
 
